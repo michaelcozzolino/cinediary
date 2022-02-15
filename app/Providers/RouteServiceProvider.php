@@ -50,8 +50,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
 
-           Route::model('movie', Movie::class);
-           Route::model('series', Series::class); // series is both a singular and a plural word
+            Route::model('movie', Movie::class);
+            Route::model('series', Series::class); // series is both a singular and a plural word
         });
     }
 
@@ -63,7 +63,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

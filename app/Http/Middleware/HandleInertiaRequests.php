@@ -63,7 +63,7 @@ class HandleInertiaRequests extends Middleware
             'availableLocales' => config('app.available_locales'),
             'language' => function () {
                 return $this->translations(
-                    resource_path('lang/'. app()->getLocale() .'.json')
+                    lang_path(app()->getLocale() .'.json')
                 );
             },
         ]);

@@ -7,7 +7,7 @@ use App\Models\Diary;
 use App\Models\Movie;
 use App\Models\Setting;
 use App\Models\User;
-
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
