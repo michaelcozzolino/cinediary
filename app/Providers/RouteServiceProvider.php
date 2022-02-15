@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Movie;
+use App\Models\Series;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -46,6 +49,9 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+
+           Route::model('movie', Movie::class);
+           Route::model('series', Series::class); // series is both a singular and a plural word
         });
     }
 

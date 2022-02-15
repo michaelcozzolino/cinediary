@@ -2,8 +2,12 @@
 
 namespace App\Console;
 
+use App\Classes\StorePopularScreenplays;
+use App\Classes\TMDBScraper;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\Movie;
+use App\Models\Series;
 
 class Kernel extends ConsoleKernel
 {
@@ -22,9 +26,8 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule(Schedule $schedule)
-    {
-        // $schedule->command('inspire')->hourly();
+    protected function schedule(Schedule $schedule) {
+        $schedule->call(new StorePopularScreenplays)->weeklyOn(1);
     }
 
     /**
@@ -38,4 +41,6 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+
+
 }

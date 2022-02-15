@@ -1,0 +1,229 @@
+<template>
+    <authenticated>
+        <template #header-title>
+            {{ __('Add movies or tv series') }}
+        </template>
+        <template #header-description>
+            {{__('Search for movies and tv series to add them to your diaries')}}!
+            <div v-if="noDiariesMessage !== ''">
+                <hr>
+                <small class="text-warning font-weight-bolder" v-text="this.noDiariesMessage"/>
+            </div>
+        </template>
+        <h6 class="text-muted text-uppercase "
+            v-show="lastQuery !== undefined"
+            v-text="this.__('Your last search...')" style="font-size: 14px; font-weight: 600"/>
+
+        <form @submit.prevent="search.search(this.getSearchedScreenplays)">
+<!--            {{this.__('Your last search..')}}-->
+            <MDBInput
+
+                :input-group="true"
+                :formOutline="false"
+                wrapperClass="mb-3"
+                v-model="search.form.query"
+                @input="search.clear('query')"
+                :placeholder="this.__('Search for movies or tv series')"
+                aria-label="query"
+                aria-describedby="query"
+                id="query"
+            >
+                <MDBBtn color="primary" type="submit"  id="search-button" :ripple="{ color: 'dark' }">
+                    <font-awesome-icon icon="search" />
+                    {{ __('Search') }}
+                </MDBBtn>
+            </MDBInput>
+            <div v-if="errors.query">{{ errors.query }}</div>
+        </form>
+
+        <MDBTabs :model-value="search.activeTabId" v-if="search.hasSearched()">
+            <!-- Tabs navs -->
+            <MDBTabNav fill tabsClasses="mb-3">
+                <MDBTabItem tabId="movies" href="movies">{{ __('Movies') }}</MDBTabItem>
+                <MDBTabItem tabId="series" href="series">{{ __('Series') }}</MDBTabItem>
+            </MDBTabNav>
+            <!-- Tabs navs -->
+            <!-- Tabs content -->
+            <MDBTabContent>
+                <MDBTabPane tabId="movies">
+                    <screenplays  class="d-flex text-center" v-if="search.hasMovies()">
+                        <screenplay @on-screenplay-stored="" v-for="movie in search.getMovies()"
+                                    :screenplay="movie"
+                                    :md="'3'"
+                                    screenplay-type="movies"
+                                    :already-in-diaries-screenplays-ids="getInDiariesScreenplaysIds"
+                                    with-dropdown-button
+                        >
+                        </screenplay>
+                    </screenplays>
+                    <p v-else>{{__('No movie matching your search')}}</p>
+                </MDBTabPane>
+                <MDBTabPane tabId="series">
+                    <screenplays class="d-flex text-center"  v-if="search.hasSeries()">
+                        <screenplay v-for="series in search.getSeries()"
+                                    :screenplay="series"
+                                    :md="'3'"
+                                    screenplay-type="series"
+                                    :already-in-diaries-screenplays-ids="getInDiariesScreenplaysIds"
+                                    with-dropdown-button
+                        >
+                            <template v-slot:title>{{series.title}}</template>
+                        </screenplay>
+                    </screenplays>
+                    <p v-else>{{__('No tv series matching your search')}}</p>
+                </MDBTabPane>
+            </MDBTabContent>
+            <!-- Tabs content -->
+        </MDBTabs>
+    </authenticated>
+</template>
+
+<script>
+import Authenticated from "@/Layouts/Authenticated";
+import Screenplay from "@/Pages/Partials/Screenplays/Screenplay";
+import Screenplays from "@/Pages/Partials/Screenplays/Screenplays";
+import {usePage} from "@inertiajs/inertia-vue3";
+import {reactive} from "vue";
+
+class Search{
+
+    constructor(data) {
+        for (let property in data) {
+            if(data.hasOwnProperty(property))
+                this[property] = data[property];
+        }
+
+    }
+
+    getScreenplays(){
+        return this['screenplays'];
+    }
+
+    setScreenplays(screenplays){
+        this['screenplays'] = screenplays;
+    }
+    getMovies(){
+        if(this.getScreenplays().hasOwnProperty('movies'))
+            return this.getScreenplays()['movies'];
+        return {};
+    }
+
+    getSeries(){
+        if(this.getScreenplays().hasOwnProperty('series'))
+            return this.getScreenplays()['series'];
+        return {};
+    }
+
+
+
+    /* it checks the length of an object  */
+    has(object){
+        return Object.keys(object).length;
+    }
+
+    hasMovies(){
+        return this.has(this.getMovies());
+    }
+
+    hasSeries(){
+        return this.has(this.getSeries());
+    }
+
+    /* it checks if a search has been performed,
+     * if true, the screenplays object has to contain the single arrays for movies & series */
+    hasSearched(){
+        return this.has(this.getScreenplays()); //non vero
+    }
+
+    search(callback){
+        this['form'].post(route('search.make'),{
+            preserveScroll: true,
+            onSuccess: () => this.setScreenplays(callback()) ,
+        });
+
+    }
+
+    clear(field){
+        // if(this.errors.hasOwnProperty(field))
+        //     delete this.errors[field];
+    }
+
+
+
+}
+
+export default {
+    components: { Authenticated, Screenplay, Screenplays},
+    props: {
+        screenplays: Object, // the screenplays returned from the search
+        lastQuery: String,
+        alreadyInDiariesScreenplaysIds: Object,
+        errors: Object
+    },
+    data(){
+        return{
+            search: new Search(reactive({
+                screenplays: this.screenplays ?? {},
+                activeTabId: "movies",
+                form: this.$inertia.form({
+                    query: this.lastQuery ?? '',
+                }),
+
+
+
+            })),
+            inDiariesScreenplaysIds: {},
+
+
+
+        }
+    },
+    mounted() {
+        // console.log(this.screenplays);
+        // console.log(Object.keys(this.screenplays['movies']).length);
+        console.log(this.$props);
+    },
+    computed: {
+        noDiariesMessage(){
+            return usePage().props.value.flash.message ?? "" ;
+        },
+
+        /* return all the screenplays that are already in a diary and all those that are being added after search */
+        getInDiariesScreenplaysIds(){
+            console.log({...this.alreadyInDiariesScreenplaysIds, ...this.inDiariesScreenplaysIds});
+
+            return {...this.alreadyInDiariesScreenplaysIds, ...this.inDiariesScreenplaysIds}
+           /* for (let diaryId in this.alreadyInDiariesScreenplaysIds ){
+                screenplaysIds[diaryId]['movies'] = this.alreadyInDiariesScreenplaysIds[diaryId]['movies']
+                    .concat(this.inDiariesScreenplaysIds[diaryId]['movies'] ?? []);
+                screenplaysIds[diaryId]['series'] = this.alreadyInDiariesScreenplaysIds[diaryId]['series']
+                    .concat(this.inDiariesScreenplaysIds[diaryId]['series'] ?? []);
+            }
+            return screenplaysIds ;*/
+        },
+
+    },
+
+    methods:{
+        getSearchedScreenplays(){
+            return this.screenplays;
+        },
+
+
+
+        onScreenplayStored(event){
+                let diaryId = event.target.diaryId;
+                let screenplayType = event.target.screenplayType;
+                let screenplayId = event.target.screenplayId;
+                this.inDiariesScreenplaysIds[diaryId][screenplayType].concat(screenplayId);
+        }
+
+
+
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

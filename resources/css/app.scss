@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+
+$fontFamily: 'Quicksand', sans-serif;
+
+#app, .p-component{
+    font-family: $fontFamily !important ;
+}
+
+.text-sm {
+    font-size: 0.85rem !important;
+    line-height: 1.25rem !important;
+}
+
+.bg-pink-200 {
+    background-color: #F48FB1 !important;
+}
+
+.bg-deep-orange-200{
+    background-color: #FFAB91 !important;
+}
+
+.bg-indigo-400{
+    background-color: #5C6BC0 !important;
+}
+
+.bg-teal-200{
+    background-color: #80CBC4 !important;
+}
+
+.bg-deep-purple-200{
+    background-color: #B39DDB !important;
+}
+
+.bg-gray-200{
+    background-color: #EEEEEE !important;
+}
