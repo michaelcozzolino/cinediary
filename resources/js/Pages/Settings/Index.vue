@@ -15,13 +15,13 @@
                 :formText="this.__('You can use your TMDB API key instead of using the Cinediary\'s one to speed up your searches. We do not store this key as plain text') + '.'"
                 v-model="form.TMDBApiKey"
             />
-            <validation-error :error="__(errors.TMDBApiKey)"/>
+            <validation-error :error="errors.TMDBApiKey"/>
 
             <MDBSwitch wrapper-class="my-4"
                        :label="this.__('Include adult content to be found')"
                        v-model="form.adultContent"
             />
-            <validation-error :error="__(errors.adultContent)"/>
+            <validation-error :error="errors.adultContent"/>
 
             <div class="d-grid gap-2 col-6 mx-auto">
                 <MDBBtn type="submit" color="primary" v-text="this.__('save')"/>

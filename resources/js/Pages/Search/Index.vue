@@ -15,14 +15,14 @@
             v-text="this.__('Your last search...')" style="font-size: 14px; font-weight: 600"/>
 
         <form @submit.prevent="search.search(this.getSearchedScreenplays)">
-<!--            {{this.__('Your last search..')}}-->
+            <!--            {{this.__('Your last search..')}}-->
             <MDBInput
 
                 :input-group="true"
                 :formOutline="false"
                 wrapperClass="mb-3"
                 v-model="search.form.query"
-                @input="search.clear('query')"
+                @input="search.form.clearErrors('query')"
                 :placeholder="this.__('Search for movies or tv series')"
                 aria-label="query"
                 aria-describedby="query"
@@ -33,7 +33,7 @@
                     {{ __('Search') }}
                 </MDBBtn>
             </MDBInput>
-            <div v-if="errors.query">{{ errors.query }}</div>
+            <validation-error :error="search.form.errors.query" />
         </form>
 
         <MDBTabs :model-value="search.activeTabId" v-if="search.hasSearched()">
@@ -54,7 +54,13 @@
                         >
                         </screenplay>
                     </screenplays>
-                    <p v-else>{{__('No movie matching your search')}}</p>
+
+                    <alert v-else>
+                        <template #message>
+                            {{__('no movie matching your search')}}
+                        </template>
+                    </alert>
+
                 </MDBTabPane>
                 <MDBTabPane tabId="series">
                     <screenplays class="d-flex text-center"  v-if="search.hasSeries()">
@@ -66,7 +72,13 @@
                             <template v-slot:title>{{series.title}}</template>
                         </screenplay>
                     </screenplays>
-                    <p v-else>{{__('No tv series matching your search')}}</p>
+
+                    <alert v-else>
+                        <template #message>
+                            {{__('no tv series matching your search')}}
+                        </template>
+                    </alert>
+
                 </MDBTabPane>
             </MDBTabContent>
             <!-- Tabs content -->
@@ -79,7 +91,9 @@ import Authenticated from "@/Layouts/Authenticated";
 import Screenplay from "@/Pages/Partials/Screenplays/Screenplay";
 import Screenplays from "@/Pages/Partials/Screenplays/Screenplays";
 import {usePage} from "@inertiajs/inertia-vue3";
-import {provide, reactive} from "vue";
+import {reactive} from "vue";
+import ValidationError from "@/Pages/Partials/ValidationError";
+import Alert from "@/Pages/Partials/Alert";
 
 class Search{
 
@@ -114,7 +128,9 @@ class Search{
 
     /* it checks the length of an object  */
     has(object){
-        return Object.keys(object).length;
+        if(object)
+            return Object.keys(object).length;
+        return 0;
     }
 
     hasMovies(){
@@ -138,18 +154,10 @@ class Search{
         });
 
     }
-
-    clear(field){
-        // if(this.errors.hasOwnProperty(field))
-        //     delete this.errors[field];
-    }
-
-
-
 }
 
 export default {
-    components: { Authenticated, Screenplay, Screenplays},
+    components: {Alert, ValidationError, Authenticated, Screenplay, Screenplays},
 
     props: {
         screenplays: Object, // the screenplays returned from the search
