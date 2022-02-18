@@ -3,13 +3,10 @@
 
 namespace Tests\Integration\Classes;
 
-
 use App\Classes\TMDBScraper;
 use App\Models\Movie;
 use App\Models\Series;
-use phpDocumentor\Reflection\Types\Array_;
 use Tests\TestCase;
-
 
 class TMDBScraperTest extends TestCase {
 
@@ -56,7 +53,7 @@ class TMDBScraperTest extends TestCase {
     public function it_can_collect_screenplays(){
         $searchResults = $this->TMDBSCraper->search(self::SEARCH_QUERY);
 
-        $this->assertContainsOnlyInstancesOf(\Illuminate\Database\Eloquent\Collection::class, $searchResults);
+        $this->assertContainsOnlyInstancesOf(\Illuminate\Support\Collection::class, $searchResults);
 
         $this->assertArrayHasKey($this->moviesTableName, $searchResults);
         $this->assertArrayHasKey($this->seriesTableName, $searchResults);

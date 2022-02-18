@@ -4,14 +4,10 @@
 namespace Tests\Integration\Traits;
 
 use App\Classes\TMDBScraper;
-use App\Models\Diary;
 use App\Models\Movie;
-use App\Models\Series;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
-use Inertia\Testing\Assert;
-use Tmdb\Model\Collection;
 
 class ScreenplayabilityTest extends TestCase
 {
@@ -89,12 +85,10 @@ class ScreenplayabilityTest extends TestCase
      * @dataProvider \Tests\TestCase::getInvalidScreenplayIds()
      */
     public function it_cannot_store_a_screenplay_because_data_is_invalid($invalidData, $invalidFields){
-        $this->get(route('search.index'));
         $response = $this->post(route('diaries.movies.store', ['diary' => $this->diaries['watched']]), [
             $invalidData
         ]);
-
-        $response->assertRedirect(route('search.index'))
+        $response->assertRedirect()
             ->assertSessionHasErrors($invalidFields);
 
         $this->assertEquals(0, Movie::whereId($invalidData['screenplayId'])->count());
@@ -104,12 +98,10 @@ class ScreenplayabilityTest extends TestCase
     /** @test */
     public function it_can_store_a_screenplay_if_it_does_not_exist_in_database(){
         $movieId = 353081; // taken from TMDB
-        $this->get(route('search.index'));
         $response = $this->post(route('diaries.movies.store', ['diary' => $this->diaries['watched']]), [
             'screenplayId' => $movieId
-        ]);
-
-        $response->assertRedirect(route('search.index'));
+        ])
+            ->assertRedirect();
 
         $this->assertEquals(1, Movie::whereId($movieId)->count());
 
@@ -118,16 +110,14 @@ class ScreenplayabilityTest extends TestCase
     /** @test */
     public function it_cannot_store_a_screenplay_because_it_does_not_exists_in_tmbd_api(){
         $movieId = 0;
-        $this->get(route('search.index'));
+
         $response = $this->post(route('diaries.movies.store', ['diary' => $this->diaries['watched']]), [
             'screenplayId' => $movieId,
-        ]);
+        ])
+            ->assertRedirect()
+            ->assertSessionHas('message', 'The requested ' . Movie::getTableName() . ' does not exist!');
 
-        $response->assertRedirect(route('search.index'));
-
-        $response->assertSessionHas('message', 'The requested ' . Movie::getTableName() . ' does not exist!');
         $this->assertEquals(0, Movie::whereId($movieId)->count());
-
 
     }
 
@@ -135,16 +125,21 @@ class ScreenplayabilityTest extends TestCase
 
 
     /** @test */
-    public function it_can_attach_a_screenplay_to_an_existing_diary(){
-        $movieId = 353081; // taken from TMDB
-        $this->get(route('search.index'));
-        $response = $this->post(route('diaries.movies.store', ['diary' => $this->diaries['watched']]), [
-            'screenplayId' => $movieId
-        ]);
+    public function it_can_attach_an_existing_screenplay_to_an_existing_diary(){
+        //id from TMDB (important: [no mock] it uses the tmdb api to scrape it and save it into the database)
+        $screenplayId = 634649;
+        $this->get(route('diaries.movies.index', [
+            'diary' => $this->diaries['watched']
+        ]))->assertOk();
 
-        $response->assertRedirect(route('search.index'));
+        $response = $this->post(route('diaries.movies.store', [
+            'diary' => $this->diaries['favourite'],
 
-        $this->assertEquals(1, $this->diaries['watched']->movies()->whereId($movieId)->count());
+        ]), compact('screenplayId'))
+            ->assertRedirect(route('diaries.movies.index', [
+                'diary' => $this->diaries['watched']
+            ]));
+        $this->assertEquals(1, $this->diaries['favourite']->refresh()->movies()->whereId($screenplayId)->count());
 
     }
 
@@ -154,7 +149,7 @@ class ScreenplayabilityTest extends TestCase
     public function it_can_detach_a_screenplay_from_an_existing_diary(){
         $this->get(route('diaries.movies.index', [
             'diary' => $this->diaries['watched']
-        ]));
+        ]))->assertOk();
         $response = $this->delete(route('diaries.movies.destroy', [
             'diary' => $this->diaries['watched'],
             'movie' => $this->movie

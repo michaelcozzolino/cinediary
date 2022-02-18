@@ -3,10 +3,8 @@
 
 namespace Tests\Integration\Http\Controllers;
 
-
-use App\Http\Controllers\SearchController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia as Assert;
 
 class SettingsControllerTest extends \Tests\TestCase {
 
@@ -51,7 +49,7 @@ class SettingsControllerTest extends \Tests\TestCase {
             'user_id' => $this->user->id,
         ]);
 
-        $this->get(route('settings.index'));
+        $this->get(route('settings.index'))->assertOk();
         $this->patch(route('settings.update'), $settings)
             ->assertRedirect(route('settings.index'));
         $this->assertDatabaseHas('settings', array_merge([
@@ -90,7 +88,7 @@ class SettingsControllerTest extends \Tests\TestCase {
             'user_id' => $this->user->id,
         ]);
 
-        $this->get(route('settings.index'));
+        $this->get(route('settings.index'))->assertOk();
         $this->patch(route('settings.update'), [
             'TMDBApiKey' => 'NOT_A_VALID_API_KEY',
             'adultContent' => 0,

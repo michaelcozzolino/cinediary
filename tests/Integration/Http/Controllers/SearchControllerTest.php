@@ -5,7 +5,7 @@ namespace Tests\Integration\Http\Controllers;
 
 use App\Http\Controllers\SearchController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia as Assert;
 
 class SearchControllerTest extends \Tests\TestCase {
 
@@ -27,11 +27,10 @@ class SearchControllerTest extends \Tests\TestCase {
         $this->get(route('search.create'))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
-                ->component('Search')
+                ->component('Search/Index')
                 ->missingAll([
                     'screenplays',
                     'lastQuery',
-                    'alreadyInDiariesScreenplaysIds',
                 ])->etc()
 
             );
@@ -56,7 +55,7 @@ class SearchControllerTest extends \Tests\TestCase {
      *
      */
     public function it_redirects_to_the_search_form_if_form_data_are_valid() {
-        $this->get(route('search.create'));
+        $this->get(route('search.create'))->assertOk();
         $response = $this->post(route('search.make'))
             ->assertRedirect(route('search.create'))
             ->assertSessionHasErrors('query');
@@ -72,13 +71,13 @@ class SearchControllerTest extends \Tests\TestCase {
         $this->post(route('search.make', compact('query')));
 
         $this->get(route('search.index'))
+            ->assertOk()
             ->assertSessionHas([SearchController::SEARCH_SESSION_DATA_KEY, 'lastQuery'])
             ->assertInertia(fn (Assert $page) => $page
-                ->component('Search')
+                ->component('Search/Index')
                 ->hasAll([
                     'screenplays',
                     'lastQuery',
-                    'alreadyInDiariesScreenplaysIds',
                 ])
                 ->where('lastQuery', $query)
                 ->etc()

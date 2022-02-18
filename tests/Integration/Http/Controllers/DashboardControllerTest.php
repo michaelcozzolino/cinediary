@@ -7,9 +7,9 @@ namespace Tests\Integration\Http\Controllers;
 use App\Models\Movie;
 use App\Models\Series;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia as Assert;
 
-class DashboardControllerTest extends \Tests\TestCase{
+class DashboardControllerTest extends \Tests\TestCase {
 
     use RefreshDatabase;
 
@@ -40,6 +40,7 @@ class DashboardControllerTest extends \Tests\TestCase{
     public function it_shows_the_latest_maximum_4_movies() {
 
         $this->get(route('dashboard'))
+            ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Home/Dashboard/Index')
                 ->has('lastWatchedScreenplaysData.movies', 4));
@@ -53,6 +54,7 @@ class DashboardControllerTest extends \Tests\TestCase{
     public function it_shows_the_latest_maximum_4_series() {
 
         $this->get(route('dashboard'))
+            ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Home/Dashboard/Index')
                 ->has('lastWatchedScreenplaysData.series', 3)); //there are only 3 series in the watched series diary
@@ -66,6 +68,7 @@ class DashboardControllerTest extends \Tests\TestCase{
     public function it_shows_the_correct_letters_bar_chart() {
         $totalLetters = 27; // symbols are includes
         $this->get(route('dashboard'))
+            ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Home/Dashboard/Index')
                 ->hasAll([
@@ -93,6 +96,7 @@ class DashboardControllerTest extends \Tests\TestCase{
      */
     public function it_shows_the_correct_watched_screenplays_percentage_chart() {
         $this->get(route('dashboard'))
+            ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Home/Dashboard/Index')
                 ->whereAll([
@@ -110,6 +114,7 @@ class DashboardControllerTest extends \Tests\TestCase{
      */
     public function it_shows_the_correct_watched_genres_percentage_chart() {
         $this->get(route('dashboard'))
+            ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Home/Dashboard/Index')
                 ->whereAll([
