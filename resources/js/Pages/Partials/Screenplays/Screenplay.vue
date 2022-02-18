@@ -1,9 +1,9 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
 
     <MDBCol :id="this.screenplay.id" :sm="'6'" :md="md"  class="mb-4 text-center">
 
         <MDBCard class="h-100" >
-
+<!--      TO-DO: create screenplays show page      -->
             <a href="route" v-mdb-ripple="{ color: 'light' }">
                 <MDBCardImg :src="getPosterPath" top alt="..." />
             </a>
@@ -18,38 +18,24 @@
                 </MDBCardTitle>
             </MDBCardBody>
 
-            <MDBCardFooter v-if="hasButtons">
-                <!--   delete button  -->
-                <div v-if="withDeleteButton">
-                    <MDBBtn @click="this.$emit('OnDelete', {id:this.screenplay.id})" tag="a" color="danger" :href="href">
-                        {{ __('Delete') }} <font-awesome-icon size="lg" icon="times"/>
-                    </MDBBtn>
-                </div>
+            <MDBCardFooter class="w-100">
+                <MDBBtnGroup vertical aria-label="Button group with nested dropdown">
 
-                <!--   add to -->
+                    <remove-from-diary
+                        v-if="removable"
+                        :href="getHref"
+                        :screenplay-id="screenplay.id"
+                        :screenplay-type="getScreenplayType"
+                        :current-diary-id="currentDiary.getId()"
+                    />
 
-                <form v-if="this.withDropdownButton" >
-                    <MDBDropdown  v-model="this.dropdown.isActive" class="mb-2">
-                        <MDBDropdownToggle
-                            tag="a"
-                            class="btn btn-primary"
-                            @click="this.dropdown.use()"
-                            id="diaries-dropdown">
-                            Add to</MDBDropdownToggle>
-                        <MDBDropdownMenu aria-labelledby="diaries-dropdown">
-                            <MDBDropdownItem v-for="diary in this.$page.props.auth.userData.diaries"
-                                             @click="addToDiary(diary.id)"
+                    <add-to-diary
+                                  :screenplay-id="screenplay.id"
+                                  :screenplay-type="getScreenplayType"
+                                  :href="getHref"
+                    />
 
-                                             :href="href">
-                                {{ diary.name }} <font-awesome-icon class="text-success" v-if="alreadyInDiary(diary.id)"
-                                                                    icon="check"
-
-                            />
-                            </MDBDropdownItem>
-                        </MDBDropdownMenu>
-                    </MDBDropdown>
-                </form>
-
+                </MDBBtnGroup>
             </MDBCardFooter>
         </MDBCard>
 
@@ -62,6 +48,8 @@ import { mdbRipple } from "mdb-vue-ui-kit";
 import Dropdown from "../../../Core/Dropdown";
 import {usePage} from '@inertiajs/inertia-vue3';
 import {Inertia} from "@inertiajs/inertia";
+import AddToDiary from "@/Pages/Partials/Screenplays/Partials/AddToDiary";
+import RemoveFromDiary from "@/Pages/Partials/Screenplays/Partials/RemoveFromDiary";
 
 export default {
 
@@ -69,75 +57,32 @@ export default {
         mdbRipple
     },
 
+    components: {
+        RemoveFromDiary,
+        AddToDiary
+    },
+
     props: {
         screenplay: { type: Object, required: true },
-        diary: Object,
-        md: String,
+        currentDiary: Object,
         screenplayType: String,
-
-        withDropdownButton: Boolean,
-        withDeleteButton: Boolean,
-        alreadyInDiariesScreenplaysIds: Object,
+        md: String,
+        removable: Boolean,
 
     },
 
-    emits: ['OnScreenplayStored', 'OnDelete'],
+    emits: ['OnDelete'],
     data(){
         return {
+            dropdown:false,
             newAddedToDiaryScreenplaysIds : {movies: [], series: []},
-            dropdownItems: [
-                {'text': 'Watchlist'},
-                {'text': 'Favourite'},
-            ],
-            dropdown: new Dropdown(this.dropdownItems),
-            addToDiaryForm: this.$inertia.form({
-                screenplayId: null,
-            })
+
+
 
         }
     },
-    mounted() {
 
-    },
     methods: {
-
-        /* methods used for and with diaries pages that do not use TMDB api */
-
-        /* checks if a screenplay is already in a diary */
-        alreadyInDiary(diaryId){
-            return Object.values(this.alreadyInDiariesScreenplaysIds[diaryId][this.getScreenplayType])
-                .indexOf(this.screenplay.id) !== -1;
-        },
-
-        onDropdownClicked(){
-            console.log(this.dropdown);
-            return {dropdown: this.dropdown}
-        },
-
-
-        /* methods used for and with TMDB api */
-
-        addToDiary(diaryId) {
-            console.log(this.getScreenplayType);
-            if (!this.alreadyInDiary(diaryId)) {
-                let routeName = "diaries." + this.getScreenplayType + ".store";
-                console.log(this.getScreenplayType);
-                this.addToDiaryForm.screenplayId = this.screenplay.id;
-
-                this.addToDiaryForm.post(route(routeName, {diary: diaryId}), {
-                    preserveScroll: true,
-                    onSuccess: () => {
-                        this.$emit('OnScreenplayStored', {
-                            screenplayType: _.capitalize(this.getScreenplayType),
-                            screenplayId: this.screenplay.id,
-                            diaryId: diaryId,
-                        });
-                    }
-                });
-
-            }
-        },
-
 
     },
 
@@ -145,13 +90,9 @@ export default {
 
         // screenplayType is not present when searching for a screenplay by using TMDB api in Search.vue
         // because the route doesn't have a movies or series binding, in that case we pass the screenplayType as props
-        // else we use the Inertia shared data
+        // else we get the screenplayType from the currentDiary that uses the shared inertia data
         getScreenplayType(){
-            return this.screenplayType ?? usePage().props.value.screenplayType;
-        },
-
-        hasButtons(){
-            return this.withDeleteButton || this.withDropdownButton;
+            return this.currentDiary ? this.currentDiary.getScreenplayType() : this.screenplayType;
         },
 
         getPosterPath(){
@@ -164,27 +105,11 @@ export default {
                 this.screenplay.releaseDate
         },
 
-        href(){
+        getHref(){
             return "#" + this.screenplay.id;
-        }
-
-
+        },
     }
 
 
 }
 </script>
-
-<style lang="scss" scoped>
-
-
-.btn-close{
-    position: relative;
-    top:3px;
-
-    color: white;
-
-}
-
-
-</style>

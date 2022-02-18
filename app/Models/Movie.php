@@ -67,6 +67,4 @@ class Movie extends Model
     public function route() : string{
         return route('movies.show',['movie' => $this]);
     }
-
-
 }

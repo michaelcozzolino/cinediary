@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -33,12 +34,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request) {
         $user = $request->user();
-        $screenplayType = null;
-        if($request->routeIs('*.movies.*'))
-            $screenplayType =  'movies';
-        elseif ($request->routeIs('*.series.*'))
-            $screenplayType =  'series';
-        return array_merge(parent::share($request), [
+
+        $alreadyInDiariesScreenplaysIds = getAlreadyInDiariesScreenplaysIds($request);
+        return array_merge(parent::share($request), compact('alreadyInDiariesScreenplaysIds'), [
             'auth' =>  [
                 'userData' => [
                     'user' => $user,
@@ -46,7 +44,7 @@ class HandleInertiaRequests extends Middleware
 
                 ],
             ],
-            'screenplayType' => $screenplayType,
+            'screenplayType' => getScreenplayType($request),
 
             'env' => [
                 'GITHUB_URL' => env('GITHUB_URL'),
@@ -67,6 +65,8 @@ class HandleInertiaRequests extends Middleware
                 );
             },
         ]);
+
+
     }
 
     private function translations($json){
@@ -75,4 +75,12 @@ class HandleInertiaRequests extends Middleware
         }
         return json_decode(file_get_contents($json), true);
     }
+
+    private function alreadyInDiariesScreenplaysIds(Request $request){
+
+    }
+
+
+
+
 }

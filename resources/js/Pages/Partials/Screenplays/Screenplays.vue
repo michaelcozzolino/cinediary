@@ -10,16 +10,8 @@ import Screenplay from "./Screenplay";
 export default {
     components: {Screenplay},
     props: {
-        alreadyInDiariesScreenplaysIds: { type: Object, required: false },
-        class: {required: false},
+        class: [String, Array],
     },
-
-    methods: {
-
-    }
-
-
-
 
 }
 </script>

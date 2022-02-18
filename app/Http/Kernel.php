@@ -3,7 +3,6 @@
 namespace App\Http;
 
 use App\Http\Middleware\RedirectIfEmptyDiaries;
-use App\Http\Middleware\RemoveSessionSearchDataIfNotSearching;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 

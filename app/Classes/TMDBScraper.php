@@ -6,7 +6,7 @@ use App\Models\Series;
 use App\Models\Setting;
 use App\Models\User;
 use App\Traits\ScreenplayActions;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tmdb\Client;
 use Tmdb\Event\BeforeRequestEvent;

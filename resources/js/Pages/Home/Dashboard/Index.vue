@@ -17,6 +17,7 @@
             <h3 class="text-dark" v-text="'Last watched ' + screenplayType"/>
             <screenplay v-for="screenplay in screenplays"
                         :screenplay="screenplay"
+                        :screenplay-type="screenplayType"
                         :md="'3'"
 
             />
@@ -127,7 +128,6 @@ export default {
 
 
     mounted() {
-        console.log(this.lastWatchedScreenplaysData);
         this.lettersBarChart.chart = new Chart("#letters-bar-chart", {
             data: this.lettersBarChart.data,
             type: 'bar',
@@ -156,10 +156,5 @@ export default {
             return Object.values(this.chartData['lettersBarChart'][screenplayType])
         }
     },
-    computed: {
-
-    }
-
-
 }
 </script>

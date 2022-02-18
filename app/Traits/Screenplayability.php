@@ -8,8 +8,9 @@ use App\Models\Movie;
 use App\Models\Series;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use function PHPUnit\Framework\returnValue;
 
-trait Screenplayability{
+trait Screenplayability {
 
     private Movie|Series $screenplayModel;
     private $user;
@@ -65,7 +66,6 @@ trait Screenplayability{
     public function destroy(Diary $diary, Movie|Series $screenplay){
 
         $screenplay->removeFromDiary($diary);
-
         return redirect()->back()->with(['message' => 'deleted']);
 
     }

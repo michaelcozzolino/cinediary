@@ -8,6 +8,8 @@ use App\Classes\TMDBScraper;
 use App\Models\Diary;
 use App\Models\Movie;
 use App\Models\Series;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 
 trait ScreenplayActions{
 
@@ -39,7 +41,6 @@ trait ScreenplayActions{
             $diary->{$this->getTable()}()->attach($this->id);
         }
     }
-
 
     public function isWatched(){
         return $this->existsInDiary(Diary::getWatched());

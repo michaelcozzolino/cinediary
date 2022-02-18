@@ -46,13 +46,11 @@
             <!-- Tabs content -->
             <MDBTabContent>
                 <MDBTabPane tabId="movies">
-                    <screenplays  class="d-flex text-center" v-if="search.hasMovies()">
-                        <screenplay @on-screenplay-stored="" v-for="movie in search.getMovies()"
+                    <screenplays class="d-flex text-center" v-if="search.hasMovies()">
+                        <screenplay v-for="movie in search.getMovies()"
                                     :screenplay="movie"
                                     :md="'3'"
                                     screenplay-type="movies"
-                                    :already-in-diaries-screenplays-ids="getInDiariesScreenplaysIds"
-                                    with-dropdown-button
                         >
                         </screenplay>
                     </screenplays>
@@ -64,8 +62,6 @@
                                     :screenplay="series"
                                     :md="'3'"
                                     screenplay-type="series"
-                                    :already-in-diaries-screenplays-ids="getInDiariesScreenplaysIds"
-                                    with-dropdown-button
                         >
                             <template v-slot:title>{{series.title}}</template>
                         </screenplay>
@@ -83,7 +79,7 @@ import Authenticated from "@/Layouts/Authenticated";
 import Screenplay from "@/Pages/Partials/Screenplays/Screenplay";
 import Screenplays from "@/Pages/Partials/Screenplays/Screenplays";
 import {usePage} from "@inertiajs/inertia-vue3";
-import {reactive} from "vue";
+import {provide, reactive} from "vue";
 
 class Search{
 
@@ -154,10 +150,10 @@ class Search{
 
 export default {
     components: { Authenticated, Screenplay, Screenplays},
+
     props: {
         screenplays: Object, // the screenplays returned from the search
         lastQuery: String,
-        alreadyInDiariesScreenplaysIds: Object,
         errors: Object
     },
     data(){
@@ -172,34 +168,13 @@ export default {
 
 
             })),
-            inDiariesScreenplaysIds: {},
-
-
 
         }
     },
-    mounted() {
-        // console.log(this.screenplays);
-        // console.log(Object.keys(this.screenplays['movies']).length);
-        console.log(this.$props);
-    },
+
     computed: {
         noDiariesMessage(){
             return usePage().props.value.flash.message ?? "" ;
-        },
-
-        /* return all the screenplays that are already in a diary and all those that are being added after search */
-        getInDiariesScreenplaysIds(){
-            console.log({...this.alreadyInDiariesScreenplaysIds, ...this.inDiariesScreenplaysIds});
-
-            return {...this.alreadyInDiariesScreenplaysIds, ...this.inDiariesScreenplaysIds}
-           /* for (let diaryId in this.alreadyInDiariesScreenplaysIds ){
-                screenplaysIds[diaryId]['movies'] = this.alreadyInDiariesScreenplaysIds[diaryId]['movies']
-                    .concat(this.inDiariesScreenplaysIds[diaryId]['movies'] ?? []);
-                screenplaysIds[diaryId]['series'] = this.alreadyInDiariesScreenplaysIds[diaryId]['series']
-                    .concat(this.inDiariesScreenplaysIds[diaryId]['series'] ?? []);
-            }
-            return screenplaysIds ;*/
         },
 
     },
@@ -208,18 +183,6 @@ export default {
         getSearchedScreenplays(){
             return this.screenplays;
         },
-
-
-
-        onScreenplayStored(event){
-                let diaryId = event.target.diaryId;
-                let screenplayType = event.target.screenplayType;
-                let screenplayId = event.target.screenplayId;
-                this.inDiariesScreenplaysIds[diaryId][screenplayType].concat(screenplayId);
-        }
-
-
-
     }
 }
 </script>

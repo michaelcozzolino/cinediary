@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\TMDBScraper;
+use App\Traits\Screenplayability;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -42,33 +43,8 @@ class SearchController extends Controller
             return redirect()->route('search.create');
         $screenplays = session(self::SEARCH_SESSION_DATA_KEY);
         $lastQuery = session('lastQuery');
-        $alreadyInDiariesScreenplaysIds = $this->getAlreadyInDiariesScreenplaysIds($screenplays);
 
-        return Inertia::render('Search/Index', compact('screenplays', 'lastQuery','alreadyInDiariesScreenplaysIds'));
-    }
-
-    private function getAlreadyInDiariesScreenplaysIds(\Illuminate\Database\Eloquent\Collection $screenplays){
-
-        $diaries = \Auth::user()->load('diaries')->diaries;
-
-        $alreadyInDiariesScreenplaysIds = [];
-        $screenplayTypes = $screenplays->keys();
-
-        /*
-         * checking if the searched screenplays are already into one or multiple customer's diaries
-         * by intersecting them
-         * */
-        foreach ($diaries as $diary){
-            $diaryId = $diary->id;
-
-            foreach ($screenplayTypes as $screenplayType)
-                $alreadyInDiariesScreenplaysIds[$diaryId][$screenplayType] = array_intersect(
-                    $diary->{$screenplayType}->pluck('id')->toArray(),
-                    $screenplays[$screenplayType]->pluck('id')->toArray(),
-                );
-        }
-        return $alreadyInDiariesScreenplaysIds;
-
+        return Inertia::render('Search/Index', compact('screenplays', 'lastQuery'));
     }
 
 }

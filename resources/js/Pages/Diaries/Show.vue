@@ -36,26 +36,23 @@
         </MDBRow>
 
 
-
         <screenplays v-if="hasScreenplays"  class="d-flex text-center">
             <screenplay v-if="!this.currentDiary.isFinding()" @on-delete="currentDiary.delete($event)"
                         v-for="screenplay in this.currentDiary.getScreenplays()"
                         :screenplay="screenplay"
-                        :id="screenplay.id"
-                        :diary-id="diary.id"
-                        :href="currentDiary.getScreenplayRoute(screenplay.id)"
-                        :md="'3'" :poster-path="screenplay.posterPath"
-                        with-delete-button
+                        :current-diary="this.currentDiary"
+                        :md="'3'"
+                        removable
             >
                 <template v-slot:title>{{screenplay.title}}</template>
             </screenplay>
 
             <!--    find section    -->
-            <screenplay v-else v-for="screenplay in this.currentDiary.settings.found.screenplays"
+<!--
+            <screenplay :screenplay="screenplay" v-else v-for="screenplay in this.currentDiary.settings.found.screenplays"
                         :href="currentDiary.getScreenplayRoute(screenplay.id)"
-                        :md="'3'" :poster-path="screenplay.posterPath">
-                <template v-slot:title>{{screenplay.title}}</template>
-            </screenplay>
+                        :md="'3'" :poster-path="screenplay.posterPath"/>
+-->
 
             <Paginator :paginator="this.currentDiary.getPaginator()"/>
 
@@ -99,7 +96,7 @@ class Diary{
 
 
     getId(){
-        return this.id;
+        return this.diary.id;
     }
 
     getPaginator(){
@@ -116,16 +113,13 @@ class Diary{
         this['screenplays'] = screenplays;
     }
 
-    getSettings(){
-        return this['settings'];
-    }
-
     getScreenplayType(){
-        return this.getSettings()['screenplays']['type'];
+        return this.screenplayType;
     }
 
     isFinding(){
-        return this.getSettings()['found']['isFinding'];
+        return false;
+        // return this.getSettings()['found']['isFinding'];
     }
 
     getScreenplaysLength(){
@@ -169,24 +163,6 @@ class Diary{
 
     }
 
-    delete(event){
-        console.log(event);
-        let screenplayBindName = this.getScreenplayType() === "movies" ? "movie" : this.getScreenplayType;
-        let parameters = { diary: this.getId() };
-        let screenplayId = event.id;
-        parameters[screenplayBindName] = screenplayId;
-        console.log(this.getRoute("destroy", parameters));
-        Inertia.delete(this.getRoute("destroy", parameters), {
-            preserveScroll: true,
-            onSuccess: () => {
-                let deleted = usePage().props.value.flash.message;
-                this['screenplays'][this.getScreenplayType()].data.splice(this.getScreenplayIndex(screenplayId),1);
-
-            }
-        });
-
-    };
-
     getRoute(action, parameters = {}){
         return route("diaries." + this.getScreenplayType() + "." + action , parameters);
     }
@@ -209,25 +185,9 @@ export default {
         return {
             // this is the diary object that manages the diary in the frontend
             currentDiary: new Diary(reactive({
-                id: this.diary.id,
-                settings: {
-                    screenplays: {
-                        type: usePage().props.value.screenplayType,
-
-                    },
-
-                    title: {
-                        class: ['text-dark'],
-                        text: 'Upcoming Movies'
-                    },
-                    // settings used to find screenplays in a given diary
-                    found: {
-                        isFinding: false,
-                        screenplays: [],
-                    },
-                },
+                diary: this.diary,
                 screenplays: this.screenplays,
-
+                screenplayType: usePage().props.value.screenplayType,
 
             })),
 
@@ -236,6 +196,7 @@ export default {
                 movies: { title: "Movies", color: "primary"},
                 series: { title: "TV Series", color: "primary" },
             },
+
             activeTab: null
 
         }
@@ -258,7 +219,7 @@ export default {
 
         hasScreenplays(){
             return this.currentDiary.getScreenplaysLength();// || this.searchData.screenplays.length();
-        }
+        },
 
 
     },
