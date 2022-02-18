@@ -69,11 +69,10 @@ export default {
 
         setActiveItem(){
             this.sidebar.menu.forEach((element) => {
-                if (element.href === window.location.href)
-                    element.class = "vsm--link_active";
-                else
-                    element.class = "";
+                let isSearching = (element.href === route('search.create') || element.href === route('search.index'))
+                    && this.$page.url.startsWith('/search');
 
+                element.class = element.href === window.location.href || isSearching ? "vsm--link_active" : "";
             });
         },
 
