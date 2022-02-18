@@ -15,11 +15,14 @@
                 :formText="this.__('You can use your TMDB API key instead of using the Cinediary\'s one to speed up your searches. We do not store this key as plain text') + '.'"
                 v-model="form.TMDBApiKey"
             />
-            <div v-if="errors.TMDBApiKey">{{ errors.TMDBApiKey }}</div>
+            <validation-error :error="__(errors.TMDBApiKey)"/>
+
             <MDBSwitch wrapper-class="my-4"
                        :label="this.__('Include adult content to be found')"
                        v-model="form.adultContent"
             />
+            <validation-error :error="__(errors.adultContent)"/>
+
             <div class="d-grid gap-2 col-6 mx-auto">
                 <MDBBtn type="submit" color="primary" v-text="this.__('save')"/>
             </div>
@@ -29,9 +32,10 @@
 
 <script>
 import Authenticated from "@/Layouts/Authenticated";
+import ValidationError from "@/Pages/Partials/ValidationError";
 export default {
 
-    components: {Authenticated},
+    components: {ValidationError, Authenticated},
     props: {
         settings: Object,
         errors: Object,

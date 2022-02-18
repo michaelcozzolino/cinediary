@@ -47,7 +47,10 @@ class TMDBScraper{
         $this->language = app()->getLocale();
         $this->user = \Auth::user();
         $this->userSettings = is_null($this->user) ? null : $this->user->settings;
-        $this->setApiKey($apiKey ?? self::DEFAULT_API_KEY);
+        $this->setApiKey($apiKey ??
+            (is_null($this->userSettings)
+                ? self::DEFAULT_API_KEY
+                : ($this->userSettings->TMDBApiKey ?? self::DEFAULT_API_KEY)));
 
 
 
@@ -224,6 +227,10 @@ class TMDBScraper{
             ]
         ];
 
+    }
+
+    public function getApiKey(){
+        return $this->apiKey;
     }
 
 

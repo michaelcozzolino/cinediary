@@ -6,6 +6,8 @@ namespace Tests\Integration\Classes;
 use App\Classes\TMDBScraper;
 use App\Models\Movie;
 use App\Models\Series;
+use App\Models\Setting;
+use App\Models\User;
 use Tests\TestCase;
 
 class TMDBScraperTest extends TestCase {
@@ -29,6 +31,36 @@ class TMDBScraperTest extends TestCase {
     }
 
 
+    /**
+     * @test
+     *
+     */
+    public function default_api_key_is_used() {
+
+        $this->assertEquals(TMDBScraper::DEFAULT_API_KEY, (new TMDBScraper(null))->getApiKey());
+
+        $user = $this->signIn()->user;
+        $u = User::first();
+
+        $user->settings()->update([
+            'TMDBApiKey' => null,
+        ]);
+
+        $this->assertEquals('7bff79e50491c5c1166a4497606d5ad3', (new TMDBScraper(null))->getApiKey());
+    }
+
+    /**
+     * @test
+     *
+     */
+    public function user_api_key_is_used() {
+        $user = $this->signIn()->user;
+
+        $user->settings()->update([
+            'TMDBApiKey' => '7bff79e50491c5c1166a4497606d5ad3',
+        ]);
+        $this->assertEquals('7bff79e50491c5c1166a4497606d5ad3', (new TMDBScraper(null))->getApiKey());
+    }
 
     /** @test */
     public function api_key_is_valid(){
