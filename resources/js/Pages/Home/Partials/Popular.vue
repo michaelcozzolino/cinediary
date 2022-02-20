@@ -1,20 +1,21 @@
 <template>
-        <jarallax v-if="popular.screenplays.length" speed="0.2" :image-src="popular.backgroundImageUrl">
+    <jarallax v-if="popular.screenplays.length" speed="0.2" :image-src="popular.backgroundImageUrl">
 
-            <section-title :title-class="['text-uppercase']">
-                <template #title>{{ __('popular') + ' ' + __(title) }}</template>
-            </section-title>
-            <MDBContainer class="text-center py-4">
+        <section-title :title-class="['text-uppercase']">
+            <template #title>{{ __('popular') + ' ' + __(title) }}</template>
+        </section-title>
+        <MDBContainer class="text-center py-4">
 
-                <screenplays  v-for="(screenplaysRow,index) in popular.screenplays"
-                              :class="'d-flex justify-content-' + ((index + 1) % 2 === 0 ? start : end)">
-                    <screenplay v-for="screenplay in screenplaysRow"
-                                :screenplay="screenplay"
-                                :md="'3'"
-                                />
-                </screenplays>
-            </MDBContainer>
-        </jarallax>
+            <screenplays  v-for="(screenplaysRow,index) in popular.screenplays"
+                          :class="'d-flex justify-content-' + ((index + 1) % 2 === 0 ? start : end)">
+                <screenplay v-for="screenplay in screenplaysRow"
+                            :screenplay-type="screenplayType"
+                            :screenplay="screenplay"
+                            :md="'3'"
+                />
+            </screenplays>
+        </MDBContainer>
+    </jarallax>
 </template>
 
 <script>
@@ -27,6 +28,11 @@ export default {
     components : {Jarallax, SectionTitle, Screenplays, Screenplay},
 
     props: {
+        screenplayType: {
+            type: String,
+            required: true,
+        },
+
         title: {
             type: String,
             required: true,
@@ -48,11 +54,11 @@ export default {
             popular: { screenplays: [], backgroundImageUrl: null },
             // screenplaysCategories: {
             //     upcomingMovies: { screenplays: [], backgroundImageUrl: null},
-                // popularTvSeries: { screenplays: [], backgroundImageUrl: null},
+            // popularTvSeries: { screenplays: [], backgroundImageUrl: null},
 
-            }
+        }
 
-        },
+    },
 
     created() {
         let popularScreenplaysRoute = null;
@@ -66,18 +72,10 @@ export default {
                 let data = result.data;
                 this.popular.screenplays = data.screenplays;
                 this.popular.backgroundImageUrl = data.randomBackdropPath;
-
-                // console.log(this.popular.screenplays);
-                // let randomNumber = _.random(0, this.popular.screenplays.length);
-                // console.log(this.popular.screenplays[randomNumber]);
-                // this.popular.backgroundImageUrl =
-                //     this.popular.screenplays[randomNumber]['backdropPath'];
-                // this.popular.screenplays =
-                //     _.chunk(this.popular.screenplays, 2);
             })
-            .catch((error) =>{
-                console.log(error);
-            });
+                .catch((error) =>{
+                    console.log(error);
+                });
         }
 
     },

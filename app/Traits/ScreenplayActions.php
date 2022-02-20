@@ -16,7 +16,7 @@ trait ScreenplayActions{
     public function watch(){
 
         if($this->isToBeWatched())
-            $this->removeFromDiary(Diary::toWatch());
+            $this->removeFromDiary(Diary::getToWatch());
 
     }
 
@@ -47,11 +47,11 @@ trait ScreenplayActions{
     }
 
     public function isFavourite(){
-        return $this->existsInDiary(Diary::favourite());
+        return $this->existsInDiary(Diary::getFavourite());
     }
 
     public function isToBeWatched(){
-        return $this->existsInDiary(Diary::toWatch());
+        return $this->existsInDiary(Diary::getToWatch());
     }
 
     public function existsInDiary(Diary $diary){
@@ -60,11 +60,11 @@ trait ScreenplayActions{
 
     public function removeFromDiary(Diary $diary){
         if($diary->isWatched())
-            $this->diaries()->detach(Diary::favourite()->id);
+            $this->diaries()->detach(Diary::getFavourite()->id);
         $this->diaries()->detach($diary->id);
     }
 
-    public static function getTableName(){
+    public static function getModelClassName(){
         return strtolower((new \ReflectionClass(self::class))->getShortName());
     }
 

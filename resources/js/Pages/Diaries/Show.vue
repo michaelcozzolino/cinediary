@@ -1,9 +1,5 @@
 <template>
-
-    <authenticated>
-        <template #header-title>{{header.title}}</template>
-        <template #header-description>{{header.description}}</template>
-
+    <authenticated :header-info="{diary}">
         <!--    buttons and search section        -->
         <MDBRow class="pb-2 text-center" >
             <MDBCol>
@@ -46,13 +42,13 @@
             >
                 <template v-slot:title>{{screenplay.title}}</template>
             </screenplay>
-
+            <!--    TODO: find in a specific diary (POST Request)        -->
             <!--    find section    -->
-<!--
-            <screenplay :screenplay="screenplay" v-else v-for="screenplay in this.currentDiary.settings.found.screenplays"
-                        :href="currentDiary.getScreenplayRoute(screenplay.id)"
-                        :md="'3'" :poster-path="screenplay.posterPath"/>
--->
+            <!--
+                        <screenplay :screenplay="screenplay" v-else v-for="screenplay in this.currentDiary.settings.found.screenplays"
+                                    :href="currentDiary.getScreenplayRoute(screenplay.id)"
+                                    :md="'3'" :poster-path="screenplay.posterPath"/>
+            -->
 
             <Paginator :paginator="this.currentDiary.getPaginator()"/>
 
@@ -76,8 +72,6 @@
 </template>
 
 <script>
-
-// import Diary from "@/components/Diary";
 import Authenticated from "@/Layouts/Authenticated";
 import Screenplays from "@/Pages/Partials/Screenplays/Screenplays";
 import Screenplay from "@/Pages/Partials/Screenplays/Screenplay";
@@ -210,12 +204,6 @@ export default {
     computed:{
 
 
-        header(){
-            return {
-                'title' : this.diary.name,
-                'description': this.diary.description
-            }
-        },
 
         hasScreenplays(){
             return this.currentDiary.getScreenplaysLength();// || this.searchData.screenplays.length();
@@ -245,7 +233,6 @@ export default {
             });
 
         },150),
-
 
     },
 }

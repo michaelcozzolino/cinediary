@@ -7,8 +7,9 @@ use App\Models\Diary;
 use App\Models\Movie;
 use App\Models\Series;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use function PHPUnit\Framework\returnValue;
 
 trait Screenplayability {
 
@@ -33,10 +34,53 @@ trait Screenplayability {
         return Inertia::render('Diaries/Show', compact('screenplays','diary') );
     }
 
-    public function show($screenplay) : \Illuminate\Contracts\View\View {
+    public function show(Movie|Series $screenplay) : \Inertia\Response {
+        $watchers = $this->getDiariesScreenplaysCount(
+            Diary::withoutGlobalScope('userDiaries')->watched()->get()->pluck('id'),
+            $screenplay
+        );
 
-        return view('pages.screenplays.show');
+        $lovers = $this->getDiariesScreenplaysCount(
+            Diary::withoutGlobalScope('userDiaries')->favourite()->get()->pluck('id'),
+            $screenplay
+        );
 
+        $futureWatchers = $this->getDiariesScreenplaysCount(
+            Diary::withoutGlobalScope('userDiaries')->toWatch()->get()->pluck('id'),
+            $screenplay
+        );
+
+        $containingDiariesNumber = $this->getContainingDiariesNumber($screenplay);
+        $statistics = compact('watchers', 'lovers', 'futureWatchers', 'containingDiariesNumber');
+
+        return Inertia::render('Screenplays/Show',
+            compact('screenplay', 'statistics' ));
+    }
+
+
+    /**
+     * Get the total number of a specific screenplay belonging to the given diaries.
+     * @param \Illuminate\Support\Collection $diariesIds
+     * @param Movie|Series $screenplay
+     * @return int
+     */
+    private function getDiariesScreenplaysCount(Collection $diariesIds, Movie|Series $screenplay) : int {
+        return DB::table('diary_' . $screenplay->getModelClassName())
+            ->where($screenplay->getModelClassName() . '_id', $screenplay->id)
+            ->whereIn('diary_id', $diariesIds)
+            ->count();
+
+    }
+
+    /**
+     * Get the number of diaries in which a specific screenplay is contained in.
+     *
+     * @param Movie|Series $screenplay
+     * @return int
+     */
+    private function getContainingDiariesNumber(Movie|Series $screenplay) : int {
+        return DB::table('diary_' . $screenplay->getModelClassName())
+            ->where($screenplay->getModelClassName() . "_id", $screenplay->id)->count();
     }
 
 
@@ -58,7 +102,7 @@ trait Screenplayability {
         }
 
         return redirect()->back()->with('message',
-            'The requested ' . $this->screenplayModel::getTableName() . ' does not exist!' );
+            'The requested ' . $this->screenplayModel::getModelClassName() . ' does not exist!' );
 
     }
 

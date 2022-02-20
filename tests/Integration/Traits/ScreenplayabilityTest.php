@@ -4,7 +4,9 @@
 namespace Tests\Integration\Traits;
 
 use App\Classes\TMDBScraper;
+use App\Models\Diary;
 use App\Models\Movie;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -115,14 +117,11 @@ class ScreenplayabilityTest extends TestCase
             'screenplayId' => $movieId,
         ])
             ->assertRedirect()
-            ->assertSessionHas('message', 'The requested ' . Movie::getTableName() . ' does not exist!');
+            ->assertSessionHas('message', 'The requested ' . Movie::getModelClassName() . ' does not exist!');
 
         $this->assertEquals(0, Movie::whereId($movieId)->count());
 
     }
-
-
-
 
     /** @test */
     public function it_can_attach_an_existing_screenplay_to_an_existing_diary(){
@@ -140,6 +139,79 @@ class ScreenplayabilityTest extends TestCase
                 'diary' => $this->diaries['watched']
             ]));
         $this->assertEquals(1, $this->diaries['favourite']->refresh()->movies()->whereId($screenplayId)->count());
+
+    }
+
+    /*
+     * tests related to show
+     * */
+
+    /**
+     * @test
+     *
+     */
+    public function it_can_show_a_screenplay_with_its_data() {
+        $movie = $this->movies->first();
+
+        $this->get(route('movies.show', [
+            'movie' => $movie->id,
+        ]))
+            ->assertInertia((fn (Assert $page) => $page
+                ->component('Screenplays/Show')
+                ->has('screenplay')
+                ->etc()
+                ->whereAll([
+                    'screenplay.id' => $movie->id,
+                    'screenplay.title' => $movie->title,
+                    'screenplay.overview' => $movie->overview,
+                ])
+            ));
+    }
+
+    /**
+     * @test
+     *
+     */
+    public function it_can_show_the_right_statistics_for_a_screenplay() {
+
+        /*
+         * we will have a total of 2 watchers, 1 favourite, 0 future watchers and
+         * 4 containing diaries ( 1 time in a custom diary)
+         * related to this movie
+         * */
+        $movie = $this->movies->first();
+        $this->diaries['custom']->movies()->syncWithoutDetaching([$movie->id]);
+
+        $newUser = User::factory()->create();
+        createNewUserDiaries($newUser);
+
+        $newUserFavouriteDiary = Diary::withoutGlobalScope('userDiaries')
+            ->favourite()
+            ->whereUserId($newUser->id)
+            ->first();
+
+        $newUserWatchedDiary = Diary::withoutGlobalScope('userDiaries')
+            ->watched()
+            ->whereUserId($newUser->id)
+            ->first();
+
+        $newUserFavouriteDiary->movies()->syncWithoutDetaching([$movie->id]);
+        $newUserWatchedDiary->movies()->syncWithoutDetaching([$movie->id]);
+
+        $this->get(route('movies.show', [
+            'movie' => $movie->id,
+        ]))
+            ->assertInertia((fn (Assert $page) => $page
+                ->component('Screenplays/Show')
+                ->has('statistics')
+                ->etc()
+                ->whereAll([
+                    'statistics.watchers' => 2,
+                    'statistics.lovers' => 1,
+                    'statistics.futureWatchers' => 0,
+                    'statistics.containingDiariesNumber' => 4,
+                ])
+            ));
 
     }
 

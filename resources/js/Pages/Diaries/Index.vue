@@ -1,12 +1,5 @@
 <template>
     <authenticated>
-        <template #header-title>
-            {{ this.__('manage diaries') }}
-        </template>
-        <template #header-description>
-            {{ this.__('you can create, delete and update your diaries here')}}
-        </template>
-
         <MDBRow class="pb-2 d-flex justify-content-center text-center">
             <MDBCol>
                 <MDBTable striped>
@@ -52,9 +45,10 @@ import Authenticated from "@/Layouts/Authenticated";
 import {mdbRipple} from "mdb-vue-ui-kit";
 import Create from "@/Pages/Diaries/Create";
 import Destroy from "@/Pages/Diaries/Destroy";
+import Header from "@/Layouts/Partials/Header";
 
 export default {
-    components: {Destroy, Create, Authenticated},
+    components: {Header, Destroy, Create, Authenticated},
     directives: {
         mdbRipple
     },

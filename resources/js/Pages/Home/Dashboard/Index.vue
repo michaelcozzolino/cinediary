@@ -2,15 +2,7 @@
 
 <!--    <Head title="Dashboard" />-->
 
-    <Authenticated>
-        <template #header-title>
-            {{ __('dashboard') }}
-        </template>
-        <template #header-description>
-            {{__('you can see your statistics and your last watched movies and tv series here')}}
-
-        </template>
-
+    <authenticated>
         <screenplays v-for="(screenplays, screenplayType) in lastWatchedScreenplaysData"
                      v-show="screenplays.length"
         >
@@ -46,7 +38,7 @@
         </MDBRow>
 
 
-    </Authenticated>
+    </authenticated>
 </template>
 
 <script>

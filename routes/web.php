@@ -44,8 +44,6 @@ Route::get('/', function () {
             'phpVersion' => PHP_VERSION,
         ]);
 
-
-
     return redirect()->route('dashboard');
 })->name('home');
 
@@ -65,34 +63,35 @@ Route::middleware(['auth'])->group(function(){
         Route::patch('/', [SettingsController::class, 'update'])->name('settings.update');
     });
 
-});
-Route::group(['prefix' => 'diaries'], function(){
-    Route::get('/', [DiariesController::class, 'index'])->name('diaries.index');
-    Route::post('store', [DiariesController::class, 'store'])->name('diaries.store');
+    Route::group(['prefix' => 'diaries'], function(){
+        Route::get('/', [DiariesController::class, 'index'])->name('diaries.index');
+        Route::post('store', [DiariesController::class, 'store'])->name('diaries.store');
 
-});
-
-
-Route::group(['prefix' => 'diaries/{diary}'], function (){
-
-    Route::delete('/', [DiariesController::class, 'destroy'])->name('diaries.destroy');
-
-    Route::group(['prefix' => 'movies'], function(){
-        Route::get('/', [MoviesController::class, 'index'])->name('diaries.movies.index');
-        Route::post('/', [MoviesController::class, 'store'])->name('diaries.movies.store');
-        Route::delete('{movie}', [MoviesController::class, 'destroy'])->name('diaries.movies.destroy');
-    });
-
-    Route::group(['prefix' => 'series'], function(){
-        Route::get('/', [SeriesController::class, 'index'])->name('diaries.series.index');
-        Route::post('/', [SeriesController::class, 'store'])->name('diaries.series.store');
-        Route::delete('/', [SeriesController::class, 'destroy'])->name('diaries.series.destroy');
     });
 
 
+    Route::group(['prefix' => 'diaries/{diary}'], function (){
 
+        Route::delete('/', [DiariesController::class, 'destroy'])->name('diaries.destroy');
+
+        Route::group(['prefix' => 'movies'], function(){
+            Route::get('/', [MoviesController::class, 'index'])->name('diaries.movies.index');
+            Route::post('/', [MoviesController::class, 'store'])->name('diaries.movies.store');
+            Route::delete('{movie}', [MoviesController::class, 'destroy'])->name('diaries.movies.destroy');
+        });
+
+        Route::group(['prefix' => 'series'], function(){
+            Route::get('/', [SeriesController::class, 'index'])->name('diaries.series.index');
+            Route::post('/', [SeriesController::class, 'store'])->name('diaries.series.store');
+            Route::delete('/', [SeriesController::class, 'destroy'])->name('diaries.series.destroy');
+        });
+
+
+
+    });
+    /* TODO: show routes can be showed if not logged by covering the auth components */
+    Route::get('/movies/{movie}', [MoviesController::class, 'show'])->name('movies.show');
+    Route::get('/series/{series}', [SeriesController::class, 'show'])->name('series.show');
 });
-
-Route::get('/movies/{movie}', [MoviesController::class, 'show'])->name('movies.show');
 
 require __DIR__.'/auth.php';

@@ -8,26 +8,12 @@
 
     <div class="min-vh-100 bg-gray-200" :style="getSidebarMarginStyle">
         <!-- Page Content -->
-        <header>
-            <div
-                class="p-5 text-center bg-image"
-                style="background-image: url('/css/images/header.jpg'); height: 300px;"
-            >
-                <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
-                    <div class="d-flex justify-content-center align-items-center h-100">
-                        <div class="text-white">
-                            <h1 class="mb-3">
-                                <slot name="header-title"/>
-                            </h1>
-                            <h5 class="mb-3">
-                                <slot name="header-description"/>
-                            </h5>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <slot name="header">
+            <Header :title="header.title"
+                    :description="header.description"
+                    :message="header.message"
+            />
+        </slot>
         <main>
 
             <MDBContainer class="pt-4" style="padding-bottom: 3.8rem">
@@ -48,16 +34,22 @@ import Sidebar from "@/Layouts/Partials/Sidebar";
 import HowItWorks from "@/Pages/Home/Partials/HowItWorks";
 import LanguageSwitcher from "@/Layouts/Partials/LanguageSwitcher";
 import AppFooter from "@/Layouts/Partials/AppFooter";
+import Header from "@/Layouts/Partials/Header";
 
 
 export default {
     components: {
+        Header,
         Sidebar,
         HowItWorks,
         Link,
         SideNav,
         LanguageSwitcher,
         AppFooter
+    },
+
+    props: {
+        headerInfo: Object,
     },
 
     data() {
@@ -69,6 +61,11 @@ export default {
                 widthCollapsed: "70px",
 
             },
+            header: {
+                title: this.$helpers.getHeadersData(this.$page.component, this.headerInfo).title,
+                description: this.$helpers.getHeadersData(this.$page.component, this.headerInfo).description,
+                message: this.headerInfo ? ('message' in this.headerInfo ? this.headerInfo.message : null) : null,
+            }
         }
     },
     computed:{

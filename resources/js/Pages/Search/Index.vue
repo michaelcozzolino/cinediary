@@ -1,15 +1,5 @@
 <template>
-    <authenticated>
-        <template #header-title>
-            {{ __('Add movies or tv series') }}
-        </template>
-        <template #header-description>
-            {{__('Search for movies and tv series to add them to your diaries')}}!
-            <div v-if="noDiariesMessage !== ''">
-                <hr>
-                <small class="text-warning font-weight-bolder" v-text="this.noDiariesMessage"/>
-            </div>
-        </template>
+    <authenticated :header-info="{message: noDiariesMessage}">
         <h6 class="text-muted text-uppercase "
             v-show="lastQuery !== undefined"
             v-text="this.__('Your last search...')" style="font-size: 14px; font-weight: 600"/>
@@ -182,7 +172,7 @@ export default {
 
     computed: {
         noDiariesMessage(){
-            return usePage().props.value.flash.message ?? "" ;
+            return usePage().props.value.flash.message;
         },
 
     },

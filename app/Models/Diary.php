@@ -65,7 +65,8 @@ class Diary extends Model
     }
 
     public function series(){
-        return $this->belongsToMany(Series::class)->withTimestamps();
+        return $this->belongsToMany(Series::class)
+            ->withTimestamps();
     }
 
     public static function getWatched() : Diary {
@@ -76,13 +77,21 @@ class Diary extends Model
         return $builder->where('name', self::WATCHED_DIARY_NAME)->main();
     }
 
-    public static function toWatch() : Diary {
-        return self::where('name', self::TO_WATCH_DIARY_NAME)->main()->first();
+    public static function getToWatch() : Diary {
+        return self::toWatch()->first();
+    }
+
+    public function scopeToWatch(Builder $builder) : Builder {
+        return $builder->where('name', self::TO_WATCH_DIARY_NAME)->main();
     }
 
 
-    public static function favourite() : Diary {
-        return self::where('name', self::FAVOURITE_DIARY_NAME)->main()->first();
+    public static function getFavourite() : Diary {
+        return self::favourite()->first();
+    }
+
+    public function scopeFavourite(Builder $builder) : Builder {
+        return $builder->where('name', self::FAVOURITE_DIARY_NAME)->main();
     }
 
     public function scopeMain(Builder $builder) : Builder {

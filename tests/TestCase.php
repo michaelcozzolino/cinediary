@@ -32,8 +32,8 @@ abstract class TestCase extends BaseTestCase
 
         $custom = Diary::firstOrCreate(['name' => 'custom diary', 'user_id' => $this->user->id]);
         $watched= Diary::getWatched();
-        $favourite = Diary::favourite();
-        $toWatch = Diary::toWatch();
+        $favourite = Diary::getFavourite();
+        $toWatch = Diary::getToWatch();
         $this->diaries = compact('custom', 'watched', 'favourite', 'toWatch');
         return $this;
     }

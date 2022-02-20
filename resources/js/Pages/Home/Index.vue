@@ -1,15 +1,12 @@
 <template>
-<!-- to-do RENAME APP TO HOME    -->
     <guest>
-        <template v-slot:main>
-
+        <template #main>
             <how-it-works></how-it-works>
-            <popular id="popular-movies" title="movies" start="start" end="end" />
-            <popular id="popular-series" title="series" end="start" start="end" />
+            <popular screenplay-type="movies" id="popular-movies" title="movies" start="start" end="end" />
+            <popular screenplay-type="series" id="popular-series" title="series" end="start" start="end" />
             <section class="statistics bg-info text-center fs-1 fw-bold">
                 <statistics></statistics>
             </section>
-
         </template>
     </guest>
 </template>

@@ -3,8 +3,8 @@
     <MDBCol :id="this.screenplay.id" :sm="'6'" :md="md"  class="mb-4 text-center">
 
         <MDBCard class="h-100" >
-<!--      TO-DO: create screenplays show page      -->
-            <a href="route" v-mdb-ripple="{ color: 'light' }">
+            <!--      TO-DO: create screenplays show page      -->
+            <a :href="getRoute" v-mdb-ripple="{ color: 'light' }">
                 <MDBCardImg :src="getPosterPath" top alt="..." />
             </a>
             <MDBCardBody>
@@ -30,9 +30,9 @@
                     />
 
                     <add-to-diary
-                                  :screenplay-id="screenplay.id"
-                                  :screenplay-type="getScreenplayType"
-                                  :href="getHref"
+                        :screenplay-id="screenplay.id"
+                        :screenplay-type="getScreenplayType"
+                        :href="getHref"
                     />
 
                 </MDBBtnGroup>
@@ -108,6 +108,15 @@ export default {
         getHref(){
             return "#" + this.screenplay.id;
         },
+
+        getRoute(){
+                if(this.$page.component.startsWith('Search'))
+                    return "#" + this.screenplay.id;
+                let parameters = {};
+                let screenplayBindName = this.getScreenplayType === 'movies' ? 'movie' : this.getScreenplayType;
+                parameters[screenplayBindName] = this.screenplay.id;
+                return route(this.getScreenplayType + '.show', parameters);
+        }
     }
 
 

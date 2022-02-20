@@ -1,12 +1,5 @@
 <template>
     <authenticated>
-        <template #header-title>
-            {{ __('settings') }}
-        </template>
-        <template #header-description>
-            {{__('manage your settings here')}}
-        </template>
-
         <form @submit.prevent="update">
             <MDBInput
                 type="password"

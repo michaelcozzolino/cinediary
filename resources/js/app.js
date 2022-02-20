@@ -13,9 +13,13 @@ import {__} from "@/Core/Translator";
 
 require("@/Core/Icons");
 require('@/Core/bootstrap');
-
+import helpers from "@/Core/helpers";
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
-
+const helpersPlugin = {
+    install (app, options) {
+        app.config.globalProperties.$helpers = helpers;
+    }
+};
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => require(`./Pages/${name}.vue`),
@@ -26,7 +30,7 @@ createInertiaApp({
 
         RegisterComponents(myApp);
 
-        return myApp.mixin({ methods: { route, __ }})
+        return myApp.mixin({ methods: { route, __ }}).use(helpersPlugin)
             .mount(el);
     },
 });
