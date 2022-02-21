@@ -11,11 +11,7 @@ import {markRaw} from "@vue/reactivity";
 import Logo from "@/Pages/Partials/Logo";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {usePage} from "@inertiajs/inertia-vue3";
-
-const separator = {
-    template: '<hr style="border: 1px solid rgba(255,255,255,1); margin: 20px;">'
-}
-
+import Separator from "@/Layouts/Partials/Separator";
 export default {
     emits: ['OnCollapse'],
 
@@ -169,7 +165,7 @@ export default {
             let other = [
 
                 {
-                    component: markRaw(separator)
+                    component: markRaw(Separator)
                 },
 
                 {

@@ -88,9 +88,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~mdb-vue-ui-kit/src/scss/standard/bootstrap/functions";
-@import "~mdb-vue-ui-kit/src/scss/standard/bootstrap/variables";
-@import "~mdb-vue-ui-kit/src/scss/standard/bootstrap/mixins";
+@import "resources/css/mdb";
 
 .v-sidebar-menu {
 
@@ -99,7 +97,9 @@ export default {
 
     }
 
-
+    .vsm--header {
+        color: $primary;
+    }
 }
 
 </style>
