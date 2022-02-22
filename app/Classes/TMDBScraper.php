@@ -39,7 +39,7 @@ class TMDBScraper{
     private array $queries;
     public const DEFAULT_API_KEY = "7bff79e50491c5c1166a4497606d5ad3";
     public const BLANK_POSTER_PATH_URL = "/css/images/reel.png";
-    public const BLANK_BACKDROP_PATH_URL = "/css/images/TOBEDEFINED.png";
+    public const BLANK_BACKDROP_PATH_URL = "/css/images/header.png";
     private ?User $user;
     private ?Setting $userSettings;
     public function __construct(string $apiKey = null) {
@@ -147,7 +147,7 @@ class TMDBScraper{
 
     private function getImageUrl($path, $size, $isPoster = true){
         return $path === null ?
-            ($isPoster ? self::BLANK_POSTER_PATH_URL : self::BACKDROP_PATH_SIZE) :
+            ($isPoster ? self::BLANK_POSTER_PATH_URL : self::BLANK_BACKDROP_PATH_URL) :
             self::IMAGE_URL . $size . $path;
     }
 
