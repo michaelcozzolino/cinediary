@@ -1,70 +1,61 @@
 <template>
-    <MDBModal
-        id="registerModal"
-        tabindex="-1"
-        labelledby="registerModalTitle"
-        v-model="registerModalOpen"
-        centered
-        @hide="this.hide()"
+    <modal ref="registerModal"
+           id="register-modal"
+           centered
+           @on-close="resetForm()"
+           :title-class="['text-uppercase']"
     >
-        <MDBModalHeader>
-            <MDBModalTitle class="text-uppercase fw-bold" id="registerModalTitle" v-text="__('register')"/>
-        </MDBModalHeader>
-        <form @submit.prevent="submit()">
-            <MDBModalBody>
+        <template #title>
+            {{ __('register') }}
+        </template>
 
-                <MDBInput @input="form.clearErrors('name')" wrapper-class="mb-3" v-model="form.name"  :label="__('name')" type="text" required/>
-                <validation-error :error="form.errors.name"/>
+        <template #body>
+            <MDBInput @input="form.clearErrors('name')" wrapper-class="mb-3" v-model="form.name"  :label="__('name')" type="text" required/>
+            <validation-error :error="form.errors.name"/>
 
-                <MDBInput @input="form.clearErrors('email')" wrapper-class="mb-3" v-model="form.email"  :label="__('email')" type="email" required/>
-                <validation-error :error="form.errors.email"/>
+            <MDBInput @input="form.clearErrors('email')" wrapper-class="mb-3" v-model="form.email"  :label="__('email')" type="email" required/>
+            <validation-error :error="form.errors.email"/>
 
-                <MDBInput @input="form.clearErrors('password')" wrapper-class="mb-3" v-model="form.password" :label="__('password')" type="password" required/>
-                <MDBInput @input="form.clearErrors('password_confirmation')" wrapper-class="mb-3" v-model="form.password_confirmation" :label="__('confirm password')" type="password" required />
+            <MDBInput @input="form.clearErrors('password')" wrapper-class="mb-3" v-model="form.password" :label="__('password')" type="password" required/>
+            <MDBInput @input="form.clearErrors('password_confirmation')" wrapper-class="mb-3" v-model="form.password_confirmation" :label="__('confirm password')" type="password" required />
 
-                <validation-error :error="form.errors.password"/>
-                <validation-error :error="form.errors.password_confirmation"/>
+            <validation-error :error="form.errors.password"/>
+            <validation-error :error="form.errors.password_confirmation"/>
+            <!--  TODO: checkbox for terms and conditions acceptance          -->
+            <!--  <MDBCheckbox :label="__('terms')" v-model="form.terms" :disabled="form.processing"/>-->
 
-<!--                <MDBCheckbox :label="__('terms')" v-model="form.terms" :disabled="form.processing"/>-->
+        </template>
 
-            </MDBModalBody>
-            <MDBModalFooter>
+        <template #footer>
+            <form @submit.prevent="submit()">
                 <MDBBtn type="submit" color="primary" v-text="__('sign up')" :disabled="form.processing"/>
-            </MDBModalFooter>
-        </form>
-    </MDBModal>
+
+            </form>
+        </template>
+    </modal>
+
 </template>
 
 <script>
 
 import {
-    MDBModal,
-    MDBModalHeader,
-    MDBModalTitle,
-    MDBModalBody,
-    MDBModalFooter,
     MDBBtn,
     MDBCheckbox,
 } from 'mdb-vue-ui-kit';
 import ValidationError from "@/Pages/Partials/ValidationError";
+import Modal from "@/Pages/Partials/Modal";
 
 export default {
 
     components: {
+        Modal,
         ValidationError,
-        MDBModal,
-        MDBModalHeader,
-        MDBModalTitle,
-        MDBModalBody,
-        MDBModalFooter,
         MDBBtn,
         MDBCheckbox,
     },
 
-
     data() {
         return {
-            registerModalOpen: false,
             form: this.$inertia.form({
                 name: '',
                 email: '',
@@ -79,27 +70,26 @@ export default {
 
         submit() {
             this.form.post(this.route('register'), {
-                onStart: () => {
-                    this.use();
-
-                },
-                onError: () => this.use(),
-                onFinish: () => this.form.reset('password', 'password_confirmation'),
+                onStart: () => this.close(),
+                onError: () => this.open(),
+                onFinish: () => this.form.reset('password', 'password_confirmation')
             })
         },
 
-        use(){
-            this.registerModalOpen = !this.registerModalOpen
+        open(){
+            this.$refs['registerModal'].open();
         },
 
-        hide(){
+        close(){
+            this.$refs['registerModal'].close()
+        },
+
+        resetForm(){
             if(!this.form.processing) {
                 this.form.reset();
                 this.form.clearErrors();
             }
         }
-
-
     }
 }
 </script>

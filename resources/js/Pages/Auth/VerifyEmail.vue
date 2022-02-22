@@ -1,42 +1,46 @@
-<!--
 <template>
-    <Head title="Email Verification" />
+    <modal ref="verifyEmailModal" id="verify-email-modal"
+           centered
+           static-backdrop
+           @on-close="logout()"
+           :title-class="['text-uppercase']"
+    >
+        <template #title>
+            {{ __('Thanks for signing up!') }}
+        </template>
 
-    <div class="mb-4 text-sm text-gray-600">
-        Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.
-    </div>
+        <template #body>
+             <span
+                 v-text="__('Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.')"
+             />
 
-    <div class="mb-4 font-medium text-sm text-green-600" v-if="verificationLinkSent" >
-        A new verification link has been sent to the email address you provided during registration.
-    </div>
-
-    <form @submit.prevent="submit">
-        <div class="mt-4 flex items-center justify-between">
-            <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Resend Verification Email
-            </BreezeButton>
-
-            <Link :href="route('logout')" method="post" as="button" class="underline text-sm text-gray-600 hover:text-gray-900">Log Out</Link>
-        </div>
-    </form>
+        </template>
+        <!--  TODO: improve html email template       -->
+        <template #footer>
+            <form @submit.prevent="submit()">
+                <MDBBtn type="submit" color="primary" :disabled="form.processing">
+                    Resend Verification Email
+                </MDBBtn>
+                <div class="my-2 text-sm text-success" v-if="verificationLinkSent"
+                     v-text="__(' A new verification link has been sent to the email address you provided during registration.')"
+                />
+            </form>
+        </template>
+    </modal>
 </template>
 
 <script>
-import BreezeButton from '@/Components/Button.vue'
-import BreezeGuestLayout from '@/Layouts/Guest.vue'
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import Modal from "@/Pages/Partials/Modal";
 
 export default {
-    layout: BreezeGuestLayout,
 
     components: {
-        BreezeButton,
-        Head,
-        Link,
+        Modal,
     },
 
     props: {
         status: String,
+        mustVerifyEmail: Boolean
     },
 
     data() {
@@ -45,17 +49,44 @@ export default {
         }
     },
 
+    mounted(){
+        this.open(); // called when the user access the website when already logged in without having the email verified
+    },
+
+    updated(){
+        this.open(); //called when the user logs in without having the email verified
+    },
+
     methods: {
         submit() {
-            this.form.post(this.route('verification.send'))
+            this.form.post(this.route('verification.send'));
         },
+
+        logout(){
+            this.$inertia.post(route('logout'));
+        },
+
+        open(){
+            if(this.mustVerifyEmail)
+                this.$refs['verifyEmailModal'].open();
+        }
+
     },
 
     computed: {
         verificationLinkSent() {
             return this.status === 'verification-link-sent';
-        }
+        },
+
+
     }
+
+
 }
 </script>
--->
+
+<style scoped>
+.btn-close {
+    visibility: hidden;
+}
+</style>

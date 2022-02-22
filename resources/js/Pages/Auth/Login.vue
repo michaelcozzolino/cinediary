@@ -1,61 +1,58 @@
 <template>
-    <MDBModal
-        id="loginModal"
-        tabindex="-1"
-        labelledby="loginModalTitle"
-        v-model="loginModalOpen"
-        centered
-        @hide="this.hide"
+    <modal ref="loginModal"
+           id="login-modal"
+           centered
+           @on-close="resetForm()"
+           :title-class="['text-uppercase']"
     >
-        <MDBModalHeader>
-            <MDBModalTitle class="text-uppercase fw-bold" id="loginModalTitle" v-text="__('login')"/>
-        </MDBModalHeader>
-        <form @submit.prevent="submit()">
-            <MDBModalBody>
+        <template #title>
+            {{ __('login') }}
+        </template>
 
-                <MDBInput @input="form.clearErrors()" wrapper-class="mb-3" v-model="form.email"  :label="__('email')" type="email" required/>
-                <MDBInput @input="form.clearErrors()" wrapper-class="mb-3" v-model="form.password" :label="__('password')" type="password" required/>
-                <validation-error :error="form.errors.email"/>
-                <MDBCheckbox :label="__('remember me')" v-model="form.remember" />
+        <template #body>
+            <MDBInput @input="form.clearErrors()" wrapper-class="mb-3" v-model="form.email"  :label="__('email')" type="email" required/>
+            <MDBInput @input="form.clearErrors()" wrapper-class="mb-3" v-model="form.password" :label="__('password')" type="password" required/>
+            <validation-error :error="form.errors.email"/>
+            <MDBCheckbox :label="__('remember me')" v-model="form.remember" />
+        </template>
 
-            </MDBModalBody>
-            <MDBModalFooter>
+        <template #footer>
+            <form @submit.prevent="submit()">
                 <MDBBtn type="submit" color="primary" v-text="__('sign in')" :disabled="form.processing"/>
-            </MDBModalFooter>
-        </form>
-    </MDBModal>
-
+            </form>
+            <MDBBtn color="primary" v-text="__('forgot password?')" :disabled="form.processing"
+                    @click="this.$emit('OnForgotPasswordButtonClick')"
+            />
+        </template>
+    </modal>
 </template>
-
-
 
 <script>
 import {
-    MDBModal,
-    MDBModalHeader,
-    MDBModalTitle,
-    MDBModalBody,
-    MDBModalFooter,
     MDBBtn,
     MDBCheckbox,
 } from 'mdb-vue-ui-kit';
 import ValidationError from "@/Pages/Partials/ValidationError";
+import Modal from "@/Pages/Partials/Modal";
+import { Link } from '@inertiajs/inertia-vue3'
 export default {
 
     components: {
+        Modal,
         ValidationError,
-        MDBModal,
-        MDBModalHeader,
-        MDBModalTitle,
-        MDBModalBody,
-        MDBModalFooter,
         MDBBtn,
         MDBCheckbox,
+        Link
+    },
+
+    emits: ['OnForgotPasswordButtonClick'],
+
+    props: {
+        mustVerifyEmail: Boolean,
     },
 
     data() {
         return {
-            loginModalOpen: false,
             form: this.$inertia.form({
                 email: '',
                 password: '',
@@ -68,38 +65,37 @@ export default {
 
         submit() {
             this.form.post(this.route('login'), {
-                onStart: () => {
-                    this.use();
-
-                },
-                onError: () => this.use(),
-                onFinish: () => this.form.reset('password') ,
-
-            })
+                onStart: () => this.close(),
+                onError: () => this.open(),
+                onFinish: () => this.form.reset('password'),
+            });
 
         },
 
-        use(){
-            this.loginModalOpen = !this.loginModalOpen
+        open(){
+            this.$refs['loginModal'].open();
+        },
+
+        close(){
+            this.$refs['loginModal'].close()
         },
 
         /*
         * I don't care that the password is on clear, because it's a demo user
         * */
-        loginDemo(){
-            this.use();
+        demoLogin(){
             this.form.email = 'demo@demo.demo';
             this.form.password = '@demo-password@';
             this.form.remember = true;
             this.submit();
         },
 
-        hide(){
+        resetForm(){
             if(!this.form.processing) {
                 this.form.reset();
                 this.form.clearErrors();
             }
-        }
+        },
     }
 }
 </script>

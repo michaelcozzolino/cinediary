@@ -1,55 +1,49 @@
-<!--
 <template>
-    <Head title="Reset Password" />
+    <modal ref="resetPasswordModal"
+           id="reset-password-modal"
+           centered
+           static-backdrop
+           @on-close="resetForm()"
+           :title-class="['text-uppercase']"
+    >
+        <template #title>
+            {{ __('reset password') }}
+        </template>
 
-    <BreezeValidationErrors class="mb-4" />
+        <template #body>
+            <MDBInput @input="form.clearErrors('email')" wrapper-class="mb-3" v-model="form.email"  :label="__('email')" type="email" required/>
+            <validation-error :error="form.errors.email"/>
 
-    <form @submit.prevent="submit">
-        <div>
-            <BreezeLabel for="email" value="Email" />
-            <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
-        </div>
+            <MDBInput @input="form.clearErrors('password')" wrapper-class="mb-3" v-model="form.password" :label="__('password')" type="password" required/>
+            <MDBInput @input="form.clearErrors('password_confirmation')" wrapper-class="mb-3" v-model="form.password_confirmation" :label="__('confirm password')" type="password" required />
 
-        <div class="mt-4">
-            <BreezeLabel for="password" value="Password" />
-            <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-        </div>
+            <validation-error :error="form.errors.password"/>
+            <validation-error :error="form.errors.password_confirmation"/>
+        </template>
 
-        <div class="mt-4">
-            <BreezeLabel for="password_confirmation" value="Confirm Password" />
-            <BreezeInput id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Reset Password
-            </BreezeButton>
-        </div>
-    </form>
+        <template #footer>
+            <form @submit.prevent="submit()">
+                <MDBBtn type="submit" color="primary" v-text="__('reset password')" :disabled="form.processing"/>
+            </form>
+        </template>
+    </modal>
 </template>
 
 <script>
-import BreezeButton from '@/Components/Button.vue'
-import BreezeGuestLayout from '@/Layouts/Guest.vue'
-import BreezeInput from '@/Components/Input.vue'
-import BreezeLabel from '@/Components/Label.vue'
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue'
-import { Head } from '@inertiajs/inertia-vue3';
+import Modal from "@/Pages/Partials/Modal";
+import ValidationError from "@/Pages/Partials/ValidationError";
 
 export default {
-    layout: BreezeGuestLayout,
 
     components: {
-        BreezeButton,
-        BreezeInput,
-        BreezeLabel,
-        BreezeValidationErrors,
-        Head,
+        ValidationError,
+        Modal,
     },
 
     props: {
         email: String,
         token: String,
+        status: String,
     },
 
     data() {
@@ -63,13 +57,38 @@ export default {
         }
     },
 
+    mounted() {
+        if(this.$page.url.startsWith('/reset-password'))
+            this.open();
+    },
+
     methods: {
         submit() {
             this.form.post(this.route('password.update'), {
                 onFinish: () => this.form.reset('password', 'password_confirmation'),
             })
+        },
+
+        open(){
+            this.$refs['resetPasswordModal'].open();
+        },
+
+        close(){
+            this.$refs['resetPasswordModal'].close()
+        },
+
+        resetForm(){
+            if(!this.form.processing) {
+                this.form.reset();
+                this.form.clearErrors();
+                this.$inertia.visit(route('home'));
+            }
+        },
+
+        passwordReset() {
+            /* TODO: maybe i will use it to show that the password has been changed after automatic login */
+            return this.status === "Your password has been reset!";
         }
     }
 }
 </script>
--->

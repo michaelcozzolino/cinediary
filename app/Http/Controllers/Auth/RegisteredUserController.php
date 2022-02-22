@@ -17,16 +17,6 @@ use Inertia\Inertia;
 class RegisteredUserController extends Controller
 {
     /**
-     * Display the registration view.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        return Inertia::render('Auth/Register');
-    }
-
-    /**
      * Handle an incoming registration request.
      *
      * @param  \Illuminate\Http\Request  $request

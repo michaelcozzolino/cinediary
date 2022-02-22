@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\ScreenplaysScopesTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,7 +50,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static Builder|User watched()
  * @method static Builder|User watchedMovies()
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 

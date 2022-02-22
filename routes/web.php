@@ -42,15 +42,20 @@ Route::get('/', function () {
             'canRegister' => Route::has('register'),
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
+            'canVerifyEmail' => false,
+            'status' => session('status'),
         ]);
 
     return redirect()->route('dashboard');
 })->name('home');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified', 'diaries.empty'])
-    ->name('dashboard');
 
-Route::middleware(['auth'])->group(function(){
+
+Route::middleware(['auth', 'verified'])->group(function(){
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->middleware(['diaries.empty'])
+        ->name('dashboard');
 
     Route::group(['prefix' => 'search'], function(){
         Route::get('/create', [SearchController::class, 'create'])->name('search.create');

@@ -1,14 +1,9 @@
 <template>
-
-    <register ref="register" />
-    <login ref="login"/>
-
     <MDBContainer class="text-center py-4 text-light bg-indigo-400" fluid>
         <MDBRow>
             <MDBCol class="text-light">
                 <h3 class="fw-bold">Cinediary allows you to track movies and tv series.</h3>
                 <h4 class="fst-italic">How does it work?</h4>
-
             </MDBCol>
         </MDBRow>
     </MDBContainer>
@@ -43,18 +38,17 @@
 </template>
 
 <script>
-import {mdbRipple } from "mdb-vue-ui-kit";
+import {mdbRipple} from "mdb-vue-ui-kit";
 import Screenplay from "../../Partials/Screenplays/Screenplay";
 import SectionTitle from "../../Partials/SectionTitle";
-import Login from "@/Pages/Auth/Login";
-import Register from "@/Pages/Auth/Register";
-
 export default {
-    components: {Register, SectionTitle, Screenplay, Login},
+    components: { SectionTitle, Screenplay },
     directives: {
         mdbRipple
     },
-    emits: ['login'],
+
+    emits: ['OnButtonClick', 'OnDemoLogin'],
+
     data(){
         return {
             steps: [
@@ -67,7 +61,7 @@ export default {
                     },
                     "button": {
                         "text": "Register",
-                        "onClick": () => this.onButtonClick("register"),
+                        "onClick": () => this.$emit('OnButtonClick', { refName: 'register'}),
                     },
 
 
@@ -96,7 +90,7 @@ export default {
                     },
                     "button": {
                         "text": "Login",
-                        "onClick": () => this.onButtonClick("login"),
+                        "onClick": () => this.$emit('OnButtonClick', { refName: 'login' }),
                     }
                 },
                 {
@@ -109,28 +103,12 @@ export default {
                     },
                     "button": {
                         "text": "Try a demo user",
-                        "onClick": () => this.onButtonClick("login-demo"),
+                        "onClick": () => this.$emit('OnDemoLogin'),
                     }
                 }
             ]
         }
     },
-
-    methods:{
-        onButtonClick(ref){
-            if(ref === 'login-demo')
-                this.$refs['login'].loginDemo();
-            else
-                this.$refs[ref].use();
-        }
-
-
-    }
 }
 </script>
-
-<style scoped>
-
-
-</style>
 

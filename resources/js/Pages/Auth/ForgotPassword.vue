@@ -1,48 +1,38 @@
-<!--
 <template>
-    <Head title="Forgot Password" />
+    <modal ref="forgotPassword"
+           id="forgot-password"
+           centered
+           @on-close="close()"
+           :title-class="['text-uppercase']"
+           static-backdrop
+    >
+        <template #title>
+            {{ __('forgot password') }}
+        </template>
 
-    <div class="mb-4 text-sm text-gray-600">
-        Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
-    </div>
+        <template #body>
+            <MDBInput @input="form.clearErrors()" wrapper-class="mb-3" v-model="form.email"  :label="__('email')" type="email" required/>
+            <validation-error :error="form.errors.email"/>
+        </template>
 
-    <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-        {{ status }}
-    </div>
-
-    <BreezeValidationErrors class="mb-4" />
-
-    <form @submit.prevent="submit">
-        <div>
-            <BreezeLabel for="email" value="Email" />
-            <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Email Password Reset Link
-            </BreezeButton>
-        </div>
-    </form>
+        <template #footer>
+            <form @submit.prevent="submit()">
+                <MDBBtn type="submit" color="primary" v-text="__('email password reset link')" :disabled="form.processing" />
+                <div class="my-2 text-sm text-success" v-if="status" v-text="status" />
+            </form>
+        </template>
+    </modal>
 </template>
 
 <script>
-import BreezeButton from '@/Components/Button.vue'
-import BreezeGuestLayout from '@/Layouts/Guest.vue'
-import BreezeInput from '@/Components/Input.vue'
-import BreezeLabel from '@/Components/Label.vue'
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue'
-import { Head } from '@inertiajs/inertia-vue3';
+
+import Modal from "@/Pages/Partials/Modal";
+import ValidationError from "@/Pages/Partials/ValidationError";
 
 export default {
-    layout: BreezeGuestLayout,
-
     components: {
-        BreezeButton,
-        BreezeInput,
-        BreezeLabel,
-        BreezeValidationErrors,
-        Head,
+        ValidationError,
+        Modal,
     },
 
     props: {
@@ -57,11 +47,27 @@ export default {
         }
     },
 
+
     methods: {
         submit() {
             this.form.post(this.route('password.email'))
-        }
-    }
+        },
+        resetForm(){
+            if(!this.form.processing) {
+                this.form.reset();
+                this.form.clearErrors();
+            }
+        },
+
+        open(){
+            this.$refs['forgotPassword'].open();
+        },
+
+        close(){
+            this.resetForm();
+            this.$inertia.reload({ only: ['status'] });
+        },
+    },
+
 }
 </script>
--->

@@ -11,18 +11,6 @@ use Inertia\Inertia;
 class PasswordResetLinkController extends Controller
 {
     /**
-     * Display the password reset link request view.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        return Inertia::render('Auth/ForgotPassword', [
-            'status' => session('status'),
-        ]);
-    }
-
-    /**
      * Handle an incoming password reset link request.
      *
      * @param  \Illuminate\Http\Request  $request
