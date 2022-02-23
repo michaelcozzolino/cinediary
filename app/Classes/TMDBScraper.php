@@ -5,6 +5,7 @@ use App\Models\Movie;
 use App\Models\Series;
 use App\Models\Setting;
 use App\Models\User;
+use DateTime;
 use Illuminate\Support\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tmdb\Client;
@@ -104,12 +105,18 @@ class TMDBScraper{
         $translatedScreenplayData['originalTitle'] = method_exists($screenplay, 'getOriginalTitle') ?
             $screenplay->getOriginalTitle() : $screenplay->getOriginalName();
         $translatedScreenplayData['id'] = $screenplay->getId();
-        $translatedScreenplayData['releaseDate'] = method_exists($screenplay, 'getReleaseDate') ?
-            $screenplay->getReleaseDate() : $screenplay->getFirstAirDate();
+        $translatedScreenplayData['releaseDate'] = $this->getReleaseDate($screenplay);
         $translatedScreenplayData['runtime'] = method_exists($screenplay, 'getRuntime') ?
             $screenplay->getRuntime() : $this->getFirstEpisodeRuntime($screenplay);
 
         return $translatedScreenplayData;
+    }
+
+    private function getReleaseDate(\Tmdb\Model\Movie|Tv $screenplay): ?DateTime {
+        $releaseDate = method_exists($screenplay, 'getReleaseDate') ?
+            $screenplay->getReleaseDate() :
+            $screenplay->getFirstAirDate();
+        return $releaseDate === '' ? null : $releaseDate;
     }
 
     private function getFirstEpisodeRuntime(Tv $series): int {

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('posterPath')->nullable();
             $table->string('backdropPath')->nullable();
             $table->text('overview');
-            $table->date('releaseDate');
+            $table->date('releaseDate')->nullable();
             $table->unsignedInteger('runtime')->default(0);
             $table->boolean('isPopular');
             $table->timestamps();

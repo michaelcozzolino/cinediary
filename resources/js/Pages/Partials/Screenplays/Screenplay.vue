@@ -3,7 +3,6 @@
     <MDBCol :id="this.screenplay.id" :sm="'6'" :md="md"  class="mb-4 text-center">
 
         <MDBCard class="h-100" >
-            <!--      TO-DO: create screenplays show page      -->
             <a :href="getRoute" v-mdb-ripple="{ color: 'light' }">
                 <MDBCardImg :src="getPosterPath" top alt="..." />
             </a>
@@ -45,9 +44,6 @@
 
 <script>
 import { mdbRipple } from "mdb-vue-ui-kit";
-import Dropdown from "../../../Core/Dropdown";
-import {usePage} from '@inertiajs/inertia-vue3';
-import {Inertia} from "@inertiajs/inertia";
 import AddToDiary from "@/Pages/Partials/Screenplays/Partials/AddToDiary";
 import RemoveFromDiary from "@/Pages/Partials/Screenplays/Partials/RemoveFromDiary";
 
@@ -68,7 +64,6 @@ export default {
         screenplayType: String,
         md: String,
         removable: Boolean,
-
     },
 
     emits: ['OnDelete'],
@@ -76,14 +71,7 @@ export default {
         return {
             dropdown:false,
             newAddedToDiaryScreenplaysIds : {movies: [], series: []},
-
-
-
         }
-    },
-
-    methods: {
-
     },
 
     computed: {
@@ -100,9 +88,9 @@ export default {
         },
 
         getFurtherData(){
-            return this.screenplay.genre ?
-                this.screenplay.genre + ', ' + this.screenplay.releaseDate :
-                this.screenplay.releaseDate
+            return [this.screenplay.genre, this.screenplay.releaseDate]
+                .filter((furtherDatum) => furtherDatum !== null)
+                .join(", ");
         },
 
         getHref(){
@@ -110,12 +98,12 @@ export default {
         },
 
         getRoute(){
-                if(this.$page.component.startsWith('Search'))
-                    return "#" + this.screenplay.id;
-                let parameters = {};
-                let screenplayBindName = this.getScreenplayType === 'movies' ? 'movie' : this.getScreenplayType;
-                parameters[screenplayBindName] = this.screenplay.id;
-                return route(this.getScreenplayType + '.show', parameters);
+            if(this.$page.component.startsWith('Search'))
+                return "#" + this.screenplay.id;
+            let parameters = {};
+            let screenplayBindName = this.getScreenplayType === 'movies' ? 'movie' : this.getScreenplayType;
+            parameters[screenplayBindName] = this.screenplay.id;
+            return route(this.getScreenplayType + '.show', parameters);
         }
     }
 
