@@ -49,8 +49,12 @@
                                     :href="currentDiary.getScreenplayRoute(screenplay.id)"
                                     :md="'3'" :poster-path="screenplay.posterPath"/>
             -->
+            <MDBRow>
+                <MDBCol class="d-flex justify-content-center">
+                    <Paginator :paginator="this.currentDiary.getPaginator()"/>
+                </MDBCol>
+            </MDBRow>
 
-            <Paginator :paginator="this.currentDiary.getPaginator()"/>
 
         </screenplays>
 

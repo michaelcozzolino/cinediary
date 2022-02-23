@@ -1,13 +1,19 @@
 <template>
-    <div v-if="paginator.links.length > 3">
-            <div class="flex flex-wrap -mb-1">
-                <template v-for="(link, key) in paginator.links">
-                    <div v-if="link.url === null" :key="key" class="mb-1 mr-1 px-4 py-3 text-gray-400 text-sm leading-4 border rounded" v-html="link.label" />
-                    <Link v-else :key="`link-${key}`" class="mb-1 mr-1 px-4 py-3 focus:text-indigo-500 text-sm leading-4 hover:bg-white border focus:border-indigo-500 rounded" :class="{ 'bg-white': link.active }" :href="link.url" v-html="link.label" />
-                </template>
-            </div>
-        </div>
+    <MDBBtnGroup class="mb-4" v-if="paginator.links.length > 3" aria-label="paginator">
+        <Link as="button" class="btn btn-primary ripple-surface" color="primary"
+              :href="getPageUrl(this.paginator.links[0])"
+              :disabled="isDisabled(this.paginator.links[0])"
+              v-text="__('previous')"
+        />
+        <Link as="button" class="btn btn-primary ripple-surface active" :href="getActivePage.url" color="primary"
+              v-text="getActivePage.label"/>
 
+        <Link as="button" class="btn btn-primary ripple-surface" color="primary"
+              :href="getPageUrl(this.paginator.links[linksLength - 1])"
+              :disabled="isDisabled(this.paginator.links[linksLength - 1])"
+              v-text="__('next')"
+        />
+    </MDBBtnGroup>
 </template>
 
 <script>
@@ -18,15 +24,51 @@ export default {
     name: "Paginator",
     components : {Link},
     props: {
-        paginator: {
-
-            links: Array,
-        }
+        paginator: Object,
     },
+
+    computed: {
+        linksLength(){
+            return this.paginator.links.length;
+        },
+
+        getActivePage() {
+            let links = this.paginator.links;
+            let linksLength = this.linksLength;
+
+            for(let i = 0; i < linksLength; i++){
+                let link = links[i];
+                if(link.active) {
+                    return link;
+
+                }
+            }
+        }
+
+    },
+
+    methods: {
+        getPageUrl(link) {
+            return link.url ?? '#';
+        },
+
+        isDisabled(link) {
+            return this.getPageUrl(link) === null;
+        },
+
+        getPageLabel(link) {
+            return link.label;
+        },
+
+
+
+    }
 
 }
 </script>
 
 <style scoped>
-
+.btn-group {
+    box-shadow: none !important;
+}
 </style>
