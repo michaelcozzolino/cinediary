@@ -12,7 +12,8 @@
                     wrapper-class="mb-3"
                     class="form-icon-trailing"
                     :placeholder="'Find ' + this.currentDiary.getScreenplayType() + ' in your diary'"
-                    @input="this.currentDiary.find($event)"
+                    @input="this.find()"
+                    v-model="findQuery"
                 >
 
                          <span class="input-group-text" id="search-addon">
@@ -33,7 +34,7 @@
 
 
         <screenplays v-if="hasScreenplays"  class="d-flex text-center">
-            <screenplay v-if="!this.currentDiary.isFinding()" @on-delete="currentDiary.delete($event)"
+            <screenplay @on-delete="currentDiary.delete($event)"
                         v-for="screenplay in this.currentDiary.getScreenplays()"
                         :screenplay="screenplay"
                         :current-diary="this.currentDiary"
@@ -43,12 +44,7 @@
                 <template v-slot:title>{{screenplay.title}}</template>
             </screenplay>
             <!--    TODO: find in a specific diary (POST Request)        -->
-            <!--    find section    -->
-            <!--
-                        <screenplay :screenplay="screenplay" v-else v-for="screenplay in this.currentDiary.settings.found.screenplays"
-                                    :href="currentDiary.getScreenplayRoute(screenplay.id)"
-                                    :md="'3'" :poster-path="screenplay.posterPath"/>
-            -->
+
             <MDBRow>
                 <MDBCol class="d-flex justify-content-center">
                     <Paginator :paginator="this.currentDiary.getPaginator()"/>
@@ -115,11 +111,6 @@ class Diary{
         return this.screenplayType;
     }
 
-    isFinding(){
-        return false;
-        // return this.getSettings()['found']['isFinding'];
-    }
-
     getScreenplaysLength(){
         return this.getScreenplays().length;
     }
@@ -134,25 +125,6 @@ class Diary{
 
         return "#";
     }
-
-    find = _.debounce((event) => {
-
-        if(!this.settings.found.isFinding)
-            this.settings.found.isFinding = true;
-
-        let query = event.target.value;
-
-        if(query.length === 0){
-            this.settings.found.isFinding = false;
-            this.settings.found.screenplays = [];
-        } else {
-            this.settings.found.screenplays = this.getScreenplays().filter((screenplay) => {
-                if(screenplay.title.toLowerCase().indexOf(query) !== -1)
-                    return screenplay;
-
-            });
-        }
-    },150);
 
     /* returns the index of a screenplay in the diary, given an id */
     getScreenplayIndex(id){
@@ -175,8 +147,8 @@ export default {
     props: {
         screenplays: Object,
         diary: Object, // this is the diary returned by the ScreenplaysTrait
-        paginator: Object
-
+        paginator: Object,
+        query: String, //query returned from the get request after the screenplays have been found
     },
 
     data(){
@@ -195,7 +167,8 @@ export default {
                 series: { title: "TV Series", color: "primary" },
             },
 
-            activeTab: null
+            activeTab: null,
+            findQuery: this.query, // query that the user inputs to find a screenplay in his diary
 
         }
     },
@@ -217,26 +190,17 @@ export default {
     },
 
     methods:{
-        search: _.debounce(function(event){
-
-            if(!this.searchData.isSearching)
-                this.searchData.isSearching = true;
-
-            let query = event.target.value;
-
-            if(query.length === 0){
-                this.searchData.isSearching = false;
-                this.searchData.screenplays = [];
-            }
-
-
-            this.searchData.screenplays = this.screenplays[this.screenplayType].data.filter((screenplay) => {
-                if(screenplay.title.toLowerCase().indexOf(query) !== -1)
-                    return screenplay;
-
+        find: _.debounce(function(event){
+            let route = this.currentDiary.getRoute('index', {
+                query: this.findQuery,
+                diary: this.currentDiary.getId()
             });
 
-        },150),
+            this.$inertia.get(route, {}, {
+                preserveState: false,
+            });
+
+        },750),
 
     },
 }

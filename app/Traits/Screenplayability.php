@@ -22,16 +22,25 @@ trait Screenplayability {
         $this->TMDBScraper = new TMDBScraper();
     }
 
-    public function index(Diary $diary): \Inertia\Response {
-
+    public function index(Request $request, Diary $diary): \Inertia\Response {
+        $findQuery = $request->input('query');
         $screenplayType = $this->screenplayModel->getTable();
 
         $screenplays = [
-            $screenplayType => $diary->{$screenplayType}()->orderBy('title')
-                ->paginate(config('cinediary.pagination_limit')),
+            $screenplayType => is_null($findQuery) ?
 
+                $diary->{$screenplayType}()
+                    ->orderBy('title')
+                    ->paginate(config('cinediary.pagination_limit')) :
+
+                $diary->{$screenplayType}()
+                    ->where('title', 'like', "%{$findQuery}%")
+                    ->orderBy('title')
+                    ->paginate(config('cinediary.pagination_limit'))
         ];
-        return Inertia::render('Diaries/Show', compact('screenplays','diary') );
+
+        return Inertia::render('Diaries/Show', compact('screenplays','diary'))
+            ->with(['query' => $findQuery ?? '']);
     }
 
     public function show(Movie|Series $screenplay) : \Inertia\Response {
