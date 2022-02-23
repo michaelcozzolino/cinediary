@@ -107,9 +107,14 @@ class TMDBScraper{
         $translatedScreenplayData['releaseDate'] = method_exists($screenplay, 'getReleaseDate') ?
             $screenplay->getReleaseDate() : $screenplay->getFirstAirDate();
         $translatedScreenplayData['runtime'] = method_exists($screenplay, 'getRuntime') ?
-            $screenplay->getRuntime() : $screenplay->getEpisodeRuntime() ;
+            $screenplay->getRuntime() : $this->getFirstEpisodeRuntime($screenplay);
 
         return $translatedScreenplayData;
+    }
+
+    private function getFirstEpisodeRuntime(Tv $series): int {
+        $episodeRuntime = $series->getEpisodeRunTime();
+        return reset($episodeRuntime) !== false ? reset($episodeRuntime) : 0;
     }
 
     /*
