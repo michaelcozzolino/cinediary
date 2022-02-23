@@ -115,7 +115,7 @@ class TMDBScraperTest extends TestCase {
         $movieTranslations = $this->TMDBSCraper->translate($firstMovie['id'], $this->blankMovie, $this->availableLanguages);
         $seriesTranslations = $this->TMDBSCraper->translate($firstSeries['id'], $this->blankSeries);
 
-        $keys = ['id', 'backdropPath', 'posterPath', 'overview', 'title', 'originalTitle', 'releaseDate', 'genre'];
+        $keys = ['id', 'backdropPath', 'posterPath', 'overview', 'title', 'originalTitle', 'releaseDate', 'genre', 'runtime'];
         foreach ($keys as $key) {
             $this->assertArrayHasKey($key, $movieTranslations);
 

@@ -5,7 +5,6 @@ use App\Models\Movie;
 use App\Models\Series;
 use App\Models\Setting;
 use App\Models\User;
-use App\Traits\ScreenplayActions;
 use Illuminate\Support\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tmdb\Client;
@@ -67,7 +66,14 @@ class TMDBScraper{
     }
 
 
-
+    /**
+     * Get the needed screenplay by its id from TMDB with all its translations
+     *
+     * @param int|string $id
+     * @param Movie|Series $screenplayModel
+     * @param array $languages
+     * @return array|null
+     */
     public function translate(int|string $id, Movie|Series $screenplayModel, array $languages = []) : ?array {
 
         if(empty($language))
@@ -99,7 +105,9 @@ class TMDBScraper{
             $screenplay->getOriginalTitle() : $screenplay->getOriginalName();
         $translatedScreenplayData['id'] = $screenplay->getId();
         $translatedScreenplayData['releaseDate'] = method_exists($screenplay, 'getReleaseDate') ?
-            $screenplay->getReleaseDate() : $screenplay->getFirstAirDate() ;
+            $screenplay->getReleaseDate() : $screenplay->getFirstAirDate();
+        $translatedScreenplayData['runtime'] = method_exists($screenplay, 'getRuntime') ?
+            $screenplay->getRuntime() : $screenplay->getEpisodeRuntime() ;
 
         return $translatedScreenplayData;
     }

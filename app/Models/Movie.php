@@ -4,8 +4,6 @@ namespace App\Models;
 
 use App\Traits\HasTranslations;
 use App\Traits\ScreenplayActions;
-use App\Traits\ScreenplaysScopesTrait;
-use App\Traits\Screenplayability;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

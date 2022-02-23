@@ -46,7 +46,7 @@ export default {
                 },
                 {
                     key: 'runtime',
-                    value: this.screenplay.runtime + ' minutes',
+                    value: this.screenplay.runtime,
                 },
                 {
                     key: 'genre',

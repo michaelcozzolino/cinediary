@@ -1,17 +1,29 @@
 <?php
 
-
 namespace App\Traits;
-
 
 use App\Classes\TMDBScraper;
 use App\Models\Diary;
 use App\Models\Movie;
 use App\Models\Series;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 
-trait ScreenplayActions{
+trait ScreenplayActions {
+
+    /**
+     * Get the screenplay runtime depending if the screenplay is a movie or a series
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function runtime(): Attribute {
+        return Attribute::make(
+            get: function ($value) {
+            return $this instanceof Movie ?
+                $value . " minutes" :
+                ($this instanceof Series ? $value . " minutes/episode" : $value);
+            }
+        );
+    }
 
     public function watch(){
 
