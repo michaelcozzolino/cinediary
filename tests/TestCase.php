@@ -22,7 +22,9 @@ abstract class TestCase extends BaseTestCase
 
     public function signIn(User $user = null){
         if(! $user) {
-            $user = User::factory()->create();
+            $user = User::factory()->create([
+                'email_verified_at' => null,
+            ]);
             createNewUserDiaries($user);
             $this->userSettings = createUserSettings($user);
         }
