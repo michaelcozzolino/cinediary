@@ -107,13 +107,9 @@ class TMDBScraperTest extends TestCase {
     /** @test */
     public function it_can_translate_a_screenplay(){
         $movies = $this->TMDBSCraper->search(self::SEARCH_QUERY)['movies'];
-        $series = $this->TMDBSCraper->search(self::SEARCH_QUERY)['series'];
 
         $firstMovie = $movies->first();
-        $firstSeries = $series->first();
-
         $movieTranslations = $this->TMDBSCraper->translate($firstMovie['id'], $this->blankMovie, $this->availableLanguages);
-        $seriesTranslations = $this->TMDBSCraper->translate($firstSeries['id'], $this->blankSeries);
 
         $keys = ['id', 'backdropPath', 'posterPath', 'overview', 'title', 'originalTitle', 'releaseDate', 'genre', 'runtime'];
         foreach ($keys as $key) {
@@ -124,14 +120,8 @@ class TMDBScraperTest extends TestCase {
 
                 foreach ($translationsAttributes as $translationsAttribute)
                     $this->assertTrue(in_array($translationsAttribute, $this->availableLanguages));
-
             }
         }
-
-
-
-
-            //do it also for tv series
     }
 
     /** @test */

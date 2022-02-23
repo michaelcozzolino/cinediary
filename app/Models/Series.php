@@ -40,7 +40,7 @@ use Illuminate\Database\Eloquent\Model;
 class Series extends Model
 {
     use HasFactory, HasTranslations, ScreenplayActions;
-    public array $translatable = ['title', 'originalTitle', 'posterPath', 'backdropPath','overview', 'genre'];
+    public array $translatable = ['title', 'posterPath', 'backdropPath','overview', 'genre'];
     public $incrementing = false;
     protected $guarded = [];
     protected $casts = [
