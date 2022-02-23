@@ -47,10 +47,6 @@ export default {
 
     emits: ['OnForgotPasswordButtonClick'],
 
-    props: {
-        mustVerifyEmail: Boolean,
-    },
-
     data() {
         return {
             form: this.$inertia.form({
