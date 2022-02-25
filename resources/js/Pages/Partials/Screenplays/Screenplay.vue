@@ -97,7 +97,10 @@ export default {
                 this.screenplay.releaseDate,
             ];
             return furtherData
-                .filter((furtherDatum) => furtherDatum !== null)
+                .filter(
+                    (furtherDatum) =>
+                        furtherDatum !== null && furtherDatum !== '',
+                )
                 .join(', ');
         },
 
