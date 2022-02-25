@@ -233,12 +233,12 @@ class TMDBScraper
     /**
      * Create the image url for a screenplay based on the given parameters.
      *
-     * @param string $path
+     * @param string|null $path
      * @param string $size
      * @param bool $isPoster
      * @return string
      */
-    private function getImageUrl(string $path, string $size, bool $isPoster = true)
+    private function getImageUrl(?string $path, string $size, bool $isPoster = true)
     {
         return $path === null
             ? ($isPoster

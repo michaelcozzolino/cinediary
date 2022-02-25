@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Models\Diary;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -23,15 +24,12 @@ abstract class TestCase extends BaseTestCase
     public function signIn(User $user = null)
     {
         if (!$user) {
-            $user = User::factory()->create([
-                'email_verified_at' => null,
-            ]);
-            createNewUserDiaries($user);
-            $this->userSettings = createUserSettings($user);
+            $this->user = createUser(true);
+        } else {
+            $this->user = $user;
         }
-
-        $this->user = $user;
-        $this->actingAs($user);
+        $this->userSettings = Setting::whereUserId($this->user->id);
+        $this->actingAs($this->user);
 
         $custom = Diary::firstOrCreate(['name' => 'custom diary', 'user_id' => $this->user->id]);
         $watched = Diary::getWatched();
