@@ -7,9 +7,7 @@
  */
 
 return [
-
     'routes' => [
-
         /**
          * Route prefix, example of route http://localhost/js/localizations.js.
          */
@@ -27,8 +25,8 @@ return [
          *
          * Don't use space in .env directive after ,
          */
-        'middleware' => (env('LARAVEL_LOCALIZATION_MIDDLEWARE')) ?
-            explode(',', env('LARAVEL_LOCALIZATION_MIDDLEWARE'))
+        'middleware' => env('LARAVEL_LOCALIZATION_MIDDLEWARE')
+            ? explode(',', env('LARAVEL_LOCALIZATION_MIDDLEWARE'))
             : [],
 
         /**
@@ -37,7 +35,6 @@ return [
         'enable' => env('LARAVEL_LOCALIZATION_ROUTE_ENABLE', false),
     ],
     'events' => [
-
         /**
          * This package emits some events after it getters all translation messages.
          *
@@ -46,7 +43,6 @@ return [
         'channel' => env('LARAVEL_LOCALIZATION_EVENTS_CHANNEL', ''),
     ],
     'caches' => [
-
         /**
          * What cache driver do you want to use - more information: https://laravel.com/docs/5.6/cache#driver-prerequisites.
          */
@@ -79,7 +75,6 @@ return [
         'filename' => 'll_messages.js',
     ],
     'paths' => [
-
         /**
          * You can export more lang files then just files in resources/lang, for example.
          *
@@ -100,5 +95,4 @@ return [
      * and it should accept (string) argument.
      */
     'export_callback' => null,
-
 ];

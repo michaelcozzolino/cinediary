@@ -1,8 +1,12 @@
 /node_modules
+/public/css/app.css
+/public/js
 /public/hot
+/public/mix-manifest.json
 /public/storage
 /storage/*.key
 /vendor
+.DS_Store
 .env
 .env.backup
 .phpunit.result.cache
@@ -13,3 +17,6 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+_ide_helper_models.php
+_ide_helper.php
+.env.testing

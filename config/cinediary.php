@@ -48,6 +48,5 @@ return [
     |
     */
 
-    'pagination_limit' => 20
-
+    'pagination_limit' => 20,
 ];

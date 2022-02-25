@@ -1,9 +1,5 @@
 <template>
-            <img
-                :src="imageUrl"
-                class="img-fluid rounded"
-                alt=""
-            />
+    <img :src="imageUrl" class="img-fluid rounded" alt="" />
 </template>
 
 <script>
@@ -12,7 +8,7 @@ export default {
         imageUrl: {
             type: String,
             required: true,
-        }
-    }
-}
+        },
+    },
+};
 </script>

@@ -1,15 +1,15 @@
 <template>
-    <hr style="margin: 20px;">
+    <hr style="margin: 20px" />
 </template>
 
 <script>
 export default {
-name: "Separator"
-}
+    name: 'Separator',
+};
 </script>
 
 <style lang="scss" scoped>
-@import "resources/css/mdb";
+@import 'resources/css/mdb';
 
 hr {
     border: 2px solid $primary;

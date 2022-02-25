@@ -1,6 +1,6 @@
-import {createApp, h} from 'vue';
-import {createInertiaApp, Head} from '@inertiajs/inertia-vue3';
-import {InertiaProgress} from '@inertiajs/progress';
+import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/inertia-vue3';
+import { InertiaProgress } from '@inertiajs/progress';
 import 'mdb-vue-ui-kit/css/mdb.min.css';
 
 import 'jarallax/dist/jarallax.css';
@@ -8,17 +8,18 @@ import '@/Core/jarallax';
 
 import VueSidebarMenu from 'vue-sidebar-menu';
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
-import {RegisterComponents} from "@/Core/RegisterComponents";
-import {__} from "@/Core/Translator";
+import { RegisterComponents } from '@/Core/RegisterComponents';
+import { __ } from '@/Core/Translator';
+import helpers from '@/Core/helpers';
 
-require("@/Core/Icons");
+require('@/Core/Icons');
 require('@/Core/bootstrap');
-import helpers from "@/Core/helpers";
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+const appName =
+    window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 const helpersPlugin = {
-    install (app, options) {
+    install(app, options) {
         app.config.globalProperties.$helpers = helpers;
-    }
+    },
 };
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -30,7 +31,9 @@ createInertiaApp({
 
         RegisterComponents(myApp);
 
-        return myApp.mixin({ methods: { route, __ }}).use(helpersPlugin)
+        return myApp
+            .mixin({ methods: { route, __ } })
+            .use(helpersPlugin)
             .mount(el);
     },
 });

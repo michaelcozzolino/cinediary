@@ -44,6 +44,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Movie whereUpcoming($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Diary[] $diaries
  * @property-read int|null $diaries_count
+ * @property array|null $genre
+ * @property int $isPopular
+ * @property-read array $translations
+ * @method static \Illuminate\Database\Eloquent\Builder|Movie whereGenre($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Movie whereIsPopular($value)
  */
 class Movie extends Model
 {
@@ -57,12 +62,11 @@ class Movie extends Model
 
     public array $translatable = ['title', 'posterPath', 'backdropPath', 'overview', 'genre'];
 
-    public function diaries(){
-        return $this->belongsToMany(Diary::class)
-            ->withTimestamps();
-    }
-
-    public function route() : string{
-        return route('movies.show',['movie' => $this]);
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function diaries()
+    {
+        return $this->belongsToMany(Diary::class)->withTimestamps();
     }
 }

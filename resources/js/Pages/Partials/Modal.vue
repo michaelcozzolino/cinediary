@@ -9,7 +9,11 @@
         @hide="this.$emit('OnClose')"
     >
         <MDBModalHeader>
-            <MDBModalTitle v-if="this.$slots.title" :class="getTitleClass" :id="titleId">
+            <MDBModalTitle
+                v-if="this.$slots.title"
+                :class="getTitleClass"
+                :id="titleId"
+            >
                 <slot name="title" />
             </MDBModalTitle>
         </MDBModalHeader>
@@ -18,16 +22,15 @@
             <slot name="body" />
         </MDBModalBody>
 
-            <MDBModalFooter v-if="this.$slots.footer">
-                <slot name="footer" />
-            </MDBModalFooter>
-
+        <MDBModalFooter v-if="this.$slots.footer">
+            <slot name="footer" />
+        </MDBModalFooter>
     </MDBModal>
 </template>
 
 <script>
 export default {
-    name: "Modal",
+    name: 'Modal',
 
     emits: ['OnClose'],
 
@@ -45,25 +48,24 @@ export default {
             type: Boolean,
             default: false,
         },
-
     },
 
     data() {
         return {
-           modal: {
-               isOpen: false,
-           }
-        }
+            modal: {
+                isOpen: false,
+            },
+        };
     },
 
     computed: {
         titleId() {
-            return this.id + "-title";
+            return this.id + '-title';
         },
 
         getTitleClass() {
             return ['fw-bold'].concat(this.titleClass);
-        }
+        },
     },
 
     methods: {
@@ -72,12 +74,9 @@ export default {
         },
         close() {
             this.modal.isOpen = false;
-        }
-
-    }
-}
+        },
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

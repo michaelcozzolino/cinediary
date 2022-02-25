@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -44,11 +43,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Diary[] $diaries
  * @property-read int|null $diaries_count
  * @property-read \App\Models\Setting|null $settings
- * @method static Builder|User favourite()
- * @method static Builder|User movies()
- * @method static Builder|User watchList()
- * @method static Builder|User watched()
- * @method static Builder|User watchedMovies()
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -59,21 +53,14 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var string[]
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ['name', 'email', 'password'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * The attributes that should be cast.
@@ -84,22 +71,19 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function diaries(): HasMany {
+    /**
+     * @return HasMany
+     */
+    public function diaries()
+    {
         return $this->hasMany(Diary::class);
     }
 
-    public function settings(): HasOne {
+    /**
+     * @return HasOne
+     */
+    public function settings()
+    {
         return $this->hasOne(Setting::class);
-    }
-
-    /* get all the watched screenplays */
-    public function scopeWatched(Builder $query) : Builder{
-        return $query->with('diaries', function ($query){
-            $query->where('name','watched')->first();
-        });
-    }
-
-    public function scopeWatchedMovies(Builder $query) : Builder{
-        return $query->whereHas('movies', fn($query) => $query);
     }
 }

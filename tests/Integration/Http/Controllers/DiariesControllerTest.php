@@ -1,19 +1,18 @@
 <?php
 
-
 namespace Tests\Integration\Http\Controllers;
-
 
 use App\Http\Controllers\DiariesController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
-class DiariesControllerTest extends TestCase{
-
+class DiariesControllerTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->signIn();
     }
@@ -22,29 +21,29 @@ class DiariesControllerTest extends TestCase{
      * @test
      *
      */
-    public function it_lists_all_the_user_diaries() {
+    public function it_lists_all_the_user_diaries()
+    {
         $this->get(route('diaries.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
-                ->component('Diaries/Index')
-                ->has('diaries', $this->user->diaries()->count()));
-
+            ->assertInertia(
+                fn(Assert $page) => $page->component('Diaries/Index')->has('diaries', $this->user->diaries()->count()),
+            );
     }
 
     /**
      * @test
      *
      */
-    public function it_stores_a_diary_if_all_fields_are_valid() {
+    public function it_stores_a_diary_if_all_fields_are_valid()
+    {
         $this->get(route('diaries.index'))->assertOk();
         $diaryName = 'A random name';
-        $this->post(route('diaries.store', compact('diaryName')))
-            ->assertRedirect(route('diaries.index'));
+        $this->post(route('diaries.store', compact('diaryName')))->assertRedirect(route('diaries.index'));
 
-        $this->assertDatabaseHas('diaries',[
+        $this->assertDatabaseHas('diaries', [
             'name' => $diaryName,
             'isMain' => false,
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
         ]);
     }
 
@@ -52,7 +51,8 @@ class DiariesControllerTest extends TestCase{
      * @test
      *
      */
-    public function it_does_not_store_a_diary_if_any_field_is_not_valid() {
+    public function it_does_not_store_a_diary_if_any_field_is_not_valid()
+    {
         $this->get(route('diaries.index'))->assertOk();
         $this->post(route('diaries.store'))
             ->assertSessionHasErrors('diaryName')
@@ -63,7 +63,8 @@ class DiariesControllerTest extends TestCase{
      * @test
      *
      */
-    public function it_deletes_a_diary_and_all_of_its_attached_screenplays() {
+    public function it_deletes_a_diary_and_all_of_its_attached_screenplays()
+    {
         $diary = $this->diaries['custom'];
         $this->get(route('diaries.index'))->assertOk();
         $this->delete(route('diaries.destroy', compact('diary')))
@@ -71,14 +72,14 @@ class DiariesControllerTest extends TestCase{
             ->assertSessionHas('message', DiariesController::DELETE_SUCCESS_MESSAGE);
 
         $this->assertModelMissing($diary);
-
     }
 
     /**
      * @test
      *
      */
-    public function it_does_not_delete_a_main_diary() {
+    public function it_does_not_delete_a_main_diary()
+    {
         $diary = $this->diaries['watched'];
         $this->assertEquals(1, $diary->isMain);
         $this->get(route('diaries.index'))->assertOk();
@@ -88,5 +89,4 @@ class DiariesControllerTest extends TestCase{
 
         $this->assertModelExists($diary);
     }
-
 }

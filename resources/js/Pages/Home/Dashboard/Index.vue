@@ -1,54 +1,57 @@
 <template xmlns="http://www.w3.org/1999/html">
-
-<!--    <Head title="Dashboard" />-->
+    <!--    <Head title="Dashboard" />-->
 
     <authenticated>
-        <screenplays v-for="(screenplays, screenplayType) in lastWatchedScreenplaysData"
-                     v-show="screenplays.length"
+        <screenplays
+            v-for="(screenplays, screenplayType) in lastWatchedScreenplaysData"
+            v-show="screenplays.length"
         >
-            <h3 class="text-dark" v-text="'Last watched ' + screenplayType"/>
-            <screenplay v-for="screenplay in screenplays"
-                        :screenplay="screenplay"
-                        :screenplay-type="screenplayType"
-                        :md="'3'"
-
+            <h3 class="text-dark" v-text="'Last watched ' + screenplayType" />
+            <screenplay
+                v-for="screenplay in screenplays"
+                :screenplay="screenplay"
+                :screenplay-type="screenplayType"
+                :md="'3'"
             />
-
         </screenplays>
 
-       <MDBRow class="mb-4">
-           <h3 class="text-dark" v-text="'Movies and tv series you watched by letter'"/>
-           <MDBCol>
-               <div id="letters-bar-chart"></div>
-           </MDBCol>
-       </MDBRow>
+        <MDBRow class="mb-4">
+            <h3
+                class="text-dark"
+                v-text="'Movies and tv series you watched by letter'"
+            />
+            <MDBCol>
+                <div id="letters-bar-chart"></div>
+            </MDBCol>
+        </MDBRow>
 
         <MDBRow>
-            <h3 class="text-dark" v-text="'Total Movies and tv series you watched'"/>
+            <h3
+                class="text-dark"
+                v-text="'Total Movies and tv series you watched'"
+            />
             <MDBCol>
                 <div id="watched-screenplays-percentage-chart"></div>
             </MDBCol>
         </MDBRow>
 
         <MDBRow>
-            <h3 class="text-dark" v-text="'Total genres you watched'"/>
+            <h3 class="text-dark" v-text="'Total genres you watched'" />
             <MDBCol>
                 <div id="watched-genres-percentage-chart"></div>
             </MDBCol>
         </MDBRow>
-
-
     </authenticated>
 </template>
 
 <script>
 import Authenticated from '@/Layouts/Authenticated.vue';
 import { Head } from '@inertiajs/inertia-vue3';
-import {Chart} from "frappe-charts/dist/frappe-charts.esm";
-import "frappe-charts/src/css/charts.scss";
-import SectionTitle from "@/Pages/Partials/SectionTitle";
-import Screenplays from "@/Pages/Partials/Screenplays/Screenplays";
-import Screenplay from "@/Pages/Partials/Screenplays/Screenplay";
+import { Chart } from 'frappe-charts/dist/frappe-charts.esm';
+import 'frappe-charts/src/css/charts.scss';
+import SectionTitle from '@/Pages/Partials/SectionTitle';
+import Screenplays from '@/Pages/Partials/Screenplays/Screenplays';
+import Screenplay from '@/Pages/Partials/Screenplays/Screenplay';
 export default {
     components: {
         Screenplay,
@@ -63,23 +66,24 @@ export default {
         lastWatchedScreenplaysData: Object,
     },
 
-    data(){
+    data() {
         return {
             lettersBarChart: {
                 data: {
-                    labels: Object.keys(this.chartData['lettersBarChart']['movies']),
+                    labels: Object.keys(
+                        this.chartData['lettersBarChart']['movies'],
+                    ),
                     datasets: [
                         {
-                            name: "Movies",
+                            name: 'Movies',
                             values: this.getLettersBarChartValues('movies'),
-                            chartType: "bar"
+                            chartType: 'bar',
                         },
                         {
-                            name: "Series",
+                            name: 'Series',
                             values: this.getLettersBarChartValues('series'),
-                            chartType: "bar"
+                            chartType: 'bar',
                         },
-
                     ],
                 },
                 chart: null,
@@ -87,66 +91,77 @@ export default {
 
             watchedScreenplaysPercentageChart: {
                 data: {
-                    labels: Object.keys(this.chartData['watchedScreenplaysPercentageChart']),
+                    labels: Object.keys(
+                        this.chartData['watchedScreenplaysPercentageChart'],
+                    ),
                     datasets: [
                         {
                             values: [
-                                this.chartData['watchedScreenplaysPercentageChart']['movies'],
-                                this.chartData['watchedScreenplaysPercentageChart']['series'],
+                                this.chartData[
+                                    'watchedScreenplaysPercentageChart'
+                                ]['movies'],
+                                this.chartData[
+                                    'watchedScreenplaysPercentageChart'
+                                ]['series'],
                             ],
-
                         },
-
                     ],
                 },
                 chart: null,
             },
             watchedGenresPercentageChart: {
                 data: {
-                    labels: Object.keys(this.chartData['watchedGenresPercentageChart']),
+                    labels: Object.keys(
+                        this.chartData['watchedGenresPercentageChart'],
+                    ),
                     datasets: [
                         {
-                            values: Object.values(this.chartData['watchedGenresPercentageChart']),
-
+                            values: Object.values(
+                                this.chartData['watchedGenresPercentageChart'],
+                            ),
                         },
-
                     ],
                 },
                 chart: null,
             },
-
-        }
+        };
     },
 
-
     mounted() {
-        this.lettersBarChart.chart = new Chart("#letters-bar-chart", {
+        this.lettersBarChart.chart = new Chart('#letters-bar-chart', {
             data: this.lettersBarChart.data,
             type: 'bar',
             height: 250,
             colors: ['#64B5F6', '#0D47A1'],
         });
 
-        this.watchedScreenplaysPercentageChart.chart = new Chart("#watched-screenplays-percentage-chart", {
-            data: this.watchedScreenplaysPercentageChart.data,
-            type: 'percentage',
-            height: 180,
-            colors: ['#64B5F6', '#0d47a1'],
-        });
+        this.watchedScreenplaysPercentageChart.chart = new Chart(
+            '#watched-screenplays-percentage-chart',
+            {
+                data: this.watchedScreenplaysPercentageChart.data,
+                type: 'percentage',
+                height: 180,
+                colors: ['#64B5F6', '#0d47a1'],
+            },
+        );
 
-        this.watchedGenresPercentageChart.chart = new Chart("#watched-genres-percentage-chart", {
-            data: this.watchedGenresPercentageChart.data,
-            type: 'percentage',
-            height: 180,
-            // colors: ['#64B5F6', '#0d47a1'],
-        });
-
+        this.watchedGenresPercentageChart.chart = new Chart(
+            '#watched-genres-percentage-chart',
+            {
+                data: this.watchedGenresPercentageChart.data,
+                type: 'percentage',
+                height: 180,
+                // colors: ['#64B5F6', '#0d47a1'],
+            },
+        );
     },
 
     methods: {
-        getLettersBarChartValues(screenplayType){
-            return Object.values(this.chartData['lettersBarChart'][screenplayType])
-        }
+        getLettersBarChartValues(screenplayType) {
+            return Object.values(
+                this.chartData['lettersBarChart'][screenplayType],
+            );
+        },
     },
-}
+};
 </script>

@@ -16,17 +16,18 @@ class RedirectIfEmptyDiaries
      * @param Closure $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next): mixed {
-
+    public function handle(Request $request, Closure $next): mixed
+    {
         $diaries = \Auth::user()->load('diaries')->diaries;
 
-        foreach ($diaries as $diary){
-            if($diary->movies->count() || $diary->series->count())
+        foreach ($diaries as $diary) {
+            if ($diary->movies->count() || $diary->series->count()) {
                 return $next($request);
+            }
         }
 
-        return redirect()->route('search.create')
-            ->with(['message' => self::ERROR_MESSAGE ]);
+        return redirect()
+            ->route('search.create')
+            ->with(['message' => self::ERROR_MESSAGE]);
     }
-
 }

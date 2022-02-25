@@ -2,18 +2,31 @@
 
 namespace App\Traits;
 
-trait ScreenplayTypes{
-
-    public function getScreenplayModels(): array {
+trait ScreenplayTypes
+{
+    /**
+     * Get the available models for screenplays.
+     *
+     * @return array
+     */
+    public function getScreenplayModels(): array
+    {
         return config('cinediary.screenplay_models');
     }
 
-    public function getScreenplayTypes(): array {
+    /**
+     * Get the screenplay types of the available models
+     *
+     * @return array
+     */
+    public function getScreenplayTypes(): array
+    {
         $screenplayTypes = [];
         $models = $this->getScreenplayModels();
 
-        foreach ($models as $model)
-            $screenplayTypes []= $model->getTable();
+        foreach ($models as $model) {
+            $screenplayTypes[] = $model->getTable();
+        }
 
         return $screenplayTypes;
     }

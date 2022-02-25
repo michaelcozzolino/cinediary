@@ -1,17 +1,15 @@
 <template>
     <MDBRow :class="this.class">
-        <slot/>
+        <slot />
     </MDBRow>
 </template>
 
-
 <script>
-import Screenplay from "./Screenplay";
+import Screenplay from './Screenplay';
 export default {
-    components: {Screenplay},
+    components: { Screenplay },
     props: {
         class: [String, Array],
     },
-
-}
+};
 </script>

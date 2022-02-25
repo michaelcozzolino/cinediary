@@ -20,8 +20,9 @@ abstract class TestCase extends BaseTestCase
         $this->availableLanguages = config('app.available_locales');
     }
 
-    public function signIn(User $user = null){
-        if(! $user) {
+    public function signIn(User $user = null)
+    {
+        if (!$user) {
             $user = User::factory()->create([
                 'email_verified_at' => null,
             ]);
@@ -33,31 +34,19 @@ abstract class TestCase extends BaseTestCase
         $this->actingAs($user);
 
         $custom = Diary::firstOrCreate(['name' => 'custom diary', 'user_id' => $this->user->id]);
-        $watched= Diary::getWatched();
+        $watched = Diary::getWatched();
         $favourite = Diary::getFavourite();
         $toWatch = Diary::getToWatch();
         $this->diaries = compact('custom', 'watched', 'favourite', 'toWatch');
         return $this;
     }
 
-    public static function getInvalidScreenplayIds(){
+    public static function getInvalidScreenplayIds()
+    {
         return [
-            [
-                ['screenplayId' => null],
-                ['screenplayId']
-            ],
-            [
-                ['screenplayId' => -1],
-                ['screenplayId']
-            ],
-            [
-                ['screenplayId' => 4.6],
-                ['screenplayId']
-            ]
-
-
+            [['screenplayId' => null], ['screenplayId']],
+            [['screenplayId' => -1], ['screenplayId']],
+            [['screenplayId' => 4.6], ['screenplayId']],
         ];
     }
-
-
 }

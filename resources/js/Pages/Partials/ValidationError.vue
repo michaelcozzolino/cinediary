@@ -9,11 +9,9 @@ export default {
     props: {
         error: {
             required: true,
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,13 +1,15 @@
 <template>
-    <authenticated :header-info="{message: noDiariesMessage}">
-        <h6 class="text-muted text-uppercase "
+    <authenticated :header-info="{ message: noDiariesMessage }">
+        <h6
+            class="text-muted text-uppercase"
             v-show="lastQuery !== undefined"
-            v-text="this.__('Your last search...')" style="font-size: 14px; font-weight: 600"/>
+            v-text="this.__('Your last search...')"
+            style="font-size: 14px; font-weight: 600"
+        />
 
         <form @submit.prevent="search.search(this.getSearchedScreenplays)">
             <!--            {{this.__('Your last search..')}}-->
             <MDBInput
-
                 :input-group="true"
                 :formOutline="false"
                 wrapperClass="mb-3"
@@ -18,7 +20,12 @@
                 aria-describedby="query"
                 id="query"
             >
-                <MDBBtn color="primary" type="submit"  id="search-button" :ripple="{ color: 'dark' }">
+                <MDBBtn
+                    color="primary"
+                    type="submit"
+                    id="search-button"
+                    :ripple="{ color: 'dark' }"
+                >
                     <font-awesome-icon icon="search" />
                     {{ __('Search') }}
                 </MDBBtn>
@@ -29,46 +36,56 @@
         <MDBTabs :model-value="search.activeTabId" v-if="search.hasSearched()">
             <!-- Tabs navs -->
             <MDBTabNav fill tabsClasses="mb-3">
-                <MDBTabItem tabId="movies" href="movies">{{ __('Movies') }}</MDBTabItem>
-                <MDBTabItem tabId="series" href="series">{{ __('Series') }}</MDBTabItem>
+                <MDBTabItem tabId="movies" href="movies">{{
+                    __('Movies')
+                }}</MDBTabItem>
+                <MDBTabItem tabId="series" href="series">{{
+                    __('Series')
+                }}</MDBTabItem>
             </MDBTabNav>
             <!-- Tabs navs -->
             <!-- Tabs content -->
             <MDBTabContent>
                 <MDBTabPane tabId="movies">
-                    <screenplays class="d-flex text-center" v-if="search.hasMovies()">
-                        <screenplay v-for="movie in search.getMovies()"
-                                    :screenplay="movie"
-                                    :md="'3'"
-                                    screenplay-type="movies"
+                    <screenplays
+                        class="d-flex text-center"
+                        v-if="search.hasMovies()"
+                    >
+                        <screenplay
+                            v-for="movie in search.getMovies()"
+                            :screenplay="movie"
+                            :md="'3'"
+                            screenplay-type="movies"
                         >
                         </screenplay>
                     </screenplays>
 
                     <alert v-else>
                         <template #message>
-                            {{__('no movie matching your search')}}
+                            {{ __('no movie matching your search') }}
                         </template>
                     </alert>
-
                 </MDBTabPane>
                 <MDBTabPane tabId="series">
-                    <screenplays class="d-flex text-center"  v-if="search.hasSeries()">
-                        <screenplay v-for="series in search.getSeries()"
-                                    :screenplay="series"
-                                    :md="'3'"
-                                    screenplay-type="series"
+                    <screenplays
+                        class="d-flex text-center"
+                        v-if="search.hasSeries()"
+                    >
+                        <screenplay
+                            v-for="series in search.getSeries()"
+                            :screenplay="series"
+                            :md="'3'"
+                            screenplay-type="series"
                         >
-                            <template v-slot:title>{{series.title}}</template>
+                            <template v-slot:title>{{ series.title }}</template>
                         </screenplay>
                     </screenplays>
 
                     <alert v-else>
                         <template #message>
-                            {{__('no tv series matching your search')}}
+                            {{ __('no tv series matching your search') }}
                         </template>
                     </alert>
-
                 </MDBTabPane>
             </MDBTabContent>
             <!-- Tabs content -->
@@ -77,114 +94,108 @@
 </template>
 
 <script>
-import Authenticated from "@/Layouts/Authenticated";
-import Screenplay from "@/Pages/Partials/Screenplays/Screenplay";
-import Screenplays from "@/Pages/Partials/Screenplays/Screenplays";
-import {usePage} from "@inertiajs/inertia-vue3";
-import {reactive} from "vue";
-import ValidationError from "@/Pages/Partials/ValidationError";
-import Alert from "@/Pages/Partials/Alert";
+import Authenticated from '@/Layouts/Authenticated';
+import Screenplay from '@/Pages/Partials/Screenplays/Screenplay';
+import Screenplays from '@/Pages/Partials/Screenplays/Screenplays';
+import { usePage } from '@inertiajs/inertia-vue3';
+import { reactive } from 'vue';
+import ValidationError from '@/Pages/Partials/ValidationError';
+import Alert from '@/Pages/Partials/Alert';
 
-class Search{
-
+class Search {
     constructor(data) {
         for (let property in data) {
-            if(data.hasOwnProperty(property))
-                this[property] = data[property];
+            if (data.hasOwnProperty(property)) this[property] = data[property];
         }
-
     }
 
-    getScreenplays(){
+    getScreenplays() {
         return this['screenplays'];
     }
 
-    setScreenplays(screenplays){
+    setScreenplays(screenplays) {
         this['screenplays'] = screenplays;
     }
-    getMovies(){
-        if(this.getScreenplays().hasOwnProperty('movies'))
+    getMovies() {
+        if (this.getScreenplays().hasOwnProperty('movies'))
             return this.getScreenplays()['movies'];
         return {};
     }
 
-    getSeries(){
-        if(this.getScreenplays().hasOwnProperty('series'))
+    getSeries() {
+        if (this.getScreenplays().hasOwnProperty('series'))
             return this.getScreenplays()['series'];
         return {};
     }
 
-
-
     /* it checks the length of an object  */
-    has(object){
-        if(object)
-            return Object.keys(object).length;
+    has(object) {
+        if (object) return Object.keys(object).length;
         return 0;
     }
 
-    hasMovies(){
+    hasMovies() {
         return this.has(this.getMovies());
     }
 
-    hasSeries(){
+    hasSeries() {
         return this.has(this.getSeries());
     }
 
     /* it checks if a search has been performed,
      * if true, the screenplays object has to contain the single arrays for movies & series */
-    hasSearched(){
+    hasSearched() {
         return this.has(this.getScreenplays()); //non vero
     }
 
-    search(callback){
-        this['form'].post(route('search.make'),{
+    search(callback) {
+        this['form'].post(route('search.make'), {
             preserveScroll: true,
-            onSuccess: () => this.setScreenplays(callback()) ,
+            onSuccess: () => this.setScreenplays(callback()),
         });
-
     }
 }
 
 export default {
-    components: {Alert, ValidationError, Authenticated, Screenplay, Screenplays},
+    components: {
+        Alert,
+        ValidationError,
+        Authenticated,
+        Screenplay,
+        Screenplays,
+    },
 
     props: {
         screenplays: Object, // the screenplays returned from the search
         lastQuery: String,
-        errors: Object
+        errors: Object,
     },
-    data(){
-        return{
-            search: new Search(reactive({
-                screenplays: this.screenplays ?? {},
-                activeTabId: "movies",
-                form: this.$inertia.form({
-                    query: this.lastQuery ?? '',
+    data() {
+        return {
+            search: new Search(
+                reactive({
+                    screenplays: this.screenplays ?? {},
+                    activeTabId: 'movies',
+                    form: this.$inertia.form({
+                        query: this.lastQuery ?? '',
+                    }),
                 }),
-
-
-
-            })),
-
-        }
+            ),
+        };
     },
 
     computed: {
-        noDiariesMessage(){
+        noDiariesMessage() {
             return usePage().props.value.flash.message;
         },
-
     },
 
-    methods:{
-        getSearchedScreenplays(){
+    methods: {
+        getSearchedScreenplays() {
             return this.screenplays;
         },
-    }
-}
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

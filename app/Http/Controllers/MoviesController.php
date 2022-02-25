@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use App\Traits\Screenplayability;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class MoviesController extends Controller
 {
@@ -13,8 +11,8 @@ class MoviesController extends Controller
 
     protected string $model = Movie::class;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->init();
     }
-
 }

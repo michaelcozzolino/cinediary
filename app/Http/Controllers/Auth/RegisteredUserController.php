@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Inertia\Inertia;
 
 class RegisteredUserController extends Controller
 {
@@ -38,19 +37,19 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $diariesTocreate = [
+        $diariesToCreate = [
             ['user_id' => $user->id, 'name' => 'Watched', 'isMain' => true],
             ['user_id' => $user->id, 'name' => 'Favourite', 'isMain' => true],
-            ['user_id' => $user->id, 'name' => 'To Watch', 'isMain' => true]
+            ['user_id' => $user->id, 'name' => 'To Watch', 'isMain' => true],
         ];
-        foreach($diariesTocreate as $diaryToCreate)
+        foreach ($diariesToCreate as $diaryToCreate) {
             Diary::firstOrCreate($diaryToCreate);
+        }
 
         Setting::firstOrCreate([
             'user_id' => $user->id,
             'defaultLanguage' => app()->getLocale(),
         ]);
-
 
         event(new Registered($user));
 

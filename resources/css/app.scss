@@ -2,8 +2,9 @@
 
 $fontFamily: 'Quicksand', sans-serif;
 
-#app, .p-component{
-    font-family: $fontFamily !important ;
+#app,
+.p-component {
+    font-family: $fontFamily !important;
 }
 
 .text-sm {
@@ -12,25 +13,25 @@ $fontFamily: 'Quicksand', sans-serif;
 }
 
 .bg-pink-200 {
-    background-color: #F48FB1 !important;
+    background-color: #f48fb1 !important;
 }
 
-.bg-deep-orange-200{
-    background-color: #FFAB91 !important;
+.bg-deep-orange-200 {
+    background-color: #ffab91 !important;
 }
 
-.bg-indigo-400{
-    background-color: #5C6BC0 !important;
+.bg-indigo-400 {
+    background-color: #5c6bc0 !important;
 }
 
-.bg-teal-200{
-    background-color: #80CBC4 !important;
+.bg-teal-200 {
+    background-color: #80cbc4 !important;
 }
 
-.bg-deep-purple-200{
-    background-color: #B39DDB !important;
+.bg-deep-purple-200 {
+    background-color: #b39ddb !important;
 }
 
-.bg-gray-200{
-    background-color: #EEEEEE !important;
+.bg-gray-200 {
+    background-color: #eeeeee !important;
 }

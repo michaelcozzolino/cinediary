@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 use Spatie\Translatable\HasTranslations as BaseHasTranslations;
+
 trait HasTranslations
 {
     use BaseHasTranslations;
@@ -19,4 +20,3 @@ trait HasTranslations
         return $attributes;
     }
 }
-

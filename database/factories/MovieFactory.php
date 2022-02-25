@@ -32,7 +32,6 @@ class MovieFactory extends Factory
             'overview' => $this->faker->text(),
             'releaseDate' => $this->faker->date(),
             'runtime' => $this->faker->randomNumber(3),
-
         ];
     }
 }

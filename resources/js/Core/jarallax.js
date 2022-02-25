@@ -1,10 +1,8 @@
-import 'object-fit-images'
-import { jarallax } from 'jarallax'
+import 'object-fit-images';
+import { jarallax } from 'jarallax';
 
-window.addEventListener('load', function(event) {
-
+window.addEventListener('load', function (event) {
     jarallax(document.querySelectorAll('.jarallax'), {
-        speed: 0.2
-    })
-
-})
+        speed: 0.2,
+    });
+});

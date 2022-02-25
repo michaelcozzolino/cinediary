@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\Integration\Classes;
 
 use App\Classes\TMDBScraper;
@@ -10,8 +9,8 @@ use App\Models\Setting;
 use App\Models\User;
 use Tests\TestCase;
 
-class TMDBScraperTest extends TestCase {
-
+class TMDBScraperTest extends TestCase
+{
     private TMDBScraper $TMDBSCraper;
     private const SEARCH_QUERY = 'mission impossible';
     private const FAKE_QUERY = 'qwertyabc_fake_query';
@@ -20,23 +19,22 @@ class TMDBScraperTest extends TestCase {
     private Movie $blankMovie;
     private Series $blankSeries;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->TMDBSCraper = new TMDBScraper(TMDBScraper::DEFAULT_API_KEY);
         $this->blankMovie = new Movie();
         $this->blankSeries = new Series();
         $this->moviesTableName = $this->blankMovie->getTable();
         $this->seriesTableName = $this->blankSeries->getTable();
-
     }
-
 
     /**
      * @test
      *
      */
-    public function default_api_key_is_used() {
-
+    public function default_api_key_is_used()
+    {
         $this->assertEquals(TMDBScraper::DEFAULT_API_KEY, (new TMDBScraper(null))->getApiKey());
 
         $user = $this->signIn()->user;
@@ -53,7 +51,8 @@ class TMDBScraperTest extends TestCase {
      * @test
      *
      */
-    public function user_api_key_is_used() {
+    public function user_api_key_is_used()
+    {
         $user = $this->signIn()->user;
 
         $user->settings()->update([
@@ -63,18 +62,21 @@ class TMDBScraperTest extends TestCase {
     }
 
     /** @test */
-    public function api_key_is_valid(){
+    public function api_key_is_valid()
+    {
         $this->assertTrue($this->TMDBSCraper->isApiKeyValid());
     }
 
     /** @test */
-    public function api_key_is_not_valid(){
-        $this->TMDBSCraper->setApiKey("NOT_VALID_API_KEY");
+    public function api_key_is_not_valid()
+    {
+        $this->TMDBSCraper->setApiKey('NOT_VALID_API_KEY');
         $this->assertFalse($this->TMDBSCraper->isApiKeyValid());
     }
 
     /** @test */
-    public function search_returns_zero_or_more_results(){
+    public function search_returns_zero_or_more_results()
+    {
         $this->assertGreaterThanOrEqual(1, count($this->TMDBSCraper->searchMovies(self::SEARCH_QUERY)));
         $this->assertEquals(0, count($this->TMDBSCraper->searchMovies(self::FAKE_QUERY)));
         $this->assertGreaterThanOrEqual(1, count($this->TMDBSCraper->searchSeries(self::SEARCH_QUERY)));
@@ -82,7 +84,8 @@ class TMDBScraperTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_collect_screenplays(){
+    public function it_can_collect_screenplays()
+    {
         $searchResults = $this->TMDBSCraper->search(self::SEARCH_QUERY);
 
         $this->assertContainsOnlyInstancesOf(\Illuminate\Support\Collection::class, $searchResults);
@@ -99,41 +102,51 @@ class TMDBScraperTest extends TestCase {
         $firstMovie = $movies->first();
         $keys = ['id', 'title', 'posterPath'];
 
-        foreach ($keys as $key)
+        foreach ($keys as $key) {
             $this->assertArrayHasKey($key, $firstMovie);
-
+        }
     }
 
     /** @test */
-    public function it_can_translate_a_screenplay(){
+    public function it_can_translate_a_screenplay()
+    {
         $movies = $this->TMDBSCraper->search(self::SEARCH_QUERY)['movies'];
 
         $firstMovie = $movies->first();
-        $movieTranslations = $this->TMDBSCraper->translate($firstMovie['id'], $this->blankMovie, $this->availableLanguages);
+        $movieTranslations = $this->TMDBSCraper->translate(
+            $firstMovie['id'],
+            $this->blankMovie,
+            $this->availableLanguages,
+        );
 
-        $keys = ['id', 'backdropPath', 'posterPath', 'overview', 'title', 'originalTitle', 'releaseDate', 'genre', 'runtime'];
+        $keys = [
+            'id',
+            'backdropPath',
+            'posterPath',
+            'overview',
+            'title',
+            'originalTitle',
+            'releaseDate',
+            'genre',
+            'runtime',
+        ];
         foreach ($keys as $key) {
             $this->assertArrayHasKey($key, $movieTranslations);
 
-            if( is_array($movieTranslations[$key])) {
+            if (is_array($movieTranslations[$key])) {
                 $translationsAttributes = array_keys($movieTranslations[$key]);
 
-                foreach ($translationsAttributes as $translationsAttribute)
+                foreach ($translationsAttributes as $translationsAttribute) {
                     $this->assertTrue(in_array($translationsAttribute, $this->availableLanguages));
+                }
             }
         }
     }
 
     /** @test */
-    public function it_cannot_translate_a_screenplay(){
-
+    public function it_cannot_translate_a_screenplay()
+    {
         $this->assertNull($this->TMDBSCraper->translate(-1, $this->blankMovie));
         $this->assertNull($this->TMDBSCraper->translate(-1, $this->blankSeries));
     }
-
-
-
-
-
-
 }

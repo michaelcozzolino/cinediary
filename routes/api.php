@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/popular-movies', [MoviesController::class, 'indexPopular'])->name('popular-movies');
 Route::get('/popular-tv-series', [SeriesController::class, 'indexPopular'])->name('popular-tv-series');
 
-Route::get('/statistics', function (){
+Route::get('/statistics', function () {
     $registeredUsers = User::all()->count();
     $createdDiaries = Diary::withoutGlobalScope('userDiaries')->count();
     $trackedMovies = Movie::all()->count();
@@ -35,6 +35,3 @@ Route::get('/statistics', function (){
 
     return compact('registeredUsers', 'createdDiaries', 'trackedMovies', 'trackedSeries');
 })->name('statistics');
-
-
-

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,93 +32,186 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $series_count
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\DiaryFactory factory(...$parameters)
- * @method static Builder|Diary watchList()
-// * @method static Builder|Diary watched()
  * @method static Builder|Diary whereIsMain($value)
- * @method static Builder|Diary watchedMovies()
+ * @method static \Illuminate\Database\Eloquent\Builder|Diary favourite()
+ * @method static \Illuminate\Database\Eloquent\Builder|Diary main()
+ * @method static \Illuminate\Database\Eloquent\Builder|Diary toWatch()
+ * @method static \Illuminate\Database\Eloquent\Builder|Diary watched()
  */
 class Diary extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public const WATCHED_DIARY_NAME = "watched";
-    public const FAVOURITE_DIARY_NAME = "favourite";
-    public const TO_WATCH_DIARY_NAME = "to watch";
+    public const WATCHED_DIARY_NAME = 'watched';
+    public const FAVOURITE_DIARY_NAME = 'favourite';
+    public const TO_WATCH_DIARY_NAME = 'to watch';
     protected $with = ['movies', 'series'];
-    protected static function booted() {
+
+    protected static function booted()
+    {
         parent::booted();
 
-        static::addGlobalScope('userDiaries', function (Builder $builder){
-           $builder->where('user_id', \Auth::id());
+        static::addGlobalScope('userDiaries', function (Builder $builder) {
+            $builder->where('user_id', \Auth::id());
         });
-
     }
 
-    public function user(){
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function movies(){
-        return $this->belongsToMany(Movie::class)
-            ->withTimestamps();
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function movies()
+    {
+        return $this->belongsToMany(Movie::class)->withTimestamps();
     }
 
-    public function series(){
-        return $this->belongsToMany(Series::class)
-            ->withTimestamps();
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function series()
+    {
+        return $this->belongsToMany(Series::class)->withTimestamps();
     }
 
-    public static function getWatched() : Diary {
+    /**
+     * Get watched diary object.
+     *
+     * @return Diary
+     */
+    public static function getWatched(): Diary
+    {
         return self::watched()->first();
     }
 
-    public function scopeWatched(Builder $builder){
+    /**
+     * Get watched diary builder.
+     *
+     * @param Builder $builder
+     * @return mixed
+     */
+    public function scopeWatched(Builder $builder)
+    {
         return $builder->where('name', self::WATCHED_DIARY_NAME)->main();
     }
 
-    public static function getToWatch() : Diary {
+    /**
+     * Get to watch diary object.
+     *
+     * @return Diary
+     */
+    public static function getToWatch(): Diary
+    {
         return self::toWatch()->first();
     }
 
-    public function scopeToWatch(Builder $builder) : Builder {
+    /**
+     * Get to watch diary builder.
+     *
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeToWatch(Builder $builder): Builder
+    {
         return $builder->where('name', self::TO_WATCH_DIARY_NAME)->main();
     }
 
-
-    public static function getFavourite() : Diary {
+    /**
+     * Get favourite diary object.
+     *
+     * @return Diary
+     */
+    public static function getFavourite(): Diary
+    {
         return self::favourite()->first();
     }
 
-    public function scopeFavourite(Builder $builder) : Builder {
+    /**
+     *  Get favourite diary builder.
+     *
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeFavourite(Builder $builder): Builder
+    {
         return $builder->where('name', self::FAVOURITE_DIARY_NAME)->main();
     }
 
-    public function scopeMain(Builder $builder) : Builder {
+    /**
+     * Get main diaries builder.
+     *
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeMain(Builder $builder): Builder
+    {
         return $builder->where('isMain', true);
     }
 
-    public function isWatched(){
+    /**
+     * Check if the diary is the watched one.
+     *
+     * @return bool
+     */
+    public function isWatched()
+    {
         return $this->name === self::WATCHED_DIARY_NAME && $this->isMain;
     }
 
-    public function isFavourite(){
+    /**
+     * Check if the diary is the favourite one.
+     *
+     * @return bool
+     */
+    public function isFavourite()
+    {
         return $this->name === self::FAVOURITE_DIARY_NAME && $this->isMain;
     }
 
-    public function isToWatch(){
+    /**
+     * Check if the diary is the to watch one.
+     *
+     * @return bool
+     */
+    public function isToWatch()
+    {
         return $this->name === self::TO_WATCH_DIARY_NAME && $this->isMain;
     }
 
-    public function delete() {
-        if (! $this->isMain)
+    /**
+     * Delete the diary from the database. Only custom diaries can be deleted.
+     *
+     * @return bool|null
+     *
+     * @throws \LogicException
+     */
+    public function delete()
+    {
+        if (!$this->isMain) {
             return parent::delete();
-        else
+        } else {
             return false;
+        }
     }
 
-    public function getLastAddedScreenplays(string $screenplayType, int $count){
-        return $this->{$screenplayType}()->orderBy('created_at', 'desc')->limit($count)->get();
+    /**
+     * Get the latest {$count} screenplays added to the diary.
+     *
+     * @param string $screenplayType
+     * @param int $count
+     * @return mixed
+     */
+    public function getLatestAddedScreenplays(string $screenplayType, int $count)
+    {
+        return $this->{$screenplayType}()
+            ->orderBy('created_at', 'desc')
+            ->limit($count)
+            ->get();
     }
-
-
 }

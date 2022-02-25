@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -32,16 +31,16 @@ class HandleInertiaRequests extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function share(Request $request) {
+    public function share(Request $request)
+    {
         $user = $request->user();
 
         $alreadyInDiariesScreenplaysIds = getAlreadyInDiariesScreenplaysIds($request);
         return array_merge(parent::share($request), compact('alreadyInDiariesScreenplaysIds'), [
-            'auth' =>  [
+            'auth' => [
                 'userData' => [
                     'user' => $user,
                     'diaries' => $user->diaries ?? null,
-
                 ],
             ],
             'screenplayType' => getScreenplayType($request),
@@ -51,36 +50,30 @@ class HandleInertiaRequests extends Middleware
                 'APP_NAME' => env('APP_NAME'),
             ],
 
-
             'flash' => [
-                'message' => fn () => $request->session()->get('message')
+                'message' => fn() => $request->session()->get('message'),
             ],
             'locale' => function () {
                 return app()->getLocale();
             },
             'availableLocales' => config('app.available_locales'),
             'language' => function () {
-                return $this->translations(
-                    lang_path(app()->getLocale() .'.json')
-                );
+                return $this->translations(lang_path(app()->getLocale() . '.json'));
             },
         ]);
-
-
     }
 
-    private function translations($json){
-        if(!file_exists($json)) {
+    /**
+     * Get the translations array.
+     *
+     * @param $json
+     * @return array|mixed
+     */
+    private function translations($json)
+    {
+        if (!file_exists($json)) {
             return [];
         }
         return json_decode(file_get_contents($json), true);
     }
-
-    private function alreadyInDiariesScreenplaysIds(Request $request){
-
-    }
-
-
-
-
 }

@@ -35,12 +35,11 @@ class Setting extends Model
 
     protected $guarded = [];
 
-
-    public function user(): BelongsTo {
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
-
-
-
-
 }

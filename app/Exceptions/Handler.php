@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Throwable;
 
@@ -23,11 +22,7 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
+    protected $dontFlash = ['current_password', 'password', 'password_confirmation'];
 
     /**
      * Register the exception handling callbacks for the application.
@@ -41,7 +36,15 @@ class Handler extends ExceptionHandler
         });
     }
 
-
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Throwable
+     */
     public function render($request, Throwable $e)
     {
         $response = parent::render($request, $e);
@@ -50,7 +53,7 @@ class Handler extends ExceptionHandler
             return Inertia::render('Error', ['status' => $response->status()])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
-        } else if ($response->status() === 419) {
+        } elseif ($response->status() === 419) {
             return back()->with([
                 'message' => 'The page expired, please try again.',
             ]);

@@ -1,30 +1,31 @@
 <template>
-    <sidebar-menu class="bg-dark"
-                  :link-component-name="'custom-link'"
-                  @update:collapsed="onToggleCollapse"
-
-                  v-bind="sidebar" @item-click="onItemClick"/>
+    <sidebar-menu
+        class="bg-dark"
+        :link-component-name="'custom-link'"
+        @update:collapsed="onToggleCollapse"
+        v-bind="sidebar"
+        @item-click="onItemClick"
+    />
 </template>
 <script>
-import {Inertia} from "@inertiajs/inertia";
-import {markRaw} from "@vue/reactivity";
-import Logo from "@/Pages/Partials/Logo";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {usePage} from "@inertiajs/inertia-vue3";
-import Separator from "@/Layouts/Partials/Separator";
+import { Inertia } from '@inertiajs/inertia';
+import { markRaw } from '@vue/reactivity';
+import Logo from '@/Pages/Partials/Logo';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { usePage } from '@inertiajs/inertia-vue3';
+import Separator from '@/Layouts/Partials/Separator';
 export default {
     emits: ['OnCollapse'],
 
     props: {
-
         width: {
             type: String,
-            required: true
+            required: true,
         },
 
         widthCollapsed: {
             type: String,
-            required: true
+            required: true,
         },
     },
 
@@ -37,15 +38,13 @@ export default {
                 collapsed: false,
                 menu: [],
                 onMobile: false,
-
-
             },
-        }
+        };
     },
 
-    mounted(){
-        this.onResize()
-        window.addEventListener('resize', this.onResize)
+    mounted() {
+        this.onResize();
+        window.addEventListener('resize', this.onResize);
         this.setActiveItem();
     },
 
@@ -53,102 +52,104 @@ export default {
         this.createMenu();
     },
 
-    computed:{
-
-        userData(){
-            return usePage().props.value.auth.userData
-        }
-
+    computed: {
+        userData() {
+            return usePage().props.value.auth.userData;
+        },
     },
 
     methods: {
-
-        setActiveItem(){
+        setActiveItem() {
             this.sidebar.menu.forEach((element) => {
-                let isSearching = (element.href === route('search.create') || element.href === route('search.index'))
-                    && this.$page.url.startsWith('/search');
+                let isSearching =
+                    (element.href === route('search.create') ||
+                        element.href === route('search.index')) &&
+                    this.$page.url.startsWith('/search');
 
-                element.class = element.href === window.location.href || isSearching ? "vsm--link_active" : "";
+                element.class =
+                    element.href === window.location.href || isSearching
+                        ? 'vsm--link_active'
+                        : '';
             });
         },
 
-        onItemClick(event, item){
-
-
-            if(item.title === this.__('Logout'))
-                Inertia.post(route('logout'));
+        onItemClick(event, item) {
+            if (item.title === this.__('Logout')) Inertia.post(route('logout'));
         },
         onToggleCollapse(collapsed) {
             this.sidebar.collapsed = collapsed;
-            this.$emit('OnCollapse', {collapsed});
+            this.$emit('OnCollapse', { collapsed });
         },
 
-        onResize(){
+        onResize() {
             if (window.innerWidth <= 976) {
-                this.sidebar.isOnMobile = true
-                this.sidebar.collapsed = true
+                this.sidebar.isOnMobile = true;
+                this.sidebar.collapsed = true;
             } else {
-                this.sidebar.isOnMobile = false
-                this.sidebar.collapsed = false
+                this.sidebar.isOnMobile = false;
+                this.sidebar.collapsed = false;
             }
 
-            this.$emit('OnCollapse', {collapsed: this.sidebar.collapsed});
+            this.$emit('OnCollapse', { collapsed: this.sidebar.collapsed });
         },
 
-        createMenuItem(href, title, icon){
-            return {href, title, icon}
+        createMenuItem(href, title, icon) {
+            return { href, title, icon };
         },
 
-        getDiaryItemIcon(diaryName, iconClass=['px-2']){
+        getDiaryItemIcon(diaryName, iconClass = ['px-2']) {
             return {
                 element: markRaw(FontAwesomeIcon),
                 class: iconClass,
-                attributes: {'icon': diaryName === 'to watch' ?
-                        'eye' : (diaryName === 'favourite' ? 'heart' :
-                            ( diaryName === 'watched' ? 'film' : 'book-open' ))
-                }
-            }
+                attributes: {
+                    icon:
+                        diaryName === 'to watch'
+                            ? 'eye'
+                            : diaryName === 'favourite'
+                            ? 'heart'
+                            : diaryName === 'watched'
+                            ? 'film'
+                            : 'book-open',
+                },
+            };
         },
 
-        createDiaryMenuItems(){
+        createDiaryMenuItems() {
             let diaries = [
                 {
                     header: this.__('your main diaries'),
-                    hiddenOnCollapse: true
+                    hiddenOnCollapse: true,
                 },
             ];
             let mainDiaries = [];
 
             let userDiaries = this.userData.diaries;
 
-            for (let userDiaryIndex in userDiaries ){
-
+            for (let userDiaryIndex in userDiaries) {
                 let userDiary = userDiaries[userDiaryIndex];
-                if (userDiary.isMain){
+                if (userDiary.isMain) {
                     let diaryName = userDiary.name;
-                    let href = route('diaries.movies.index', {'diary' : userDiary.id});
+                    let href = route('diaries.movies.index', {
+                        diary: userDiary.id,
+                    });
                     let title = this.__(diaryName);
                     let icon = this.getDiaryItemIcon(diaryName);
                     mainDiaries.push(this.createMenuItem(href, title, icon));
                 }
-
             }
 
             return diaries.concat(mainDiaries);
-
         },
 
-        createMenu(){
-
+        createMenu() {
             let main = [
                 {
                     component: markRaw(Logo),
-                    hiddenOnCollapse: true
+                    hiddenOnCollapse: true,
                 },
                 {
-                    header: this.__('Welcome') +', ' + this.userData.user.name,
-                    hiddenOnCollapse: true
-
+                    header: this.__('Welcome') + ', ' + this.userData.user.name,
+                    hiddenOnCollapse: true,
                 },
                 {
                     href: route('dashboard'),
@@ -156,52 +157,48 @@ export default {
                     icon: {
                         element: markRaw(FontAwesomeIcon),
                         class: 'px-2',
-                        attributes: {'icon': 'chart-line'}
-                    }
-
+                        attributes: { icon: 'chart-line' },
+                    },
                 },
             ];
 
             let other = [
-
                 {
-                    component: markRaw(Separator)
+                    component: markRaw(Separator),
                 },
 
                 {
                     href: route('diaries.index'),
-                    title: this.__("Manage diaries"),
+                    title: this.__('Manage diaries'),
                     icon: {
                         element: markRaw(FontAwesomeIcon),
                         class: 'px-2',
-                        attributes: {'icon': 'book'}
-                    }
+                        attributes: { icon: 'book' },
+                    },
                 },
 
                 {
                     href: route('search.create'),
-                    title: this.__("Add movies or tv series"),
+                    title: this.__('Add movies or tv series'),
                     icon: {
                         element: markRaw(FontAwesomeIcon),
                         class: 'px-2',
-                        attributes: {'icon': 'search-plus'}
+                        attributes: { icon: 'search-plus' },
                     },
                 },
 
-
                 {
                     header: this.__('General'),
-                    hiddenOnCollapse: true
-
+                    hiddenOnCollapse: true,
                 },
                 {
                     href: route('settings.index'),
-                    title:  this.__('Settings') ,
+                    title: this.__('Settings'),
                     icon: {
                         element: markRaw(FontAwesomeIcon),
                         class: 'px-2',
-                        attributes: {'icon': 'cog'}
-                    }
+                        attributes: { icon: 'cog' },
+                    },
                 },
                 {
                     href: undefined,
@@ -209,20 +206,15 @@ export default {
                     icon: {
                         element: markRaw(FontAwesomeIcon),
                         class: 'px-2',
-                        attributes: {'icon': 'sign-out-alt'}
-                    }
-                }
+                        attributes: { icon: 'sign-out-alt' },
+                    },
+                },
             ];
 
-            this.sidebar.menu = main.concat(this.createDiaryMenuItems(),other) ;
-
-
-        }
+            this.sidebar.menu = main.concat(this.createDiaryMenuItems(), other);
+        },
     },
-
-}
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

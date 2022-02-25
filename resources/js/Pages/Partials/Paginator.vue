@@ -1,34 +1,48 @@
 <template>
-    <MDBBtnGroup class="mb-4" v-if="paginator.links.length > 3" aria-label="paginator">
-        <Link as="button" class="btn btn-primary ripple-surface" color="primary"
-              :href="getPageUrl(this.paginator.links[0])"
-              :disabled="isDisabled(this.paginator.links[0])"
-              v-text="__('previous')"
+    <MDBBtnGroup
+        class="mb-4"
+        v-if="paginator.links.length > 3"
+        aria-label="paginator"
+    >
+        <Link
+            as="button"
+            class="btn btn-primary ripple-surface"
+            color="primary"
+            :href="getPageUrl(this.paginator.links[0])"
+            :disabled="isDisabled(this.paginator.links[0])"
+            v-text="__('previous')"
         />
-        <Link as="button" class="btn btn-primary ripple-surface active" :href="getActivePage.url" color="primary"
-              v-text="getActivePage.label"/>
+        <Link
+            as="button"
+            class="btn btn-primary ripple-surface active"
+            :href="getActivePage.url"
+            color="primary"
+            v-text="getActivePage.label"
+        />
 
-        <Link as="button" class="btn btn-primary ripple-surface" color="primary"
-              :href="getPageUrl(this.paginator.links[linksLength - 1])"
-              :disabled="isDisabled(this.paginator.links[linksLength - 1])"
-              v-text="__('next')"
+        <Link
+            as="button"
+            class="btn btn-primary ripple-surface"
+            color="primary"
+            :href="getPageUrl(this.paginator.links[linksLength - 1])"
+            :disabled="isDisabled(this.paginator.links[linksLength - 1])"
+            v-text="__('next')"
         />
     </MDBBtnGroup>
 </template>
 
 <script>
-
-import {Link} from "@inertiajs/inertia-vue3";
+import { Link } from '@inertiajs/inertia-vue3';
 
 export default {
-    name: "Paginator",
-    components : {Link},
+    name: 'Paginator',
+    components: { Link },
     props: {
         paginator: Object,
     },
 
     computed: {
-        linksLength(){
+        linksLength() {
             return this.paginator.links.length;
         },
 
@@ -36,15 +50,13 @@ export default {
             let links = this.paginator.links;
             let linksLength = this.linksLength;
 
-            for(let i = 0; i < linksLength; i++){
+            for (let i = 0; i < linksLength; i++) {
                 let link = links[i];
-                if(link.active) {
+                if (link.active) {
                     return link;
-
                 }
             }
-        }
-
+        },
     },
 
     methods: {
@@ -59,12 +71,8 @@ export default {
         getPageLabel(link) {
             return link.label;
         },
-
-
-
-    }
-
-}
+    },
+};
 </script>
 
 <style scoped>

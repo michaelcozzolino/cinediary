@@ -1,50 +1,60 @@
 <template>
-        <MDBDropdown v-model="languageDropdown">
-            <MDBDropdownToggle @click="languageDropdown = !languageDropdown" v-text="currentLanguage"/>
-            <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-                <MDBDropdownItem href="#" v-for="language in languages"
-                                 @click="changeLanguage(language)"> {{ language }}
-                    <font-awesome-icon v-show="isCurrentLanguage(language)" class="text-success"  icon="check"/>
-                </MDBDropdownItem>
-            </MDBDropdownMenu>
-        </MDBDropdown>
+    <MDBDropdown v-model="languageDropdown">
+        <MDBDropdownToggle
+            @click="languageDropdown = !languageDropdown"
+            v-text="currentLanguage"
+        />
+        <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
+            <MDBDropdownItem
+                href="#"
+                v-for="language in languages"
+                @click="changeLanguage(language)"
+            >
+                {{ language }}
+                <font-awesome-icon
+                    v-show="isCurrentLanguage(language)"
+                    class="text-success"
+                    icon="check"
+                />
+            </MDBDropdownItem>
+        </MDBDropdownMenu>
+    </MDBDropdown>
 </template>
 
 <script>
-import {usePage} from "@inertiajs/inertia-vue3";
+import { usePage } from '@inertiajs/inertia-vue3';
 
 export default {
-    data(){
+    data() {
         return {
             languageDropdown: false,
             languages: this.getLanguages(),
-        }
+        };
     },
 
     methods: {
-        changeLanguage(language){
+        changeLanguage(language) {
             language = language.toLowerCase();
-            this.$inertia.get(route('language',{language}));
+            this.$inertia.get(route('language', { language }));
         },
 
-        getLanguages(){
-            return usePage().props.value.availableLocales.map((language) => language.toUpperCase());
+        getLanguages() {
+            return usePage().props.value.availableLocales.map((language) =>
+                language.toUpperCase(),
+            );
         },
 
-        isCurrentLanguage(language){
+        isCurrentLanguage(language) {
             return this.currentLanguage === language;
-        }
+        },
     },
     computed: {
-        currentLanguage(){
+        currentLanguage() {
             let locale = usePage().props.value.locale;
             return locale.toUpperCase();
-
         },
-    }
-}
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

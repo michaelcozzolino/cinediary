@@ -1,22 +1,21 @@
 <template>
     <div>
         <div class="bg-dark">
-            <Logo/>
+            <Logo />
         </div>
 
-
         <main style="padding-bottom: 3.5rem">
-            <slot name="main"/>
+            <slot name="main" />
         </main>
-        <AppFooter/>
+        <AppFooter />
     </div>
 </template>
 
 <script>
-import AppFooter from "@/Layouts/Partials/AppFooter";
+import AppFooter from '@/Layouts/Partials/AppFooter';
 import { Link } from '@inertiajs/inertia-vue3';
-import Login from "@/Pages/Auth/Login";
-import Logo from "@/Pages/Partials/Logo";
+import Login from '@/Pages/Auth/Login';
+import Logo from '@/Pages/Partials/Logo';
 
 export default {
     components: {
@@ -24,6 +23,6 @@ export default {
         Login,
         AppFooter,
         Link,
-    }
-}
+    },
+};
 </script>

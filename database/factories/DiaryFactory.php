@@ -24,7 +24,7 @@ class DiaryFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'user_id' => User::factory()->create()->id
+            'user_id' => User::factory()->create()->id,
         ];
     }
 }

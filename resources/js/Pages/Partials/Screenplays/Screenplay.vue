@@ -1,8 +1,11 @@
 <template xmlns="http://www.w3.org/1999/html">
-
-    <MDBCol :id="this.screenplay.id" :sm="'6'" :md="md"  class="mb-4 text-center">
-
-        <MDBCard class="h-100" >
+    <MDBCol
+        :id="this.screenplay.id"
+        :sm="'6'"
+        :md="md"
+        class="mb-4 text-center"
+    >
+        <MDBCard class="h-100">
             <a :href="getRoute" v-mdb-ripple="{ color: 'light' }">
                 <MDBCardImg :src="getPosterPath" top alt="..." />
             </a>
@@ -10,16 +13,18 @@
                 <MDBCardTitle class="fw-bold">
                     <div class="title" v-text="screenplay.title" />
 
-                    <div class="mt-2 text-muted float-start text-sm" v-text="getFurtherData" >
-
-                    </div>
-
+                    <div
+                        class="mt-2 text-muted float-start text-sm"
+                        v-text="getFurtherData"
+                    ></div>
                 </MDBCardTitle>
             </MDBCardBody>
 
             <MDBCardFooter class="w-100">
-                <MDBBtnGroup vertical aria-label="Button group with nested dropdown">
-
+                <MDBBtnGroup
+                    vertical
+                    aria-label="Button group with nested dropdown"
+                >
                     <remove-from-diary
                         v-if="removable"
                         :href="getHref"
@@ -33,29 +38,25 @@
                         :screenplay-type="getScreenplayType"
                         :href="getHref"
                     />
-
                 </MDBBtnGroup>
             </MDBCardFooter>
         </MDBCard>
-
     </MDBCol>
-
 </template>
 
 <script>
-import { mdbRipple } from "mdb-vue-ui-kit";
-import AddToDiary from "@/Pages/Partials/Screenplays/Partials/AddToDiary";
-import RemoveFromDiary from "@/Pages/Partials/Screenplays/Partials/RemoveFromDiary";
+import { mdbRipple } from 'mdb-vue-ui-kit';
+import AddToDiary from '@/Pages/Partials/Screenplays/Partials/AddToDiary';
+import RemoveFromDiary from '@/Pages/Partials/Screenplays/Partials/RemoveFromDiary';
 
 export default {
-
     directives: {
-        mdbRipple
+        mdbRipple,
     },
 
     components: {
         RemoveFromDiary,
-        AddToDiary
+        AddToDiary,
     },
 
     props: {
@@ -67,46 +68,54 @@ export default {
     },
 
     emits: ['OnDelete'],
-    data(){
+    data() {
         return {
-            dropdown:false,
-            newAddedToDiaryScreenplaysIds : {movies: [], series: []},
-        }
+            dropdown: false,
+            newAddedToDiaryScreenplaysIds: { movies: [], series: [] },
+        };
     },
 
     computed: {
-
         // screenplayType is not present when searching for a screenplay by using TMDB api in Search.vue
         // because the route doesn't have a movies or series binding, in that case we pass the screenplayType as props
         // else we get the screenplayType from the currentDiary that uses the shared inertia data
-        getScreenplayType(){
-            return this.currentDiary ? this.currentDiary.getScreenplayType() : this.screenplayType;
+        getScreenplayType() {
+            return this.currentDiary
+                ? this.currentDiary.getScreenplayType()
+                : this.screenplayType;
         },
 
-        getPosterPath(){
-            return this.screenplay.posterPath === "" ? "/css/images/reel.png" : this.screenplay.posterPath;
+        getPosterPath() {
+            return this.screenplay.posterPath === ''
+                ? '/css/images/reel.png'
+                : this.screenplay.posterPath;
         },
 
-        getFurtherData(){
-            return [this.screenplay.genre, this.screenplay.releaseDate]
+        getFurtherData() {
+            let furtherData = [
+                this.screenplay.genre,
+                this.screenplay.releaseDate,
+            ];
+            return furtherData
                 .filter((furtherDatum) => furtherDatum !== null)
-                .join(", ");
+                .join(', ');
         },
 
-        getHref(){
-            return "#" + this.screenplay.id;
+        getHref() {
+            return '#' + this.screenplay.id;
         },
 
-        getRoute(){
-            if(this.$page.component.startsWith('Search'))
-                return "#" + this.screenplay.id;
+        getRoute() {
+            if (this.$page.component.startsWith('Search'))
+                return '#' + this.screenplay.id;
             let parameters = {};
-            let screenplayBindName = this.getScreenplayType === 'movies' ? 'movie' : this.getScreenplayType;
+            let screenplayBindName =
+                this.getScreenplayType === 'movies'
+                    ? 'movie'
+                    : this.getScreenplayType;
             parameters[screenplayBindName] = this.screenplay.id;
             return route(this.getScreenplayType + '.show', parameters);
-        }
-    }
-
-
-}
+        },
+    },
+};
 </script>

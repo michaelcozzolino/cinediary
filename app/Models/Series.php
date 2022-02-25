@@ -36,19 +36,32 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Series watched()
  * @method static \Illuminate\Database\Eloquent\Builder|Series watchList()
  * @method static \Illuminate\Database\Eloquent\Builder|Series movies()
+ * @property array|null $genre
+ * @property int $runtime
+ * @property int $isPopular
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Diary[] $diaries
+ * @property-read int|null $diaries_count
+ * @property-read array $translations
+ * @method static \Database\Factories\SeriesFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Series whereGenre($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Series whereIsPopular($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Series whereRuntime($value)
  */
 class Series extends Model
 {
     use HasFactory, HasTranslations, ScreenplayActions;
-    public array $translatable = ['title', 'posterPath', 'backdropPath','overview', 'genre'];
+    public array $translatable = ['title', 'posterPath', 'backdropPath', 'overview', 'genre'];
     public $incrementing = false;
     protected $guarded = [];
     protected $casts = [
         'releaseDate' => 'datetime:Y',
     ];
 
-    public function diaries(){
-        return $this->belongsToMany(Diary::class)
-            ->withTimestamps();
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function diaries()
+    {
+        return $this->belongsToMany(Diary::class)->withTimestamps();
     }
 }

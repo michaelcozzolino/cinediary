@@ -17,12 +17,11 @@ import {
     faUser,
     faUserPlus,
     faTrash,
-    faMinusCircle
-
-} from '@fortawesome/free-solid-svg-icons'
+    faMinusCircle,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import {library} from "@fortawesome/fontawesome-svg-core";
+import { library } from '@fortawesome/fontawesome-svg-core';
 
 library.add(
     faBook,
@@ -44,5 +43,5 @@ library.add(
     faUserPlus,
     faGithub,
     faTrash,
-    faMinusCircle
-)
+    faMinusCircle,
+);
