@@ -42,10 +42,5 @@
         "@fortawesome/vue-fontawesome": "^3.0.0-5",
         "frappe-charts": "^1.6.2",
         "vue-sidebar-menu": "^5.1.2"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "pretty-quick --staged"
-        }
     }
 }
