@@ -159,13 +159,27 @@ trait Screenplayability
             ::where('isPopular', true)
             ->get()
             ->toArray();
+
         $randomBackdropPath = null;
+
         if ($screenplays) {
             shuffle($screenplays);
             $screenplays = array_slice($screenplays, 0, config('cinediary.homepage_max_screenplays'));
-            $randomBackdropPath = $screenplays[rand(0, count($screenplays) - 1)]['backdropPath'];
+
+            /** getting the screenplays that do not have a blank backdrop path and taking the first one */
+            $randomBackdropPathScreenplays = array_filter(
+                $screenplays,
+                fn($screenplay) => $screenplay['backdropPath'] !== TMDBScraper::BLANK_BACKDROP_PATH_URL,
+            );
+
+            $randomBackdropPath =
+                count($randomBackdropPathScreenplays) > 0
+                    ? $randomBackdropPathScreenplays[0]['backdropPath']
+                    : TMDBScraper::BLANK_BACKDROP_PATH_URL;
+
             $screenplays = array_chunk($screenplays, config('cinediary.homepage_screenplays_per_row'));
         }
+
         return compact('screenplays', 'randomBackdropPath');
     }
 }
