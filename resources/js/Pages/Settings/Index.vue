@@ -16,7 +16,7 @@
 
             <MDBSwitch
                 wrapper-class="my-4"
-                :label="this.__('Include adult content to be found')"
+                :label="this.__('Include NSFW content to be found')"
                 v-model="form.adultContent"
             />
             <validation-error :error="errors.adultContent" />
