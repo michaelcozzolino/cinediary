@@ -53,6 +53,7 @@ class Series extends Model
     public array $translatable = ['title', 'posterPath', 'backdropPath', 'overview', 'genre'];
     public $incrementing = false;
     protected $guarded = [];
+    protected $perPage = 20;
     protected $casts = [
         'releaseDate' => 'datetime:Y',
     ];

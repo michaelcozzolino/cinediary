@@ -40,12 +40,12 @@ trait Screenplayability
                 ? $diary
                     ->{$screenplayType}()
                     ->orderBy('title')
-                    ->paginate(config('cinediary.pagination_limit'))
+                    ->paginate()
                 : $diary
                     ->{$screenplayType}()
                     ->where('title', 'like', "%{$findQuery}%")
                     ->orderBy('title')
-                    ->paginate(config('cinediary.pagination_limit')),
+                    ->paginate(),
         ];
 
         return Inertia::render('Diaries/Show', compact('screenplays', 'diary'))->with(['query' => $findQuery ?? '']);

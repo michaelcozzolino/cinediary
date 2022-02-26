@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+use App\Models\Movie;
+use App\Models\Series;
+
 trait ScreenplayTypes
 {
     /**
@@ -11,7 +14,7 @@ trait ScreenplayTypes
      */
     public function getScreenplayModels(): array
     {
-        return config('cinediary.screenplay_models');
+        return [new Movie(), new Series()];
     }
 
     /**

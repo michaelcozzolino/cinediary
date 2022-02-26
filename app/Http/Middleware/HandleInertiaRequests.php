@@ -45,9 +45,9 @@ class HandleInertiaRequests extends Middleware
             ],
             'screenplayType' => getScreenplayType($request),
 
-            'env' => [
-                'GITHUB_URL' => env('GITHUB_URL'),
-                'APP_NAME' => env('APP_NAME'),
+            'config' => [
+                'github_url' => config('cinediary.github_url'),
+                'app_name' => config('app.name'),
             ],
 
             'flash' => [

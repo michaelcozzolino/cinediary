@@ -27,7 +27,7 @@ class ScreenplayabilityTest extends TestCase
         $this->movie = Movie::factory()->create(['id' => 1]);
         $this->movie->addToDiary($this->diaries['favourite']);
 
-        $this->maxScreenplaysPerPage = config('cinediary.pagination_limit');
+        $this->maxScreenplaysPerPage = 20;
         $this->movies = createMovies(1 + $this->maxScreenplaysPerPage * 2);
         //total movies in watched diary is 1 + 1 + 40
         $this->diaries['watched']->movies()->syncWithoutDetaching($this->movies->pluck('id'));

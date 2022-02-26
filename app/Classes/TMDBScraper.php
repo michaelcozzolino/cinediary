@@ -8,7 +8,6 @@ use App\Models\Setting;
 use App\Models\User;
 use DateTime;
 use Illuminate\Support\Collection;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tmdb\Client;
 use Tmdb\Event\BeforeRequestEvent;
@@ -139,8 +138,8 @@ class TMDBScraper
      * @param \Tmdb\Model\Movie|\Tmdb\Model\Tv $screenplay
      * @return DateTime|null
      */
-    #[Pure]
-    private function getReleaseDate(\Tmdb\Model\Movie|Tv $screenplay) {
+    private function getReleaseDate(\Tmdb\Model\Movie|Tv $screenplay)
+    {
         $releaseDate = method_exists($screenplay, 'getReleaseDate')
             ? $screenplay->getReleaseDate()
             : $screenplay->getFirstAirDate();

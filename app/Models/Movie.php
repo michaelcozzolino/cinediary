@@ -56,6 +56,7 @@ class Movie extends Model
 
     public $incrementing = false;
     protected $guarded = [];
+    protected $perPage = 20;
     protected $casts = [
         'releaseDate' => 'datetime:Y',
     ];

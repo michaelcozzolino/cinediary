@@ -6,6 +6,17 @@ use App\Models\Series;
 return [
     /*
     |--------------------------------------------------------------------------
+    | Github url
+    |--------------------------------------------------------------------------
+    |
+    | The url of the Github repository
+    |
+    */
+
+    'github_url' => 'https://github.com/michaelcozzolino/cinediary',
+
+    /*
+    |--------------------------------------------------------------------------
     | Max homepage's screenplays
     |--------------------------------------------------------------------------
     |
@@ -27,26 +38,4 @@ return [
     */
 
     'homepage_screenplays_per_row' => 2,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Screenplay models
-    |--------------------------------------------------------------------------
-    |
-    | The possible available screenplay models
-    |
-    */
-
-    'screenplay_models' => [new Movie(), new Series()],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Pagination limit
-    |--------------------------------------------------------------------------
-    |
-    | The number of maximum screenplays to show in a single page
-    |
-    */
-
-    'pagination_limit' => 20,
 ];

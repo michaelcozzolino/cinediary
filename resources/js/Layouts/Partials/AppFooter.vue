@@ -12,7 +12,7 @@
                 © 2021 - {{ currentYear }}&nbsp&nbsp<a
                     class="text-reset fw-bold"
                     :href="route('home')"
-                    v-text="this.$page.props.env.APP_NAME"
+                    v-text="this.$page.props.config.app_name"
                 />
             </p>
             &nbsp&nbsp
@@ -47,7 +47,7 @@ export default {
 
     methods: {
         goToGithub() {
-            window.open(this.$page.props.env.GITHUB_URL, '_blank');
+            window.open(this.$page.props.config.github_url, '_blank');
         },
     },
 };
