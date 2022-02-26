@@ -22,6 +22,7 @@
                 :icon="['fab', 'github']"
                 size="2x"
                 style="cursor: pointer"
+                class="github"
             />
             &nbsp&nbsp
 
@@ -53,8 +54,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import 'resources/css/mdb.scss';
+
 footer {
     height: 65px;
+}
+
+.github:hover {
+    color: $primary;
 }
 </style>
