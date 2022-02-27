@@ -86,9 +86,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/', [SeriesController::class, 'destroy'])->name('diaries.series.destroy');
         });
     });
-    /* TODO: show routes can be showed if not logged by covering the auth components */
-    Route::get('/movies/{movie}', [MoviesController::class, 'show'])->name('movies.show');
-    Route::get('/series/{series}', [SeriesController::class, 'show'])->name('series.show');
+
 });
 
+Route::get('/movies/{movie}', [MoviesController::class, 'show'])->name('movies.show');
+Route::get('/series/{series}', [SeriesController::class, 'show'])->name('series.show');
 require __DIR__ . '/auth.php';

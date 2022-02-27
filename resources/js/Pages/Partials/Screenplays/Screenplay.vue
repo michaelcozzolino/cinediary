@@ -6,9 +6,9 @@
         class="mb-4 text-center"
     >
         <MDBCard class="h-100">
-            <a :href="getRoute" v-mdb-ripple="{ color: 'light' }">
+            <Link :href="getRoute" v-mdb-ripple="{ color: 'light' }">
                 <MDBCardImg :src="getPosterPath" top alt="..." />
-            </a>
+            </Link>
             <MDBCardBody>
                 <MDBCardTitle class="fw-bold">
                     <div class="title" v-text="screenplay.title" />
@@ -20,7 +20,10 @@
                 </MDBCardTitle>
             </MDBCardBody>
 
-            <MDBCardFooter class="w-100">
+            <MDBCardFooter
+                class="w-100"
+                v-if="this.$helpers.needsAuthentication()"
+            >
                 <MDBBtnGroup
                     vertical
                     aria-label="Button group with nested dropdown"
@@ -48,6 +51,7 @@
 import { mdbRipple } from 'mdb-vue-ui-kit';
 import AddToDiary from '@/Pages/Partials/Screenplays/Partials/AddToDiary';
 import RemoveFromDiary from '@/Pages/Partials/Screenplays/Partials/RemoveFromDiary';
+import { Link } from '@inertiajs/inertia-vue3';
 
 export default {
     directives: {
@@ -57,6 +61,7 @@ export default {
     components: {
         RemoveFromDiary,
         AddToDiary,
+        Link,
     },
 
     props: {

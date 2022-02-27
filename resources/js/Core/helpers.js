@@ -1,3 +1,5 @@
+import { usePage } from '@inertiajs/inertia-vue3';
+
 export default {
     getHeadersData(component, info = {}) {
         let data = {
@@ -31,5 +33,14 @@ export default {
                 break;
         }
         return data;
+    },
+
+    /**
+     * Check if authentication is strictly needed.
+     * Some authenticated pages can be visited also as a guest
+     * by hiding the components that need authentication
+     * */
+    needsAuthentication() {
+        return usePage().props.value.auth.userData.user !== null;
     },
 };

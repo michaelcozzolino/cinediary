@@ -14,6 +14,8 @@ import Logo from '@/Pages/Partials/Logo';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { usePage } from '@inertiajs/inertia-vue3';
 import Separator from '@/Layouts/Partials/Separator';
+import GuestAlert from '@/Layouts/Partials/Sidebar/Partials/GuestAlert';
+
 export default {
     emits: ['OnCollapse'],
 
@@ -142,76 +144,89 @@ export default {
         },
 
         createMenu() {
-            let main = [
-                {
-                    component: markRaw(Logo),
+            let logoItem = {
+                component: markRaw(Logo),
+                hiddenOnCollapse: true,
+            };
+            if (this.$helpers.needsAuthentication()) {
+                let main = [
+                    logoItem,
+                    {
+                        header:
+                            this.__('Welcome') + ', ' + this.userData.user.name,
+                        hiddenOnCollapse: true,
+                    },
+                    {
+                        href: route('dashboard'),
+                        title: 'Dashboard',
+                        icon: {
+                            element: markRaw(FontAwesomeIcon),
+                            class: 'px-2',
+                            attributes: { icon: 'chart-line' },
+                        },
+                    },
+                ];
+
+                let other = [
+                    {
+                        component: markRaw(Separator),
+                    },
+
+                    {
+                        href: route('diaries.index'),
+                        title: this.__('Manage diaries'),
+                        icon: {
+                            element: markRaw(FontAwesomeIcon),
+                            class: 'px-2',
+                            attributes: { icon: 'book' },
+                        },
+                    },
+
+                    {
+                        href: route('search.create'),
+                        title: this.__('Add movies or tv series'),
+                        icon: {
+                            element: markRaw(FontAwesomeIcon),
+                            class: 'px-2',
+                            attributes: { icon: 'search-plus' },
+                        },
+                    },
+
+                    {
+                        header: this.__('General'),
+                        hiddenOnCollapse: true,
+                    },
+                    {
+                        href: route('settings.index'),
+                        title: this.__('Settings'),
+                        icon: {
+                            element: markRaw(FontAwesomeIcon),
+                            class: 'px-2',
+                            attributes: { icon: 'cog' },
+                        },
+                    },
+                    {
+                        href: undefined,
+                        title: this.__('Logout'),
+                        icon: {
+                            element: markRaw(FontAwesomeIcon),
+                            class: 'px-2',
+                            attributes: { icon: 'sign-out-alt' },
+                        },
+                    },
+                ];
+
+                this.sidebar.menu = main.concat(
+                    this.createDiaryMenuItems(),
+                    other,
+                );
+            } else {
+                let alert = {
+                    component: markRaw(GuestAlert),
                     hiddenOnCollapse: true,
-                },
-                {
-                    header: this.__('Welcome') + ', ' + this.userData.user.name,
-                    hiddenOnCollapse: true,
-                },
-                {
-                    href: route('dashboard'),
-                    title: 'Dashboard',
-                    icon: {
-                        element: markRaw(FontAwesomeIcon),
-                        class: 'px-2',
-                        attributes: { icon: 'chart-line' },
-                    },
-                },
-            ];
-
-            let other = [
-                {
-                    component: markRaw(Separator),
-                },
-
-                {
-                    href: route('diaries.index'),
-                    title: this.__('Manage diaries'),
-                    icon: {
-                        element: markRaw(FontAwesomeIcon),
-                        class: 'px-2',
-                        attributes: { icon: 'book' },
-                    },
-                },
-
-                {
-                    href: route('search.create'),
-                    title: this.__('Add movies or tv series'),
-                    icon: {
-                        element: markRaw(FontAwesomeIcon),
-                        class: 'px-2',
-                        attributes: { icon: 'search-plus' },
-                    },
-                },
-
-                {
-                    header: this.__('General'),
-                    hiddenOnCollapse: true,
-                },
-                {
-                    href: route('settings.index'),
-                    title: this.__('Settings'),
-                    icon: {
-                        element: markRaw(FontAwesomeIcon),
-                        class: 'px-2',
-                        attributes: { icon: 'cog' },
-                    },
-                },
-                {
-                    href: undefined,
-                    title: this.__('Logout'),
-                    icon: {
-                        element: markRaw(FontAwesomeIcon),
-                        class: 'px-2',
-                        attributes: { icon: 'sign-out-alt' },
-                    },
-                },
-            ];
-
-            this.sidebar.menu = main.concat(this.createDiaryMenuItems(), other);
+                };
+                this.sidebar.menu = [logoItem, alert];
+            }
         },
     },
 };

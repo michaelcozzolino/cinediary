@@ -27,8 +27,7 @@
 
 <script>
 import { Link } from '@inertiajs/inertia-vue3';
-import SideNav from '@/Layouts/Partials/Sidebar';
-import Sidebar from '@/Layouts/Partials/Sidebar';
+import Sidebar from '@/Layouts/Partials/Sidebar/Sidebar';
 import HowItWorks from '@/Pages/Home/Partials/HowItWorks';
 import LanguageSwitcher from '@/Layouts/Partials/LanguageSwitcher';
 import AppFooter from '@/Layouts/Partials/AppFooter';
@@ -40,7 +39,6 @@ export default {
         Sidebar,
         HowItWorks,
         Link,
-        SideNav,
         LanguageSwitcher,
         AppFooter,
     },
