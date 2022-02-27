@@ -1,5 +1,5 @@
 <template>
-    <MDBRow v-for="statisticsRow in statistics">
+    <MDBRow v-for="statisticsRow in getStatistics">
         <MDBCol md="6" sm="12" v-for="statistic in statisticsRow">
             <h4 class="fw-bold text-uppercase text-dark my-4">
                 <font-awesome-icon :icon="statistic.icon" />
@@ -19,9 +19,9 @@ export default {
         },
     },
 
-    data() {
-        return {
-            statistics: [
+    computed: {
+        getStatistics() {
+            return [
                 [
                     {
                         name: 'watchers',
@@ -46,8 +46,8 @@ export default {
                         icon: 'book',
                     },
                 ],
-            ],
-        };
+            ];
+        },
     },
 };
 </script>
