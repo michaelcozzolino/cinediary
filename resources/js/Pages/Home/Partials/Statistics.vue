@@ -1,6 +1,6 @@
 <template>
     <section-title :title-class="['text-uppercase']">
-        <template #title>Statistics</template>
+        <template #title>{{ this.__('Statistics') }}</template>
     </section-title>
     <MDBContainer>
         <MDBRow>
@@ -21,10 +21,13 @@ export default {
     data() {
         return {
             statistics: {
-                registeredUsers: { name: 'Registered Users', value: 0 },
-                createdDiaries: { name: 'Created Diaries', value: 0 },
-                trackedMovies: { name: 'Tracked Movies', value: 0 },
-                trackedSeries: { name: 'Tracked TV Series', value: 0 },
+                registeredUsers: {
+                    name: this.__('Registered users'),
+                    value: 0,
+                },
+                createdDiaries: { name: this.__('Created diaries'), value: 0 },
+                trackedMovies: { name: this.__('Tracked movies'), value: 0 },
+                trackedSeries: { name: this.__('Tracked TV series'), value: 0 },
             },
         };
     },

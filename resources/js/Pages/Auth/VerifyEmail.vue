@@ -8,13 +8,13 @@
         :title-class="['text-uppercase']"
     >
         <template #title>
-            {{ __('Thanks for signing up!') }}
+            {{ this.__('Thanks for signing up!') }}
         </template>
 
         <template #body>
             <span
                 v-text="
-                    __(
+                    this.__(
                         'Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.',
                     )
                 "
@@ -34,8 +34,8 @@
                     class="my-2 text-sm text-success"
                     v-if="verificationLinkSent"
                     v-text="
-                        __(
-                            ' A new verification link has been sent to the email address you provided during registration.',
+                        this.__(
+                            'A new verification link has been sent to the email address you provided during registration.',
                         )
                     "
                 />

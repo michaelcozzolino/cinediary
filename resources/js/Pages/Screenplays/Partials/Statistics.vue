@@ -24,24 +24,24 @@ export default {
             return [
                 [
                     {
-                        name: 'watchers',
+                        name: this.__('Watchers'),
                         value: this.statistics.watchers,
                         icon: 'film',
                     },
                     {
-                        name: 'lovers',
+                        name: this.__('Lovers'),
                         value: this.statistics.lovers,
                         icon: 'heart',
                     },
                 ],
                 [
                     {
-                        name: 'future watchers',
+                        name: this.__('Future watchers'),
                         value: this.statistics.futureWatchers,
                         icon: 'eye',
                     },
                     {
-                        name: 'containing diaries',
+                        name: this.__('Containing diaries'),
                         value: this.statistics.containingDiariesNumber,
                         icon: 'book',
                     },

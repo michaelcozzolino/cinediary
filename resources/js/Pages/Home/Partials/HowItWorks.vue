@@ -2,10 +2,14 @@
     <MDBContainer class="text-center py-4 text-light bg-indigo-400" fluid>
         <MDBRow>
             <MDBCol class="text-light">
-                <h3 class="fw-bold">
-                    Cinediary allows you to track movies and tv series.
-                </h3>
-                <h4 class="fst-italic">How does it work?</h4>
+                <h3
+                    class="fw-bold"
+                    v-text="this.__('cinediary_info.description')"
+                />
+                <h4
+                    class="fst-italic"
+                    v-text="this.__('cinediary_info.help')"
+                />
             </MDBCol>
         </MDBRow>
     </MDBContainer>
@@ -20,13 +24,15 @@
                             :icon="step.icon.name"
                             :size="step.icon.size"
                             aria-hidden="true"
-                        ></font-awesome-icon>
-                        <MDBCardTitle class="font-weight-bold text-uppercase">{{
-                            step.title
-                        }}</MDBCardTitle>
-                        <MDBCardText class="dark-grey-text">
-                            {{ step.description.text }}
-                        </MDBCardText>
+                        />
+                        <MDBCardTitle
+                            class="font-weight-bold text-uppercase"
+                            v-text="step.title"
+                        />
+                        <MDBCardText
+                            class="dark-grey-text"
+                            v-text="step.description"
+                        />
                     </MDBCardBody>
                     <MDBCardFooter border="info">
                         <MDBBtn
@@ -34,9 +40,8 @@
                             tag="a"
                             color="primary"
                             :href="step.button.href"
-                        >
-                            {{ step.button.text }}
-                        </MDBBtn>
+                            v-text="step.button.text"
+                        />
                     </MDBCardFooter>
                 </MDBCard>
             </MDBCol>
@@ -61,18 +66,16 @@ export default {
             steps: [
                 {
                     icon: { name: 'user-plus', size: '3x' },
-                    title: 'Sign up for free in few minutes',
+                    title: this.__('step_1.title'),
                     class: [
                         'h-100',
                         'hover-shadow',
                         'text-dark',
                         'bg-deep-purple-200',
                     ],
-                    description: {
-                        text: 'Create your account with a few simple steps by providing some basic information such as your username.',
-                    },
+                    description: this.__('step_1.description'),
                     button: {
-                        text: 'Register',
+                        text: this.__('Register'),
                         onClick: () =>
                             this.$emit('OnButtonClick', {
                                 refName: 'register',
@@ -81,54 +84,48 @@ export default {
                 },
                 {
                     icon: { name: 'search', size: '3x' },
-                    title: 'Find and discover Movies and TV Series',
+                    title: this.__('step_2.title'),
                     class: [
                         'h-100',
                         'hover-shadow',
                         'text-dark',
                         'bg-pink-200',
                     ],
-                    description: {
-                        text: 'Search for a movie or a tv-series you have watched or you want to watch between a 1M+ database.',
-                    },
+                    description: this.__('step_2.description'),
                     button: {
-                        text: 'Discover',
+                        text: this.__('Discover'),
                         onClick: () => false,
                         href: '#popular-movies',
                     },
                 },
                 {
                     icon: { name: 'book-open', size: '3x' },
-                    title: 'Add to your diaries!',
+                    title: this.__('step_3.title'),
                     class: [
                         'h-100',
                         'hover-shadow',
                         'text-dark',
                         'bg-teal-200',
                     ],
-                    description: {
-                        text: 'You can track every movie and tv series by adding them to your diaries. A diary is a list of movies or tv series representing a common fact, such as "watched movies". ',
-                    },
+                    description: this.__('step_3.description'),
                     button: {
-                        text: 'Login',
+                        text: this.__('Login'),
                         onClick: () =>
                             this.$emit('OnButtonClick', { refName: 'login' }),
                     },
                 },
                 {
                     icon: { name: 'question-circle', size: '3x' },
-                    title: 'Not convinced yet?',
+                    title: this.__('step_4.title'),
                     class: [
                         'h-100',
                         'hover-shadow',
                         'text-dark',
                         'bg-deep-orange-200',
                     ],
-                    description: {
-                        text: 'You can try a demo by clicking on the following button and login with an already registered demo user.',
-                    },
+                    description: this.__('step_4.description'),
                     button: {
-                        text: 'Try a demo user',
+                        text: this.__('Try a demo user'),
                         onClick: () => this.$emit('OnDemoLogin'),
                     },
                 },

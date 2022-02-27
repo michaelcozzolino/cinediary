@@ -7,7 +7,7 @@
         :title-class="['text-uppercase']"
     >
         <template #title>
-            {{ __('register') }}
+            {{ this.__('Register') }}
         </template>
 
         <template #body>
@@ -15,7 +15,7 @@
                 @input="form.clearErrors('name')"
                 wrapper-class="mb-3"
                 v-model="form.name"
-                :label="__('name')"
+                :label="this.__('Name')"
                 type="text"
                 required
             />
@@ -25,7 +25,7 @@
                 @input="form.clearErrors('email')"
                 wrapper-class="mb-3"
                 v-model="form.email"
-                :label="__('email')"
+                :label="this.__('Email')"
                 type="email"
                 required
             />
@@ -35,7 +35,7 @@
                 @input="form.clearErrors('password')"
                 wrapper-class="mb-3"
                 v-model="form.password"
-                :label="__('password')"
+                :label="this.__('Password')"
                 type="password"
                 required
             />
@@ -43,7 +43,7 @@
                 @input="form.clearErrors('password_confirmation')"
                 wrapper-class="mb-3"
                 v-model="form.password_confirmation"
-                :label="__('confirm password')"
+                :label="this.__('Confirm Password')"
                 type="password"
                 required
             />
@@ -59,7 +59,7 @@
                 <MDBBtn
                     type="submit"
                     color="primary"
-                    v-text="__('sign up')"
+                    v-text="this.__('Sign up')"
                     :disabled="form.processing"
                 />
             </form>

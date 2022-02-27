@@ -25,7 +25,7 @@
                 <MDBBtn
                     type="submit"
                     color="primary"
-                    v-text="this.__('save')"
+                    v-text="this.__('Save')"
                 />
             </div>
         </form>

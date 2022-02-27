@@ -3,19 +3,18 @@
         <h6
             class="text-muted text-uppercase"
             v-show="lastQuery !== undefined"
-            v-text="this.__('Your last search...')"
+            v-text="this.__('Your last search')"
             style="font-size: 14px; font-weight: 600"
         />
 
         <form @submit.prevent="search.search(this.getSearchedScreenplays)">
-            <!--            {{this.__('Your last search..')}}-->
             <MDBInput
                 :input-group="true"
                 :formOutline="false"
                 wrapperClass="mb-3"
                 v-model="search.form.query"
                 @input="search.form.clearErrors('query')"
-                :placeholder="this.__('Search for movies or tv series')"
+                :placeholder="this.__('Search for movies or TV series')"
                 aria-label="query"
                 aria-describedby="query"
                 id="query"
@@ -27,7 +26,7 @@
                     :ripple="{ color: 'dark' }"
                 >
                     <font-awesome-icon icon="search" />
-                    {{ __('Search') }}
+                    {{ this.__('Search') }}
                 </MDBBtn>
             </MDBInput>
             <validation-error :error="search.form.errors.query" />
@@ -36,12 +35,16 @@
         <MDBTabs :model-value="search.activeTabId" v-if="search.hasSearched()">
             <!-- Tabs navs -->
             <MDBTabNav fill tabsClasses="mb-3">
-                <MDBTabItem tabId="movies" href="movies">{{
-                    __('Movies')
-                }}</MDBTabItem>
-                <MDBTabItem tabId="series" href="series">{{
-                    __('Series')
-                }}</MDBTabItem>
+                <MDBTabItem
+                    tabId="movies"
+                    href="movies"
+                    v-text="this.__('Movies')"
+                />
+                <MDBTabItem
+                    tabId="series"
+                    href="series"
+                    v-text="this.__('TV series')"
+                />
             </MDBTabNav>
             <!-- Tabs navs -->
             <!-- Tabs content -->
@@ -62,7 +65,7 @@
 
                     <alert v-else>
                         <template #message>
-                            {{ __('no movie matching your search') }}
+                            {{ this.__('No movies matching your search') }}!
                         </template>
                     </alert>
                 </MDBTabPane>
@@ -83,7 +86,7 @@
 
                     <alert v-else>
                         <template #message>
-                            {{ __('no tv series matching your search') }}
+                            {{ this.__('No TV series matching your search') }}!
                         </template>
                     </alert>
                 </MDBTabPane>

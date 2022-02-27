@@ -5,7 +5,7 @@
         :image-src="popular.backgroundImageUrl"
     >
         <section-title :title-class="['text-uppercase']">
-            <template #title>{{ __('popular') + ' ' + __(title) }}</template>
+            <template #title>{{ this.__(title) }}</template>
         </section-title>
         <MDBContainer class="text-center py-4">
             <screenplays
@@ -67,8 +67,9 @@ export default {
 
     created() {
         let popularScreenplaysRoute = null;
-        if (this.title === 'movies') popularScreenplaysRoute = 'popular-movies';
-        else if (this.title === 'series')
+        if (this.screenplayType === 'movies')
+            popularScreenplaysRoute = 'popular-movies';
+        else if (this.screenplayType === 'series')
             popularScreenplaysRoute = 'popular-tv-series';
 
         if (popularScreenplaysRoute !== null) {

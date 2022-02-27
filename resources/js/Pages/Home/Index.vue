@@ -30,19 +30,19 @@
             <popular
                 screenplay-type="movies"
                 id="popular-movies"
-                title="movies"
+                title="Popular movies"
                 start="start"
                 end="end"
             />
             <popular
                 screenplay-type="series"
                 id="popular-series"
-                title="series"
+                title="Popular TV series"
                 end="start"
                 start="end"
             />
             <section class="statistics bg-info text-center fs-1 fw-bold">
-                <statistics></statistics>
+                <statistics />
             </section>
         </template>
     </guest>

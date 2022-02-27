@@ -8,7 +8,7 @@
         static-backdrop
     >
         <template #title>
-            {{ __('forgot password') }}
+            {{ this.__('Forgot Password') }}
         </template>
 
         <template #body>
@@ -16,7 +16,7 @@
                 @input="form.clearErrors()"
                 wrapper-class="mb-3"
                 v-model="form.email"
-                :label="__('email')"
+                :label="this.__('Email')"
                 type="email"
                 required
             />
@@ -28,7 +28,7 @@
                 <MDBBtn
                     type="submit"
                     color="primary"
-                    v-text="__('email password reset link')"
+                    v-text="this.__('Email Password Reset Link')"
                     :disabled="form.processing"
                 />
                 <div

@@ -15,7 +15,7 @@
             <tr v-for="field in info">
                 <td
                     class="text-light bg-dark text-uppercase"
-                    v-text="__(field.key)"
+                    v-text="field.key"
                 />
                 <td v-text="field.value" />
             </tr>
@@ -41,19 +41,19 @@ export default {
             info: [
                 /* TODO: add more fields (see wikipedia) */
                 {
-                    key: 'original title',
+                    key: this.__('Original title'),
                     value: this.screenplay.originalTitle,
                 },
                 {
-                    key: 'year',
+                    key: this.__('Year'),
                     value: this.screenplay.releaseDate,
                 },
                 {
-                    key: 'runtime',
+                    key: this.__('Runtime'),
                     value: this.screenplay.runtime,
                 },
                 {
-                    key: 'genre',
+                    key: this.__('Genre'),
                     value: this.screenplay.genre,
                 },
             ],

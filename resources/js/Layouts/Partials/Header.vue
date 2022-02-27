@@ -6,18 +6,18 @@
                     class="d-flex justify-content-center align-items-center h-100"
                 >
                     <div class="text-white mx-5">
-                        <h1 class="mb-3" v-text="__(title)" />
+                        <h1 class="mb-3" v-text="title" />
                         <!-- TODO: customize scrollbar                        -->
                         <h5
                             class="mb-3"
-                            v-text="__(description)"
+                            v-text="description"
                             style="max-height: 400px; overflow-y: auto"
                         />
                         <div v-if="message">
                             <hr />
                             <small
                                 class="text-warning font-weight-bolder"
-                                v-text="__(message)"
+                                v-text="this.__(message)"
                             />
                         </div>
                     </div>

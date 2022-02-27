@@ -5,7 +5,7 @@
             @click="this.dropdown.use()"
             class="dropdown-toggle"
             id="add-to-diary-dropdown"
-            v-text="__('add to')"
+            v-text="this.__('Add to')"
         />
 
         <MDBDropdown
@@ -19,7 +19,7 @@
                     @click="addToDiary(diary.id)"
                     :href="href"
                 >
-                    {{ diary.name }}
+                    {{ diary.isMain ? this.__(diary.name) : diary.name }}
                     <font-awesome-icon
                         class="text-success"
                         v-if="isAlreadyInDiary(diary.id)"

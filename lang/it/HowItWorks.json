@@ -1,0 +1,22 @@
+{
+    "step_1": {
+        "title": "Registrati gratis in pochi minuti!",
+        "description": "Crea il tuo account in pochi semplici passi fornendo informazioni di base come il tuo username."
+    },
+    "step_2": {
+        "title": "Cerca e scopri film e serie TV",
+        "description": "Cerca un film o una serie TV che hai visto o che desideri guardare in un datase di oltre 1 milione. "
+    },
+    "step_3": {
+        "title": "Aggiungili ai tuoi diari!",
+        "description": "Traccia ogni film e serie TV aggiungendoli ai tuoi diari. Un diario è una lista di film o serie TV che rappresenta un fatto in comune, come i \"film visti\"."
+    },
+    "step_4": {
+        "title": "Non sei ancora convinto?",
+        "description": "Prova una demo effettuando l'accesso con un utente gia registrato."
+    },
+    "cinediary_info": {
+        "description": "Cinediary ti permette di tracciare film e serie TV.",
+        "help": "Come funziona?"
+    }
+}

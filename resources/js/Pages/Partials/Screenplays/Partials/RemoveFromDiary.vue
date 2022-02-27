@@ -1,7 +1,7 @@
 <template>
     <MDBBtn @click="remove()" tag="a" color="danger" :href="href" class="px-2">
         <span>
-            {{ __('remove') }}
+            {{ this.__('Remove') }}
             &nbsp&nbsp<font-awesome-icon size="lg" icon="times" />
         </span>
     </MDBBtn>

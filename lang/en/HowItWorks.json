@@ -1,0 +1,22 @@
+{
+    "step_1": {
+        "title": "Sign up for free in few minutes!",
+        "description": "Create your account in a few simple steps by providing some basic information such as your username."
+    },
+    "step_2": {
+        "title": "Search and discover movies and TV series!",
+        "description": "Search for a movie or a TV series you have watched or you want to watch in a 1M+ database."
+    },
+    "step_3": {
+        "title": "Add them to your diaries!",
+        "description": "Track every movie and TV series by adding them to your diaries. A diary is a list of movies or TV series representing a common fact, such as \"watched movies\"."
+    },
+    "step_4": {
+        "title": "Not convinced yet?",
+        "description": "Try out a demo by logging in with an already registered user."
+    },
+    "cinediary_info": {
+        "description": "Cinediary allows you to track movies and TV series.",
+        "help": "How does it work?"
+    }
+}

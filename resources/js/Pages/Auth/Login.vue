@@ -7,7 +7,7 @@
         :title-class="['text-uppercase']"
     >
         <template #title>
-            {{ __('login') }}
+            {{ this.__('Login') }}
         </template>
 
         <template #body>
@@ -15,7 +15,7 @@
                 @input="form.clearErrors()"
                 wrapper-class="mb-3"
                 v-model="form.email"
-                :label="__('email')"
+                :label="this.__('Email')"
                 type="email"
                 required
             />
@@ -23,12 +23,15 @@
                 @input="form.clearErrors()"
                 wrapper-class="mb-3"
                 v-model="form.password"
-                :label="__('password')"
+                :label="this.__('Password')"
                 type="password"
                 required
             />
             <validation-error :error="form.errors.email" />
-            <MDBCheckbox :label="__('remember me')" v-model="form.remember" />
+            <MDBCheckbox
+                :label="this.__('Remember me')"
+                v-model="form.remember"
+            />
         </template>
 
         <template #footer>
@@ -36,13 +39,13 @@
                 <MDBBtn
                     type="submit"
                     color="primary"
-                    v-text="__('sign in')"
+                    v-text="this.__('Sign in')"
                     :disabled="form.processing"
                 />
             </form>
             <MDBBtn
                 color="primary"
-                v-text="__('forgot password?')"
+                v-text="this.__('Forgot your password?')"
                 :disabled="form.processing"
                 @click="this.$emit('OnForgotPasswordButtonClick')"
             />

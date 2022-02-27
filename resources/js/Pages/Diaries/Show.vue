@@ -11,11 +11,7 @@
                     id="search"
                     wrapper-class="mb-3"
                     class="form-icon-trailing"
-                    :placeholder="
-                        'Find ' +
-                        this.currentDiary.getScreenplayType() +
-                        ' in your diary'
-                    "
+                    :placeholder="getFindBarPlaceholder"
                     @input="this.find()"
                     v-model="findQuery"
                 >
@@ -34,9 +30,8 @@
                                     }),
                                 )
                             "
-                        >
-                            {{ __(tab.title) }}
-                        </MDBBtn>
+                            v-text="tab.title"
+                        />
                     </template>
                 </MDBInput>
             </MDBCol>
@@ -64,19 +59,13 @@
 
         <alert v-else>
             <template #message
-                >{{
-                    __(
-                        'No ' +
-                            this.currentDiary.getScreenplayType() +
-                            ' found, you can add them',
-                    )
-                }}
+                >{{ getNotFoundMessage }}
                 <a
-                    class="here"
+                    class="here fw-bold"
                     style="color: inherit; text-decoration: underline"
                     :href="route('search.index')"
-                    ><strong>{{ __('here') }}!</strong>
-                </a>
+                    v-text="this.__('here')"
+                />!
             </template>
         </alert>
     </authenticated>
@@ -155,7 +144,6 @@ class Diary {
 }
 
 import { reactive } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
 import Alert from '@/Pages/Partials/Alert';
 
 export default {
@@ -187,8 +175,8 @@ export default {
             ),
 
             tabs: {
-                movies: { title: 'Movies', color: 'primary' },
-                series: { title: 'TV Series', color: 'primary' },
+                movies: { title: this.__('Movies'), color: 'primary' },
+                series: { title: this.__('TV series'), color: 'primary' },
             },
 
             activeTab: null,
@@ -204,6 +192,20 @@ export default {
     computed: {
         hasScreenplays() {
             return this.currentDiary.getScreenplaysLength();
+        },
+        getFindBarPlaceholder() {
+            return this.__(
+                'Find ' +
+                    this.currentDiary.getScreenplayType() +
+                    ' in this diary',
+            );
+        },
+        getNotFoundMessage() {
+            return this.__(
+                'No ' +
+                    this.currentDiary.getScreenplayType() +
+                    ' found, you can add them',
+            );
         },
     },
 

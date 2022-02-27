@@ -10,7 +10,7 @@
             color="primary"
             :href="getPageUrl(this.paginator.links[0])"
             :disabled="isDisabled(this.paginator.links[0])"
-            v-text="__('previous')"
+            v-text="this.__('previous')"
         />
         <Link
             as="button"
@@ -26,7 +26,7 @@
             color="primary"
             :href="getPageUrl(this.paginator.links[linksLength - 1])"
             :disabled="isDisabled(this.paginator.links[linksLength - 1])"
-            v-text="__('next')"
+            v-text="this.__('next')"
         />
     </MDBBtnGroup>
 </template>

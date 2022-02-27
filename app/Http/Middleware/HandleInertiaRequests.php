@@ -58,7 +58,7 @@ class HandleInertiaRequests extends Middleware
             },
             'availableLocales' => config('app.available_locales'),
             'language' => function () {
-                return $this->translations(lang_path(app()->getLocale() . '.json'));
+                return $this->translations();
             },
         ]);
     }
@@ -66,14 +66,33 @@ class HandleInertiaRequests extends Middleware
     /**
      * Get the translations array.
      *
-     * @param $json
      * @return array|mixed
      */
-    private function translations($json)
+    public function translations()
     {
-        if (!file_exists($json)) {
-            return [];
+        $translations = [];
+        $currentLanguage = app()->getLocale();
+        $languageFile = lang_path($currentLanguage . '.json');
+
+        if (file_exists($languageFile)) {
+            $translations = array_merge($translations, (array) json_decode(file_get_contents($languageFile), true));
         }
-        return json_decode(file_get_contents($json), true);
+
+        $languageDirectory = lang_path($currentLanguage);
+        if (file_exists($languageDirectory)) {
+            $files = array_diff(scandir($languageDirectory), ['.', '..']);
+
+            foreach ($files as $file) {
+                $filePath = $languageDirectory . '/' . $file;
+
+                $filePathInfo = pathinfo($filePath);
+
+                if (array_key_exists('extension', $filePathInfo) && $filePathInfo['extension'] === 'json') {
+                    $translations = array_merge($translations, (array) json_decode(file_get_contents($filePath), true));
+                }
+            }
+        }
+        //        dd($translations);
+        return $translations;
     }
 }

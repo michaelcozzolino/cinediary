@@ -7,7 +7,11 @@
             as="button"
             class="btn btn-warning"
             :href="route('home')"
-            v-text="__('register or login to use all the available features!')"
+            v-text="
+                this.__(
+                    'Login or register to be able to use all the available features!',
+                )
+            "
         />
     </div>
 </template>

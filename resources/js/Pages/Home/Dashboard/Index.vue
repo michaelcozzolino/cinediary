@@ -6,7 +6,10 @@
             v-for="(screenplays, screenplayType) in lastWatchedScreenplaysData"
             v-show="screenplays.length"
         >
-            <h3 class="text-dark" v-text="'Last watched ' + screenplayType" />
+            <h3
+                class="text-dark"
+                v-text="getLastWatchedTitle(screenplayType)"
+            />
             <screenplay
                 v-for="screenplay in screenplays"
                 :screenplay="screenplay"
@@ -18,27 +21,30 @@
         <MDBRow class="mb-4">
             <h3
                 class="text-dark"
-                v-text="'Movies and tv series you watched by letter'"
+                v-text="this.__('Movies and TV series you watched by letter')"
             />
             <MDBCol>
-                <div id="letters-bar-chart"></div>
+                <div id="letters-bar-chart" />
             </MDBCol>
         </MDBRow>
 
         <MDBRow>
             <h3
                 class="text-dark"
-                v-text="'Total Movies and tv series you watched'"
+                v-text="this.__('Total Movies and TV series you watched')"
             />
             <MDBCol>
-                <div id="watched-screenplays-percentage-chart"></div>
+                <div id="watched-screenplays-percentage-chart" />
             </MDBCol>
         </MDBRow>
 
         <MDBRow>
-            <h3 class="text-dark" v-text="'Total genres you watched'" />
+            <h3
+                class="text-dark"
+                v-text="this.__('Total genres you watched')"
+            />
             <MDBCol>
-                <div id="watched-genres-percentage-chart"></div>
+                <div id="watched-genres-percentage-chart" />
             </MDBCol>
         </MDBRow>
     </authenticated>
@@ -161,6 +167,11 @@ export default {
             return Object.values(
                 this.chartData['lettersBarChart'][screenplayType],
             );
+        },
+        getLastWatchedTitle(screenplayType) {
+            let value =
+                screenplayType === 'movies' ? screenplayType : 'TV series';
+            return this.__('Last watched ' + value);
         },
     },
 };

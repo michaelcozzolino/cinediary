@@ -42,8 +42,8 @@ class Diary extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public const WATCHED_DIARY_NAME = 'watched';
-    public const FAVOURITE_DIARY_NAME = 'favourite';
+    public const WATCHED_DIARY_NAME = 'Watched';
+    public const FAVOURITE_DIARY_NAME = 'Favourite';
     public const TO_WATCH_DIARY_NAME = 'to watch';
     protected $with = ['movies', 'series'];
 

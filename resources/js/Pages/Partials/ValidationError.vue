@@ -1,6 +1,6 @@
 <template>
     <div v-if="error">
-        <p class="text-danger fw-bold" v-text="__(error)" />
+        <p class="text-danger fw-bold" v-text="error" />
     </div>
 </template>
 

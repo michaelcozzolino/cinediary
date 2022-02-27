@@ -107,9 +107,9 @@ export default {
                     icon:
                         diaryName === 'to watch'
                             ? 'eye'
-                            : diaryName === 'favourite'
+                            : diaryName === 'Favourite'
                             ? 'heart'
-                            : diaryName === 'watched'
+                            : diaryName === 'Watched'
                             ? 'film'
                             : 'book-open',
                 },
@@ -119,7 +119,7 @@ export default {
         createDiaryMenuItems() {
             let diaries = [
                 {
-                    header: this.__('your main diaries'),
+                    header: this.__('Your main diaries'),
                     hiddenOnCollapse: true,
                 },
             ];
@@ -158,7 +158,7 @@ export default {
                     },
                     {
                         href: route('dashboard'),
-                        title: 'Dashboard',
+                        title: this.__('Dashboard'),
                         icon: {
                             element: markRaw(FontAwesomeIcon),
                             class: 'px-2',
@@ -184,7 +184,7 @@ export default {
 
                     {
                         href: route('search.create'),
-                        title: this.__('Add movies or tv series'),
+                        title: this.__('Add movies or TV series'),
                         icon: {
                             element: markRaw(FontAwesomeIcon),
                             class: 'px-2',
@@ -193,7 +193,7 @@ export default {
                     },
 
                     {
-                        header: this.__('General'),
+                        header: this.__('Other'),
                         hiddenOnCollapse: true,
                     },
                     {
