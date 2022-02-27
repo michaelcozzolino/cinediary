@@ -86,7 +86,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/', [SeriesController::class, 'destroy'])->name('diaries.series.destroy');
         });
     });
-
 });
 
 Route::get('/movies/{movie}', [MoviesController::class, 'show'])->name('movies.show');
