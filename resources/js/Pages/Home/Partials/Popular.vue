@@ -68,13 +68,13 @@ export default {
     created() {
         let popularScreenplaysRoute = null;
         if (this.screenplayType === 'movies')
-            popularScreenplaysRoute = 'popular-movies';
+            popularScreenplaysRoute = this.route('popular-movies');
         else if (this.screenplayType === 'series')
-            popularScreenplaysRoute = 'popular-tv-series';
+            popularScreenplaysRoute = this.route('popular-series');
 
         if (popularScreenplaysRoute !== null) {
             axios
-                .get(route(popularScreenplaysRoute))
+                .get(popularScreenplaysRoute)
                 .then((result) => {
                     let data = result.data;
                     this.popular.screenplays = data.screenplays;

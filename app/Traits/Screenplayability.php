@@ -172,7 +172,7 @@ trait Screenplayability
 
             $randomBackdropPath =
                 count($randomBackdropPathScreenplays) > 0
-                    ? $randomBackdropPathScreenplays[0]['backdropPath']
+                    ? reset($randomBackdropPathScreenplays)['backdropPath']
                     : TMDBScraper::BLANK_BACKDROP_PATH_URL;
 
             $screenplays = array_chunk($screenplays, config('cinediary.homepage_screenplays_per_row'));
