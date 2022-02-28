@@ -27,8 +27,8 @@
                     type="submit"
                     color="primary"
                     :disabled="form.processing"
+                    v-text="this.__('Resend Verification Email')"
                 >
-                    Resend Verification Email
                 </MDBBtn>
                 <div
                     class="my-2 text-sm text-success"
