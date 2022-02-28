@@ -104,7 +104,9 @@ export default {
             return furtherData
                 .filter(
                     (furtherDatum) =>
-                        furtherDatum !== null && furtherDatum !== '',
+                        furtherDatum !== null &&
+                        furtherDatum !== '' &&
+                        furtherDatum !== undefined,
                 )
                 .join(', ');
         },
