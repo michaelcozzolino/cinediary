@@ -13,11 +13,11 @@
                             v-text="description"
                             style="max-height: 400px; overflow-y: auto"
                         />
-                        <div v-if="message">
+                        <div v-if="getMessage">
                             <hr />
                             <small
                                 class="text-warning font-weight-bolder"
-                                v-text="this.__(message)"
+                                v-text="getMessage"
                             />
                         </div>
                     </div>
@@ -32,7 +32,7 @@ export default {
     props: {
         title: String,
         description: String,
-        message: String,
+        // message: String,
         height: Number,
         imageUrl: String,
     },
@@ -51,6 +51,10 @@ export default {
 
         getHeight() {
             return this.height ?? 300;
+        },
+
+        getMessage() {
+            return this.$page.props.flash.message;
         },
     },
 };

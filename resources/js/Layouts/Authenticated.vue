@@ -10,11 +10,7 @@
     <div class="min-vh-100 bg-gray-200" :style="getSidebarMarginStyle">
         <!-- Page Content -->
         <slot name="header">
-            <Header
-                :title="header.title"
-                :description="header.description"
-                :message="header.message"
-            />
+            <Header :title="header.title" :description="header.description" />
         </slot>
         <main>
             <MDBContainer class="pt-4" style="padding-bottom: 3.8rem">
@@ -63,11 +59,6 @@ export default {
                     this.$page.component,
                     this.headerInfo,
                 ).description,
-                message: this.headerInfo
-                    ? 'message' in this.headerInfo
-                        ? this.headerInfo.message
-                        : null
-                    : null,
             },
         };
     },

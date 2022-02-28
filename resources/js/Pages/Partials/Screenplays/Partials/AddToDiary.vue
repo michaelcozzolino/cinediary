@@ -68,7 +68,7 @@ export default {
                 this.addToDiaryForm.screenplayId = this.screenplayId;
 
                 this.addToDiaryForm.post(route(routeName, { diary: diaryId }), {
-                    preserveScroll: true,
+                    preserveScroll: false,
                     preserveState: false,
                 });
             }

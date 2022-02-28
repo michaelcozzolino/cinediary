@@ -59,6 +59,13 @@ trait ScreenplayActions
             }
 
             $diary->{$this->getTable()}()->attach($this->id);
+            session()->flash(
+                'message',
+                __('flash.screenplay_added', [
+                    'screenplay_title' => $this->title,
+                    'diary_name' => $diary->isMain ? __($diary->name) : $diary->name,
+                ]),
+            );
         }
     }
 
@@ -91,6 +98,7 @@ trait ScreenplayActions
             $this->diaries()->detach(Diary::getFavourite()->id);
         }
         $this->diaries()->detach($diary->id);
+        session()->flash('message', __('flash.screenplay_removed', ['screenplay_title' => $this->title]));
     }
 
     public static function getModelClassName()

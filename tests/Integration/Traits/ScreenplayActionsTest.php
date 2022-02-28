@@ -31,6 +31,7 @@ class ScreenplayActionsTest extends TestCase
                 ->whereId($this->movie->id)
                 ->exists(),
         );
+        $this->assertNotNull(session('message'));
     }
 
     /** @test */
@@ -46,6 +47,7 @@ class ScreenplayActionsTest extends TestCase
         $this->movie->toBeWatched();
         $this->movie->removeFromDiary($this->diaries['toWatch']);
         $this->assertFalse($this->movie->existsInDiary($this->diaries['toWatch']));
+        $this->assertNotNull(session('message'));
     }
 
     /** @test */

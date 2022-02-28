@@ -145,9 +145,7 @@ trait Screenplayability
     public function destroy(Diary $diary, Movie|Series $screenplay)
     {
         $screenplay->removeFromDiary($diary);
-        return redirect()
-            ->back()
-            ->with(['message' => 'deleted']);
+        return redirect()->back();
     }
 
     /*

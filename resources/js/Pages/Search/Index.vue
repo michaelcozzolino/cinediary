@@ -1,5 +1,5 @@
 <template>
-    <authenticated :header-info="{ message: noDiariesMessage }">
+    <authenticated>
         <h6
             class="text-muted text-uppercase"
             v-show="lastQuery !== undefined"
@@ -100,7 +100,6 @@
 import Authenticated from '@/Layouts/Authenticated';
 import Screenplay from '@/Pages/Partials/Screenplays/Screenplay';
 import Screenplays from '@/Pages/Partials/Screenplays/Screenplays';
-import { usePage } from '@inertiajs/inertia-vue3';
 import { reactive } from 'vue';
 import ValidationError from '@/Pages/Partials/ValidationError';
 import Alert from '@/Pages/Partials/Alert';
@@ -185,12 +184,6 @@ export default {
                 }),
             ),
         };
-    },
-
-    computed: {
-        noDiariesMessage() {
-            return usePage().props.value.flash.message;
-        },
     },
 
     methods: {

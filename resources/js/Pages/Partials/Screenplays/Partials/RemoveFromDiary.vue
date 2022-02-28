@@ -32,7 +32,7 @@ export default {
                     parameters,
                 ),
                 {
-                    preserveScroll: true,
+                    preserveScroll: false,
                     preserveState: false,
                 },
             );
