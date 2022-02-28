@@ -23,7 +23,7 @@ class SetLocale
     {
         $locale = null;
         if (!session()->has('locale')) {
-            if (\Auth::check()) {
+            if (\Auth::check() && \Auth::user()->hasVerifiedEmail()) {
                 $locale = Setting::whereUserId(\Auth::user()->id)->first()->defaultLanguage;
             } else {
                 $locale = $this->getCountryIp(\Request::ip(), new Client());

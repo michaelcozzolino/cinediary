@@ -195,8 +195,7 @@ class ScreenplayabilityTest extends TestCase
         $movie = $this->movies->first();
         $this->diaries['custom']->movies()->syncWithoutDetaching([$movie->id]);
 
-        $newUser = User::factory()->create();
-        createNewUserDiaries($newUser);
+        $newUser = createUser(true);
 
         $newUserFavouriteDiary = Diary::withoutGlobalScope('userDiaries')
             ->favourite()

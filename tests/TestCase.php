@@ -21,6 +21,12 @@ abstract class TestCase extends BaseTestCase
         $this->availableLanguages = config('app.available_locales');
     }
 
+    /**
+     * Sign in a specific user or create one.
+     *
+     * @param User|null $user
+     * @return $this
+     */
     public function signIn(User $user = null)
     {
         if (!$user) {
@@ -28,17 +34,24 @@ abstract class TestCase extends BaseTestCase
         } else {
             $this->user = $user;
         }
+
         $this->userSettings = Setting::whereUserId($this->user->id);
         $this->actingAs($this->user);
 
-        $custom = Diary::firstOrCreate(['name' => 'custom diary', 'user_id' => $this->user->id]);
-        $watched = Diary::getWatched();
-        $favourite = Diary::getFavourite();
-        $toWatch = Diary::getToWatch();
-        $this->diaries = compact('custom', 'watched', 'favourite', 'toWatch');
+        if (!is_null($this->user->email_verified_at)) {
+            $custom = Diary::firstOrCreate(['name' => 'custom diary', 'user_id' => $this->user->id]);
+            $watched = Diary::getWatched();
+            $favourite = Diary::getFavourite();
+            $toWatch = Diary::getToWatch();
+            $this->diaries = compact('custom', 'watched', 'favourite', 'toWatch');
+        }
+
         return $this;
     }
 
+    /**
+     * @return array[]
+     */
     public static function getInvalidScreenplayIds()
     {
         return [

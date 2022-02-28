@@ -37,20 +37,6 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $diariesToCreate = [
-            ['user_id' => $user->id, 'name' => 'Watched', 'isMain' => true],
-            ['user_id' => $user->id, 'name' => 'Favourite', 'isMain' => true],
-            ['user_id' => $user->id, 'name' => 'To Watch', 'isMain' => true],
-        ];
-        foreach ($diariesToCreate as $diaryToCreate) {
-            Diary::firstOrCreate($diaryToCreate);
-        }
-
-        Setting::firstOrCreate([
-            'user_id' => $user->id,
-            'defaultLanguage' => app()->getLocale(),
-        ]);
-
         event(new Registered($user));
 
         Auth::login($user);
