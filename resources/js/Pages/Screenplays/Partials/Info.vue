@@ -14,10 +14,11 @@
         <tbody>
             <tr v-for="field in info">
                 <td
+                    v-if="field.value !== ''"
                     class="text-light bg-dark text-uppercase"
                     v-text="field.key"
                 />
-                <td v-text="field.value" />
+                <td v-text="field.value" v-if="field.value !== ''" />
             </tr>
         </tbody>
     </MDBTable>
