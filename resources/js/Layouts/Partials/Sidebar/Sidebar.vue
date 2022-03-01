@@ -54,12 +54,6 @@ export default {
         this.createMenu();
     },
 
-    computed: {
-        userData() {
-            return usePage().props.value.auth.userData;
-        },
-    },
-
     methods: {
         setActiveItem() {
             this.sidebar.menu.forEach((element) => {
@@ -125,7 +119,7 @@ export default {
             ];
             let mainDiaries = [];
 
-            let userDiaries = this.userData.diaries;
+            let userDiaries = this.$helpers.getUser().diaries;
 
             for (let userDiaryIndex in userDiaries) {
                 let userDiary = userDiaries[userDiaryIndex];
@@ -153,7 +147,9 @@ export default {
                     logoItem,
                     {
                         header:
-                            this.__('Welcome') + ', ' + this.userData.user.name,
+                            this.__('Welcome') +
+                            ', ' +
+                            this.$helpers.getUser().name,
                         hiddenOnCollapse: true,
                     },
                     {

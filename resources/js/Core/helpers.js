@@ -47,11 +47,15 @@ export default {
      * by hiding the components that need authentication
      * */
     needsAuthentication() {
-        return this.getSharedProps().auth.userData.user !== null;
+        return this.getUser() !== null;
     },
 
     getSharedProps() {
         return usePage().props.value;
+    },
+
+    getUser() {
+        return this.getSharedProps().auth.user;
     },
 
     getAppName() {

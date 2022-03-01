@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Diary;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -33,16 +34,22 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-        $user = $request->user();
-
         $alreadyInDiariesScreenplaysIds = getAlreadyInDiariesScreenplaysIds($request);
+
         return array_merge(parent::share($request), compact('alreadyInDiariesScreenplaysIds'), [
-            'auth' => [
-                'userData' => [
-                    'user' => $user,
-                    'diaries' => $user->diaries ?? null,
-                ],
-            ],
+            'auth' => function () use ($request) {
+                return [
+                    'user' => $request->user()
+                        ? [
+                            'name' => $request->user()->name,
+                            'diaries' => Diary::setEagerLoads([])
+                                ->whereUserId($request->user()->id)
+                                ->get(['id', 'name', 'isMain']),
+                        ]
+                        : null,
+                ];
+            },
+
             'screenplayType' => getScreenplayType($request),
 
             'config' => [

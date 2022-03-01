@@ -15,7 +15,7 @@
         >
             <MDBDropdownMenu aria-labelledby="add-to-diary-dropdown">
                 <MDBDropdownItem
-                    v-for="diary in this.$page.props.auth.userData.diaries"
+                    v-for="diary in this.$helpers.getUser().diaries"
                     @click="addToDiary(diary.id)"
                     :href="href"
                 >
