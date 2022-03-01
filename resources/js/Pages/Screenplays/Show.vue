@@ -1,5 +1,8 @@
 <template>
     <authenticated>
+        <template #head>
+            <AppHead :title="screenplay.title" />
+        </template>
         <template #header>
             <Header
                 :title="screenplay.title"
@@ -29,8 +32,10 @@ import Poster from '@/Pages/Screenplays/Partials/Poster';
 import Info from '@/Pages/Screenplays/Partials/Info';
 import SectionTitle from '@/Pages/Partials/SectionTitle';
 import Statistics from '@/Pages/Screenplays/Partials/Statistics';
+import AppHead from '@/Layouts/Partials/AppHead';
 export default {
     components: {
+        AppHead,
         Statistics,
         SectionTitle,
         Info,

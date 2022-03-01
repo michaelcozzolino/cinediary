@@ -1,5 +1,7 @@
 <template>
-    <!--    <Head title="title"/>-->
+    <slot name="head">
+        <AppHead :title="head.title" />
+    </slot>
 
     <sidebar
         :width="sidebar.width"
@@ -28,9 +30,11 @@ import HowItWorks from '@/Pages/Home/Partials/HowItWorks';
 import LanguageSwitcher from '@/Layouts/Partials/LanguageSwitcher';
 import AppFooter from '@/Layouts/Partials/AppFooter';
 import Header from '@/Layouts/Partials/Header';
+import AppHead from '@/Layouts/Partials/AppHead';
 
 export default {
     components: {
+        AppHead,
         Header,
         Sidebar,
         HowItWorks,
@@ -59,6 +63,12 @@ export default {
                     this.$page.component,
                     this.headerInfo,
                 ).description,
+            },
+            head: {
+                title: this.$helpers.getHeadersData(
+                    this.$page.component,
+                    this.headerInfo,
+                ).title,
             },
         };
     },
