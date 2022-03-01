@@ -48,7 +48,6 @@
             >
                 <template v-slot:title>{{ screenplay.title }}</template>
             </screenplay>
-            <!--    TODO: find with partial reload        -->
 
             <MDBRow>
                 <MDBCol class="d-flex justify-content-center">
@@ -216,13 +215,10 @@ export default {
                 diary: this.currentDiary.getId(),
             });
 
-            this.$inertia.get(
-                route,
-                {},
-                {
-                    preserveState: false,
-                },
-            );
+            this.$inertia.visit(route, {
+                preserveState: false,
+                only: ['screenplays', 'query'],
+            });
         }, 750),
     },
 };
