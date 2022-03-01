@@ -1,7 +1,7 @@
 <template>
     <Link :href="route('home')">
         <img
-            src="https://puu.sh/IFwCQ/b0171fbe7a.png"
+            src="/css/images/logo.png"
             class="img-fluid mx-auto d-block"
             alt="..."
         />
