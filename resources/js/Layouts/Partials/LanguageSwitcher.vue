@@ -50,7 +50,7 @@ export default {
     },
     computed: {
         currentLanguage() {
-            let locale = usePage().props.value.locale;
+            let locale = usePage().props.value.current_language;
             return locale.toUpperCase();
         },
     },

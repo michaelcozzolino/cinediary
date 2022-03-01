@@ -21,23 +21,37 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        $locale = null;
-        if (!session()->has('locale')) {
-            if (\Auth::check() && \Auth::user()->hasVerifiedEmail()) {
-                $locale = Setting::whereUserId(\Auth::user()->id)->first()->defaultLanguage;
-            } else {
-                $locale = $this->getCountryIp(\Request::ip(), new Client());
+        $availableLanguages = config('app.available_locales');
+
+        if ($request->wantsJson() && str_starts_with($request->path(), 'api')) {
+            $contentLanguage = $request->header('Content-Language');
+
+            app()->setLocale(config('app.locale'));
+
+            if (in_array($contentLanguage, $availableLanguages)) {
+                app()->setLocale($contentLanguage);
+            }
+        } else {
+            $locale = null;
+
+            if (!session()->has('locale')) {
+                if (\Auth::check() && \Auth::user()->hasVerifiedEmail()) {
+                    $locale = Setting::whereUserId(\Auth::user()->id)->first()->defaultLanguage;
+                } else {
+                    $locale = $this->getCountryIp(\Request::ip(), new Client());
+                }
+
+                if (!in_array($locale, $availableLanguages)) {
+                    $locale = config('app.locale');
+                }
+
+                app()->setLocale($locale);
+
+                session(compact('locale'));
             }
 
-            if (!in_array($locale, config('app.available_locales'))) {
-                $locale = config('app.locale');
-            }
-
-            app()->setLocale($locale);
-            session(compact('locale'));
+            app()->setLocale(session()->get('locale'));
         }
-
-        app()->setLocale(session()->get('locale'));
 
         return $next($request);
     }

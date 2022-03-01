@@ -53,11 +53,11 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => fn() => $request->session()->get('message'),
             ],
-            'locale' => function () {
+            'current_language' => function () {
                 return app()->getLocale();
             },
             'availableLocales' => config('app.available_locales'),
-            'language' => function () {
+            'translations' => function () {
                 return $this->translations();
             },
         ]);

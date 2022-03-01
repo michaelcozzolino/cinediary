@@ -74,7 +74,12 @@ export default {
 
         if (popularScreenplaysRoute !== null) {
             axios
-                .get(popularScreenplaysRoute)
+                .get(popularScreenplaysRoute, {
+                    headers: {
+                        'Content-Language': this.$page.props.current_language,
+                        Accept: 'application/json',
+                    },
+                })
                 .then((result) => {
                     let data = result.data;
                     this.popular.screenplays = data.screenplays;
