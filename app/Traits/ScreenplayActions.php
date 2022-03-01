@@ -20,9 +20,9 @@ trait ScreenplayActions
         return Attribute::make(
             get: function ($value) {
                 return $this instanceof Movie
-                    ? $value . ' minutes'
+                    ? $value . ' ' . __('minutes')
                     : ($this instanceof Series
-                        ? $value . ' minutes/episode'
+                        ? $value . ' ' . __('minutes/episode')
                         : $value);
             },
         );
