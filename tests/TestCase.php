@@ -40,9 +40,9 @@ abstract class TestCase extends BaseTestCase
 
         if (!is_null($this->user->email_verified_at)) {
             $custom = Diary::firstOrCreate(['name' => 'custom diary', 'user_id' => $this->user->id]);
-            $watched = Diary::watched()->first();
-            $favourite = Diary::favourite()->first();
-            $toWatch = Diary::toBeWatched()->first();
+            $watched = \Auth::user()->watched_diary;
+            $favourite = \Auth::user()->favourite_diary;
+            $toWatch = \Auth::user()->to_be_watched_diary;
             $this->diaries = compact('custom', 'watched', 'favourite', 'toWatch');
         }
 

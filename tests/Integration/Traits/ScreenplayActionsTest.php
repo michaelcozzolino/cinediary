@@ -24,7 +24,7 @@ class ScreenplayActionsTest extends TestCase
     /** @test */
     public function it_can_be_added_to_a_diary()
     {
-        $this->movie->addToDiary($this->diaries['custom']);
+        $this->movie->track($this->diaries['custom']);
         $this->assertTrue(
             $this->diaries['custom']
                 ->movies()
@@ -37,7 +37,7 @@ class ScreenplayActionsTest extends TestCase
     /** @test */
     public function it_exists_in_a_diary()
     {
-        $this->movie->addToDiary($this->diaries['watched']);
+        $this->movie->track($this->diaries['watched']);
         $this->assertTrue($this->movie->existsInDiary($this->diaries['watched']));
     }
 
@@ -53,8 +53,8 @@ class ScreenplayActionsTest extends TestCase
     /** @test */
     public function it_can_be_watched()
     {
-        $this->movie->addToDiary($this->diaries['toWatch']);
-        $this->movie->addToDiary($this->diaries['watched']);
+        $this->movie->track($this->diaries['toWatch']);
+        $this->movie->track($this->diaries['watched']);
         $this->assertTrue($this->movie->existsInDiary($this->diaries['watched']));
         $this->assertFalse($this->movie->existsInDiary($this->diaries['toWatch']));
     }
@@ -62,7 +62,7 @@ class ScreenplayActionsTest extends TestCase
     /** @test */
     public function it_can_be_favourite()
     {
-        $this->movie->addToDiary($this->diaries['favourite']);
+        $this->movie->track($this->diaries['favourite']);
         $this->assertTrue($this->movie->existsInDiary($this->diaries['watched']));
         $this->assertTrue($this->movie->existsInDiary($this->diaries['favourite']));
         $this->assertFalse($this->movie->existsInDiary($this->diaries['toWatch']));
@@ -71,8 +71,8 @@ class ScreenplayActionsTest extends TestCase
     /** @test */
     public function it_can_be_watched_in_the_future()
     {
-        $this->movie->addToDiary($this->diaries['favourite']);
-        $this->movie->addToDiary($this->diaries['toWatch']);
+        $this->movie->track($this->diaries['favourite']);
+        $this->movie->track($this->diaries['toWatch']);
         $this->assertTrue($this->movie->existsInDiary($this->diaries['toWatch']));
         $this->assertFalse($this->movie->existsInDiary($this->diaries['favourite']));
         $this->assertFalse($this->movie->existsInDiary($this->diaries['watched']));
@@ -81,7 +81,7 @@ class ScreenplayActionsTest extends TestCase
     /** @test */
     public function it_can_be_unwatched()
     {
-        $this->movie->addToDiary($this->diaries['watched']);
+        $this->movie->track($this->diaries['watched']);
         $this->movie->removeFromDiary($this->diaries['watched']);
         $this->assertFalse($this->movie->existsInDiary($this->diaries['watched']));
         $this->assertFalse($this->movie->existsInDiary($this->diaries['favourite']));

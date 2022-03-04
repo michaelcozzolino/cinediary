@@ -19,29 +19,29 @@ class DashboardControllerTest extends \Tests\TestCase
         $series = [];
         $movies[] = Movie::factory()
             ->create(['title' => 'a', 'genre' => 'action'])
-            ->addToDiary($this->diaries['watched']);
+            ->track($this->diaries['watched']);
         $movies[] = Movie::factory()
             ->create(['title' => 'b', 'genre' => 'action'])
-            ->addToDiary($this->diaries['watched']);
+            ->track($this->diaries['watched']);
         $movies[] = Movie::factory()
             ->create(['title' => 'c', 'genre' => 'action'])
-            ->addToDiary($this->diaries['watched']);
+            ->track($this->diaries['watched']);
         $movies[] = Movie::factory()
             ->create(['title' => 'c', 'genre' => 'adventure'])
-            ->addToDiary($this->diaries['watched']);
+            ->track($this->diaries['watched']);
         $movies[] = Movie::factory()
             ->create(['title' => 'c', 'genre' => 'adventure'])
-            ->addToDiary($this->diaries['watched']);
+            ->track($this->diaries['watched']);
 
         $series[] = Series::factory()
             ->create(['title' => 'x', 'genre' => 'action'])
-            ->addToDiary($this->diaries['watched']);
+            ->track($this->diaries['watched']);
         $series[] = Series::factory()
             ->create(['title' => 'y', 'genre' => 'adventure'])
-            ->addToDiary($this->diaries['watched']);
+            ->track($this->diaries['watched']);
         $series[] = Series::factory()
             ->create(['title' => 'z', 'genre' => 'comedy'])
-            ->addToDiary($this->diaries['watched']);
+            ->track($this->diaries['watched']);
     }
 
     /**

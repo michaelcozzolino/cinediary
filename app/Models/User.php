@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -71,6 +72,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['watched_diary', 'favourite_diary', 'to_be_watched_diary'];
+
     /**
      * @return HasMany
      */
@@ -85,5 +88,47 @@ class User extends Authenticatable implements MustVerifyEmail
     public function settings()
     {
         return $this->hasOne(Setting::class);
+    }
+
+    /**
+     * Get the watched diary attribute
+     *
+     * @return Attribute
+     */
+    protected function watchedDiary(): Attribute
+    {
+        return new Attribute(
+            get: fn() => Diary::setEagerLoads([])
+                ->watched()
+                ->first(),
+        );
+    }
+
+    /**
+     * Get the favourite diary attribute
+     *
+     * @return Attribute
+     */
+    protected function favouriteDiary(): Attribute
+    {
+        return new Attribute(
+            get: fn() => Diary::setEagerLoads([])
+                ->favourite()
+                ->first(),
+        );
+    }
+
+    /**
+     * Get the to be watched diary attribute
+     *
+     * @return Attribute
+     */
+    protected function toBeWatchedDiary(): Attribute
+    {
+        return new Attribute(
+            get: fn() => Diary::setEagerLoads([])
+                ->toBeWatched()
+                ->first(),
+        );
     }
 }

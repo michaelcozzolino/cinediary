@@ -35,7 +35,7 @@ class RedirectIfEmptyDiariesTest extends TestCase
     public function it_does_not_redirect_a_user_to_the_search_page_if_at_least_a_diary_he_owns_is_not_empty()
     {
         $movie = createMovies(1)[0];
-        $movie->addToDiary($this->diaries['watched']);
+        $movie->track($this->diaries['watched']);
         $dashboardResponse = $this->get(route('dashboard'));
 
         $request = Request::create(route('dashboard'), 'GET');

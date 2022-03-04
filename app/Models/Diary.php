@@ -81,7 +81,7 @@ class Diary extends Model
     }
 
     /**
-     * Get watched diary builder.
+     * Get the watched diary builder.
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
      * @return \Illuminate\Database\Eloquent\Builder
@@ -92,7 +92,7 @@ class Diary extends Model
     }
 
     /**
-     * Get to be watched diary builder.
+     * Get the to be watched diary builder.
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
      * @return \Illuminate\Database\Eloquent\Builder
@@ -103,7 +103,7 @@ class Diary extends Model
     }
 
     /**
-     *  Get favourite diary builder.
+     *  Get the favourite diary builder.
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
      * @return \Illuminate\Database\Eloquent\Builder
@@ -114,7 +114,7 @@ class Diary extends Model
     }
 
     /**
-     * Get main diaries builder.
+     * Get the main diaries builder.
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
      * @return \Illuminate\Database\Eloquent\Builder

@@ -128,7 +128,7 @@ trait Screenplayability
 
         $screenplay = $this->screenplayModel::firstOrTranslate($this->TMDBScraper, $request->input('screenplayId'));
         if (!is_null($screenplay)) {
-            $screenplay->addToDiary($diary);
+            $screenplay->track($diary);
             return redirect()->back();
         }
 

@@ -25,7 +25,7 @@ class ScreenplayabilityTest extends TestCase
         $this->TMDBScraper = new TMDBScraper(TMDBScraper::DEFAULT_API_KEY);
         $this->signIn();
         $this->movie = Movie::factory()->create(['id' => 1]);
-        $this->movie->addToDiary($this->diaries['favourite']);
+        $this->movie->track($this->diaries['favourite']);
 
         $this->maxScreenplaysPerPage = 20;
         $this->movies = createMovies(1 + $this->maxScreenplaysPerPage * 2);
