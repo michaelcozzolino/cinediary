@@ -49,7 +49,7 @@ class DashboardController extends Controller
         $currentLanguage = app()->getLocale();
         $lastWatchedScreenplaysData = [];
         $screenplayTypes = $this->getScreenplayTypes();
-        $watchedDiary = Diary::getWatched();
+        $watchedDiary = Diary::watched()->first();
 
         foreach ($screenplayTypes as $screenplayType) {
             $lastWatchedScreenplaysData[$screenplayType] = $watchedDiary->getLatestAddedScreenplays($screenplayType, 4);

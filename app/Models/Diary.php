@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Diary whereIsMain($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Diary favourite()
  * @method static \Illuminate\Database\Eloquent\Builder|Diary main()
- * @method static \Illuminate\Database\Eloquent\Builder|Diary toWatch()
+ * @method static \Illuminate\Database\Eloquent\Builder|Diary toBeWatched()
  * @method static \Illuminate\Database\Eloquent\Builder|Diary watched()
  */
 class Diary extends Model
@@ -44,7 +44,7 @@ class Diary extends Model
     protected $guarded = [];
     public const WATCHED_DIARY_NAME = 'Watched';
     public const FAVOURITE_DIARY_NAME = 'Favourite';
-    public const TO_WATCH_DIARY_NAME = 'to watch';
+    public const TO_BE_WATCHED_DIARY_NAME = 'to watch';
     protected $with = ['movies', 'series'];
 
     protected static function booted()
@@ -81,73 +81,43 @@ class Diary extends Model
     }
 
     /**
-     * Get watched diary object.
-     *
-     * @return Diary
-     */
-    public static function getWatched(): Diary
-    {
-        return self::watched()->first();
-    }
-
-    /**
      * Get watched diary builder.
      *
-     * @param Builder $builder
-     * @return mixed
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWatched(Builder $builder)
     {
-        return $builder->where('name', self::WATCHED_DIARY_NAME)->main();
+        return $builder->whereName(self::WATCHED_DIARY_NAME)->main();
     }
 
     /**
-     * Get to watch diary object.
+     * Get to be watched diary builder.
      *
-     * @return Diary
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function getToWatch(): Diary
+    public function scopeToBeWatched(Builder $builder)
     {
-        return self::toWatch()->first();
-    }
-
-    /**
-     * Get to watch diary builder.
-     *
-     * @param Builder $builder
-     * @return Builder
-     */
-    public function scopeToWatch(Builder $builder): Builder
-    {
-        return $builder->where('name', self::TO_WATCH_DIARY_NAME)->main();
-    }
-
-    /**
-     * Get favourite diary object.
-     *
-     * @return Diary
-     */
-    public static function getFavourite(): Diary
-    {
-        return self::favourite()->first();
+        return $builder->whereName(self::TO_BE_WATCHED_DIARY_NAME)->main();
     }
 
     /**
      *  Get favourite diary builder.
      *
-     * @param Builder $builder
-     * @return Builder
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeFavourite(Builder $builder): Builder
     {
-        return $builder->where('name', self::FAVOURITE_DIARY_NAME)->main();
+        return $builder->whereName(self::FAVOURITE_DIARY_NAME)->main();
     }
 
     /**
      * Get main diaries builder.
      *
-     * @param Builder $builder
-     * @return Builder
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeMain(Builder $builder): Builder
     {
@@ -175,13 +145,13 @@ class Diary extends Model
     }
 
     /**
-     * Check if the diary is the to watch one.
+     * Check if the diary is the to be watched one.
      *
      * @return bool
      */
-    public function isToWatch()
+    public function isToBeWatched()
     {
-        return $this->name === self::TO_WATCH_DIARY_NAME && $this->isMain;
+        return $this->name === self::TO_BE_WATCHED_DIARY_NAME && $this->isMain;
     }
 
     /**

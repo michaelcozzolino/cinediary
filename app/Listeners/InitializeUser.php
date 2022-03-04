@@ -25,7 +25,11 @@ class InitializeUser
             'defaultLanguage' => app()->getLocale(),
         ]);
 
-        $diariesToCreateNames = [Diary::WATCHED_DIARY_NAME, Diary::FAVOURITE_DIARY_NAME, Diary::TO_WATCH_DIARY_NAME];
+        $diariesToCreateNames = [
+            Diary::WATCHED_DIARY_NAME,
+            Diary::FAVOURITE_DIARY_NAME,
+            Diary::TO_BE_WATCHED_DIARY_NAME,
+        ];
 
         foreach ($diariesToCreateNames as $diaryToCreateName) {
             Diary::create([

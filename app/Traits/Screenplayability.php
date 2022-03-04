@@ -75,7 +75,7 @@ trait Screenplayability
 
         $futureWatchers = $this->getDiariesScreenplaysCount(
             Diary::withoutGlobalScope('userDiaries')
-                ->toWatch()
+                ->toBeWatched()
                 ->get()
                 ->pluck('id'),
             $screenplay,

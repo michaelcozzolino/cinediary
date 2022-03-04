@@ -31,20 +31,21 @@ trait ScreenplayActions
     public function watch()
     {
         if ($this->isToBeWatched()) {
-            $this->removeFromDiary(Diary::getToWatch());
+            $this->removeFromDiary(Diary::toBeWatched()->first());
         }
     }
 
     public function makeFavourite()
     {
         if (!$this->isWatched()) {
-            $this->addToDiary(Diary::getWatched());
+            //            $this->addToDiary(Diary::where('name', Diary::WATCHED_DIARY_NAME)->main()->first());
+            $this->addToDiary(Diary::watched()->first());
         }
     }
 
     public function toBeWatched()
     {
-        $this->removeFromDiary(Diary::getWatched());
+        $this->removeFromDiary(Diary::watched()->first());
     }
 
     public function addToDiary(Diary $diary)
@@ -54,7 +55,7 @@ trait ScreenplayActions
                 $this->makeFavourite();
             } elseif ($diary->isWatched()) {
                 $this->watch();
-            } elseif ($diary->isToWatch()) {
+            } elseif ($diary->isToBeWatched()) {
                 $this->toBeWatched();
             }
 
@@ -71,31 +72,32 @@ trait ScreenplayActions
 
     public function isWatched()
     {
-        return $this->existsInDiary(Diary::getWatched());
+        return $this->existsInDiary(Diary::watched()->first());
     }
 
     public function isFavourite()
     {
-        return $this->existsInDiary(Diary::getFavourite());
+        return $this->existsInDiary(Diary::favourite()->first());
     }
 
     public function isToBeWatched()
     {
-        return $this->existsInDiary(Diary::getToWatch());
+        return $this->existsInDiary(Diary::toBeWatched()->first());
     }
 
     public function existsInDiary(Diary $diary)
     {
-        return (bool) $diary
-            ->{$this->getTable()}()
-            ->whereId($this->id)
+        return (bool) Diary::whereId($diary->id)
+            ->whereHas($this->getTable(), function ($builder) {
+                $builder->where(self::getModelClassName() . '_id', '=', $this->id);
+            })
             ->count();
     }
 
     public function removeFromDiary(Diary $diary)
     {
         if ($diary->isWatched()) {
-            $this->diaries()->detach(Diary::getFavourite()->id);
+            $this->diaries()->detach(Diary::favourite()->first()->id);
         }
         $this->diaries()->detach($diary->id);
         session()->flash('message', __('flash.screenplay_removed', ['screenplay_title' => $this->title]));
