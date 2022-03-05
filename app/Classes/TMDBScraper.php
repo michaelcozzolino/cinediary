@@ -38,8 +38,8 @@ class TMDBScraper
     private array $repositories;
     private array $queries;
     public const DEFAULT_API_KEY = '7bff79e50491c5c1166a4497606d5ad3';
-    public const BLANK_POSTER_PATH_URL = '/css/images/reel.png';
-    public const BLANK_BACKDROP_PATH_URL = '/css/images/header.jpg';
+    public const BLANK_POSTER_PATH_URL = '/images/reel.png';
+    public const BLANK_BACKDROP_PATH_URL = '/images/header.jpg';
     private ?User $user;
     private ?Setting $userSettings;
 

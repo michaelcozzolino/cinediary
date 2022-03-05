@@ -1,7 +1,7 @@
 <template>
     <Link :href="route('home')">
         <img
-            src="/css/images/logo.png"
+            src="/images/logo.png"
             class="img-fluid mx-auto d-block"
             alt="..."
         />

@@ -92,7 +92,7 @@ export default {
 
         getPosterPath() {
             return this.screenplay.posterPath === ''
-                ? '/css/images/reel.png'
+                ? '/images/reel.png'
                 : this.screenplay.posterPath;
         },
 

@@ -46,7 +46,7 @@ export default {
         },
 
         getImageUrl() {
-            return this.imageUrl ?? '/css/images/header.jpg';
+            return this.imageUrl ?? '/images/header.jpg';
         },
 
         getHeight() {

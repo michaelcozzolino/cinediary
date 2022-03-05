@@ -1,6 +1,6 @@
 <template>
     <Head>
-        <link rel="icon" type="image/svg+xml" href="/css/images/favicon.svg" />
+        <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
         <title>{{ this.getTitle }}</title>
         <meta name="description" :content="getDescription" />
     </Head>
