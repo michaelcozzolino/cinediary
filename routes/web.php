@@ -3,7 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiariesController;
 use App\Http\Controllers\MoviesController;
-use App\Http\Controllers\searchController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Foundation\Application;
