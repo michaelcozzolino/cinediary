@@ -76,13 +76,12 @@ export default {
 
         /* checks if a screenplay is already in a diary */
         isAlreadyInDiary(diaryId) {
-            return (
-                Object.values(
-                    usePage().props.value.alreadyInDiariesScreenplaysIds[
-                        diaryId
-                    ][this.screenplayType],
-                ).indexOf(this.screenplayId) !== -1
-            );
+            return Object.values(
+                usePage().props.value.alreadyInDiariesScreenplaysIds[diaryId][
+                    this.screenplayType
+                ],
+            ).filter((screenplayId) => screenplayId == this.screenplayId)
+                .length;
         },
     },
 };
