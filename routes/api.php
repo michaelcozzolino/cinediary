@@ -35,3 +35,7 @@ Route::get('/statistics', function () {
 
     return compact('registeredUsers', 'createdDiaries', 'trackedMovies', 'trackedSeries');
 })->name('statistics');
+
+Route::fallback(function () {
+    return response()->json(['message' => 'Not Found'], 404);
+});
