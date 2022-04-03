@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://cinediary.tk" target="_blank">
-        <img src="https://raw.githubusercontent.com/michaelcozzolino/cinediary/main/public/images/logo.png" width="1000" style='background-color: #262626'>
+        <img src="https://raw.githubusercontent.com/michaelcozzolino/cinediary/master/public/images/logo.png" width="1000" style='background-color: #262626'>
     </a>
 </p>
 
@@ -33,6 +33,6 @@ You can view the website at [cinediary.tk](https://cinediary.tk) or you can run 
 
 <p align="center">
     <a href="https://www.cinediary.tk" target="_blank">
-        <img src="https://raw.githubusercontent.com/michaelcozzolino/cinediary/main/public/images/phpinsights.png" width="600">
+        <img src="https://raw.githubusercontent.com/michaelcozzolino/cinediary/master/public/images/phpinsights.png" width="600">
     </a>
 </p>
