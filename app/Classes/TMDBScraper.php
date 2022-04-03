@@ -24,8 +24,6 @@ use Tmdb\Model\Tv;
 use Tmdb\Repository\MovieRepository;
 use Tmdb\Repository\SearchRepository;
 use Tmdb\Repository\TvRepository;
-use Tmdb\Token\Api\ApiToken;
-use Tmdb\Token\Api\BearerToken;
 
 class TMDBScraper
 {
@@ -47,7 +45,7 @@ class TMDBScraper
      * TMDBScraper constructor.
      * @param string|null $apiKey
      */
-    public function __construct(string $apiKey = null)
+    public function __construct(?string $apiKey = null)
     {
         $this->language = app()->getLocale();
         $this->user = \Auth::user();
@@ -74,6 +72,7 @@ class TMDBScraper
                 return false;
             }
         }
+
         return true;
     }
 
@@ -143,6 +142,7 @@ class TMDBScraper
         $releaseDate = method_exists($screenplay, 'getReleaseDate')
             ? $screenplay->getReleaseDate()
             : $screenplay->getFirstAirDate();
+
         return $releaseDate === '' ? null : $releaseDate;
     }
 
@@ -155,6 +155,7 @@ class TMDBScraper
     private function getFirstEpisodeRuntime(Tv $series)
     {
         $episodeRuntime = $series->getEpisodeRunTime();
+
         return reset($episodeRuntime) !== false ? reset($episodeRuntime) : 0;
     }
 
@@ -167,6 +168,7 @@ class TMDBScraper
     private function getFirstGenre(\Tmdb\Model\Movie|Tv $screenplay)
     {
         $genres = $screenplay->getGenres()->getGenres();
+
         return count($genres) ? $genres[0]->getName() : null;
     }
 
@@ -180,6 +182,7 @@ class TMDBScraper
     {
         $movies = $this->searchMovies($query);
         $series = $this->searchSeries($query);
+
         return $this->collect(compact('movies', 'series'));
     }
 
@@ -226,6 +229,7 @@ class TMDBScraper
                 ]);
             }
         }
+
         return new Collection($screenplays);
     }
 
@@ -281,12 +285,12 @@ class TMDBScraper
     {
         $ed = new EventDispatcher();
         $this->client = new Client([
-            /** @var ApiToken|BearerToken */
             'api_token' => $this->apiKey,
             'event_dispatcher' => [
                 'adapter' => $ed,
             ],
-            // We make use of PSR-17 and PSR-18 auto discovery to automatically guess these, but preferably set these explicitly.
+            // We make use of PSR-17 and PSR-18 auto discovery to automatically guess these,
+            // but preferably set these explicitly.
             'http' => [
                 'client' => null,
                 'request_factory' => null,

@@ -5,7 +5,6 @@ namespace Tests\Integration\Http\Middleware;
 use App\Http\Middleware\RedirectIfEmptyDiaries;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class RedirectIfEmptyDiariesTest extends TestCase

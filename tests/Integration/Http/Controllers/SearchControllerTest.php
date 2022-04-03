@@ -18,7 +18,6 @@ class SearchControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function the_search_form_is_shown_without_last_search()
     {
@@ -28,7 +27,7 @@ class SearchControllerTest extends \Tests\TestCase
         $this->get(route('search.create'))
             ->assertOk()
             ->assertInertia(
-                fn(Assert $page) => $page
+                fn (Assert $page) => $page
                     ->component('Search/Index')
                     ->missingAll(['screenplays', 'lastQuery'])
                     ->etc(),
@@ -37,7 +36,6 @@ class SearchControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_can_search_if_form_data_are_valid()
     {
@@ -52,7 +50,6 @@ class SearchControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_redirects_to_the_search_form_if_form_data_are_valid()
     {
@@ -64,7 +61,6 @@ class SearchControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function the_search_form_is_shown_with_last_search()
     {
@@ -75,7 +71,7 @@ class SearchControllerTest extends \Tests\TestCase
             ->assertOk()
             ->assertSessionHas([SearchController::SEARCH_SESSION_DATA_KEY, 'lastQuery'])
             ->assertInertia(
-                fn(Assert $page) => $page
+                fn (Assert $page) => $page
                     ->component('Search/Index')
                     ->hasAll(['screenplays', 'lastQuery'])
                     ->where('lastQuery', $query)

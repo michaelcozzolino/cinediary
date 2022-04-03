@@ -49,16 +49,13 @@ class HandleInertiaRequests extends Middleware
                         : null,
                 ];
             },
-
             'screenplayType' => getScreenplayType($request),
-
             'config' => [
                 'github_url' => config('cinediary.github_url'),
                 'app_name' => config('app.name'),
             ],
-
             'flash' => [
-                'message' => fn() => $request->session()->get('message'),
+                'message' => fn () => $request->session()->get('message'),
             ],
             'current_language' => function () {
                 return app()->getLocale();

@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Diary;
-use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 

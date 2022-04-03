@@ -23,7 +23,7 @@ class SearchController extends Controller
     }
 
     /**
-     * Make a search
+     * Make a search.
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse

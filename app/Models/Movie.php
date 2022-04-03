@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Movie
+ * App\Models\Movie.
  *
  * @property int $id
  * @property string $title
@@ -52,7 +52,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Movie extends Model
 {
-    use HasFactory, HasTranslations, ScreenplayActions;
+    use HasFactory;
+    use HasTranslations;
+    use ScreenplayActions;
 
     public $incrementing = false;
     protected $guarded = [];

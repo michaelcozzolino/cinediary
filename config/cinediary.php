@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\Movie;
-use App\Models\Series;
-
 return [
     /*
     |--------------------------------------------------------------------------

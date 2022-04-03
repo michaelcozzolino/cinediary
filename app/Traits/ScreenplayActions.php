@@ -47,7 +47,7 @@ trait ScreenplayActions
     }
 
     /**
-     * Remove screenplay from the favourite diary
+     * Remove screenplay from the favourite diary.
      */
     public function notFavouriteAnymore()
     {
@@ -55,7 +55,7 @@ trait ScreenplayActions
     }
 
     /**
-     * Remove screenplay from the favourite and watched diaries
+     * Remove screenplay from the favourite and watched diaries.
      */
     public function unWatch()
     {
@@ -170,7 +170,7 @@ trait ScreenplayActions
     }
 
     /**
-     * Get the name of the model using this trait
+     * Get the name of the model using this trait.
      *
      * @return string
      */

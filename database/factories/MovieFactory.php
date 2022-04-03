@@ -15,6 +15,7 @@ class MovieFactory extends Factory
     protected $model = Movie::class;
 
     private static int $id = 1;
+
     /**
      * Define the model's default state.
      *

@@ -69,6 +69,7 @@ class SetLocale
         $country = null;
         try {
             $response = json_decode($client->get("https://ipinfo.io/{$ip}/geo")->getBody());
+
             return strtolower($response->country);
         } catch (\Exception $e) {
             return null;

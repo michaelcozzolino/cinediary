@@ -5,7 +5,6 @@ namespace Tests\Integration\Traits;
 use App\Classes\TMDBScraper;
 use App\Models\Diary;
 use App\Models\Movie;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -49,7 +48,7 @@ class ScreenplayabilityTest extends TestCase
         )
             ->assertOk()
             ->assertInertia(
-                fn(Assert $page) => $page
+                fn (Assert $page) => $page
                     ->component('Diaries/Show')
                     ->hasAll($screenplaysData)
                     ->where('diary.id', $this->diaries['watched']->id),
@@ -158,7 +157,6 @@ class ScreenplayabilityTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function it_can_show_a_screenplay_with_its_data()
     {
@@ -169,7 +167,7 @@ class ScreenplayabilityTest extends TestCase
                 'movie' => $movie->id,
             ]),
         )->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Screenplays/Show')
                 ->has('screenplay')
                 ->etc()
@@ -183,7 +181,6 @@ class ScreenplayabilityTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function it_can_show_the_right_statistics_for_a_screenplay()
     {
@@ -215,7 +212,7 @@ class ScreenplayabilityTest extends TestCase
                 'movie' => $movie->id,
             ]),
         )->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Screenplays/Show')
                 ->has('statistics')
                 ->etc()

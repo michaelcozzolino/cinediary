@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Diary
+ * App\Models\Diary.
  *
  * @property int $id
  * @property string $name
@@ -165,9 +165,9 @@ class Diary extends Model
     {
         if (!$this->isMain) {
             return parent::delete();
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

@@ -5,7 +5,6 @@ namespace Tests\Integration\Classes;
 use App\Classes\TMDBScraper;
 use App\Models\Movie;
 use App\Models\Series;
-use App\Models\Setting;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -31,7 +30,6 @@ class TMDBScraperTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function default_api_key_is_used()
     {
@@ -49,7 +47,6 @@ class TMDBScraperTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function user_api_key_is_used()
     {

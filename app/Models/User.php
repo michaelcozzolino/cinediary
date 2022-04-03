@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * App\Models\User
+ * App\Models\User.
  *
  * @property int $id
  * @property string $name
@@ -47,7 +47,9 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -91,42 +93,42 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the watched diary attribute
+     * Get the watched diary attribute.
      *
      * @return Attribute
      */
     protected function watchedDiary(): Attribute
     {
         return new Attribute(
-            get: fn() => Diary::setEagerLoads([])
+            get: fn () => Diary::setEagerLoads([])
                 ->watched()
                 ->first(),
         );
     }
 
     /**
-     * Get the favourite diary attribute
+     * Get the favourite diary attribute.
      *
      * @return Attribute
      */
     protected function favouriteDiary(): Attribute
     {
         return new Attribute(
-            get: fn() => Diary::setEagerLoads([])
+            get: fn () => Diary::setEagerLoads([])
                 ->favourite()
                 ->first(),
         );
     }
 
     /**
-     * Get the to be watched diary attribute
+     * Get the to be watched diary attribute.
      *
      * @return Attribute
      */
     protected function toBeWatchedDiary(): Attribute
     {
         return new Attribute(
-            get: fn() => Diary::setEagerLoads([])
+            get: fn () => Diary::setEagerLoads([])
                 ->toBeWatched()
                 ->first(),
         );

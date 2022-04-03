@@ -19,6 +19,7 @@ class DiariesController extends Controller
     public function index()
     {
         $diaries = Diary::withCount($this->getScreenplayTypes())->get();
+
         return Inertia::render('Diaries/Index', compact('diaries'));
     }
 
@@ -47,6 +48,7 @@ class DiariesController extends Controller
     public function destroy(Diary $diary)
     {
         $message = $diary->delete() ? self::DELETE_SUCCESS_MESSAGE : self::DELETE_ERROR_MESSAGE;
+
         return redirect()
             ->back()
             ->with(compact('message'));

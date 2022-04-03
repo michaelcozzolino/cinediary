@@ -2,9 +2,7 @@
 
 namespace Tests\Integration\Traits;
 
-use App\Models\Diary;
 use App\Models\Movie;
-use App\Models\Series;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

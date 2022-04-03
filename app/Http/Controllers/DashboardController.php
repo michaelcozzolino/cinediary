@@ -83,7 +83,7 @@ class DashboardController extends Controller
 
     /**
      * Associate each letter to a initial 0 value representing the number of screenplays whose name
-     * begins with that letter
+     * begins with that letter.
      *
      * @return array
      */
@@ -93,7 +93,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get the count of the genres of the screenplays in a specific diary
+     * Get the count of the genres of the screenplays in a specific diary.
      *
      * @param Diary $diary
      * @return array

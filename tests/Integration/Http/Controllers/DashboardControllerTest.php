@@ -46,14 +46,13 @@ class DashboardControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_shows_the_latest_maximum_4_movies()
     {
         $this->get(route('dashboard'))
             ->assertOk()
             ->assertInertia(
-                fn(Assert $page) => $page
+                fn (Assert $page) => $page
                     ->component('Home/Dashboard/Index')
                     ->has('lastWatchedScreenplaysData.movies', 4),
             );
@@ -61,14 +60,13 @@ class DashboardControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_shows_the_latest_maximum_4_series()
     {
         $this->get(route('dashboard'))
             ->assertOk()
             ->assertInertia(
-                fn(Assert $page) => $page
+                fn (Assert $page) => $page
                     ->component('Home/Dashboard/Index')
                     ->has('lastWatchedScreenplaysData.series', 3),
             ); //there are only 3 series in the watched series diary
@@ -76,7 +74,6 @@ class DashboardControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_shows_the_correct_letters_bar_chart()
     {
@@ -84,7 +81,7 @@ class DashboardControllerTest extends \Tests\TestCase
         $this->get(route('dashboard'))
             ->assertOk()
             ->assertInertia(
-                fn(Assert $page) => $page
+                fn (Assert $page) => $page
                     ->component('Home/Dashboard/Index')
                     ->hasAll([
                         'chartData.lettersBarChart.movies' => $totalLetters,
@@ -104,14 +101,13 @@ class DashboardControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_shows_the_correct_watched_screenplays_percentage_chart()
     {
         $this->get(route('dashboard'))
             ->assertOk()
             ->assertInertia(
-                fn(Assert $page) => $page
+                fn (Assert $page) => $page
                     ->component('Home/Dashboard/Index')
                     ->whereAll([
                         'chartData.watchedScreenplaysPercentageChart.movies' => 5,
@@ -123,14 +119,13 @@ class DashboardControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_shows_the_correct_watched_genres_percentage_chart()
     {
         $this->get(route('dashboard'))
             ->assertOk()
             ->assertInertia(
-                fn(Assert $page) => $page
+                fn (Assert $page) => $page
                     ->component('Home/Dashboard/Index')
                     ->whereAll([
                         'chartData.watchedGenresPercentageChart.action' => 4,

@@ -68,6 +68,7 @@ class NewPasswordController extends Controller
         if ($status == Password::PASSWORD_RESET) {
             //            return Inertia::render('Home/Index')->with('status', __($status));
             Auth::login(User::whereEmail($request->input('email'))->first());
+
             return redirect(route('home'));
         }
 

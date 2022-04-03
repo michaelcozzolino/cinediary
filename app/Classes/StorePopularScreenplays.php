@@ -14,7 +14,7 @@ class StorePopularScreenplays
     }
 
     /**
-     * Store popular screenplays into the database
+     * Store popular screenplays into the database.
      */
     private function storePopularScreenplays()
     {

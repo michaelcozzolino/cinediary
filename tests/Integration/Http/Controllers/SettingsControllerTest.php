@@ -17,7 +17,6 @@ class SettingsControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_can_show_the_user_settings()
     {
@@ -29,7 +28,7 @@ class SettingsControllerTest extends \Tests\TestCase
         ]);
 
         $this->get(route('settings.index'))->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Settings/Index')
                 ->has('settings')
                 ->whereAll([
@@ -83,7 +82,6 @@ class SettingsControllerTest extends \Tests\TestCase
 
     /**
      * @test
-     *
      */
     public function it_cannot_update_the_user_settings_if_data_are_not_valid()
     {

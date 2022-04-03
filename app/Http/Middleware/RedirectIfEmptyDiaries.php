@@ -9,6 +9,7 @@ class RedirectIfEmptyDiaries
 {
     public const ERROR_MESSAGE = 'You have neither movies nor series added to your diaries,
                 you can start here by searching some!';
+
     /**
      * Handle an incoming request.
      *

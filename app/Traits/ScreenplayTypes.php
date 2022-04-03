@@ -18,7 +18,7 @@ trait ScreenplayTypes
     }
 
     /**
-     * Get the screenplay types of the available models
+     * Get the screenplay types of the available models.
      *
      * @return array
      */

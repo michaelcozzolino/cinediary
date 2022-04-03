@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Models\Diary;
 use App\Models\Setting;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class InitializeUser
 {

@@ -17,6 +17,7 @@ class SettingsController extends Controller
     public function index()
     {
         $settings = \Auth::user()->settings;
+
         return Inertia::render('Settings/Index', compact('settings'));
     }
 

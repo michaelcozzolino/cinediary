@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Series
+ * App\Models\Series.
  *
  * @property int $id
  * @property string $title
@@ -49,7 +49,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Series extends Model
 {
-    use HasFactory, HasTranslations, ScreenplayActions;
+    use HasFactory;
+    use HasTranslations;
+    use ScreenplayActions;
     public array $translatable = ['title', 'posterPath', 'backdropPath', 'overview', 'genre'];
     public $incrementing = false;
     protected $guarded = [];

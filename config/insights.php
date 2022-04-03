@@ -8,7 +8,16 @@ use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenNormalClasses;
 use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenPrivateMethods;
 use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenTraits;
 use NunoMaduro\PhpInsights\Domain\Metrics\Architecture\Classes;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\Commenting\TodoSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
+use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
+use PhpCsFixer\Fixer\Comment\NoEmptyCommentFixer;
 use SlevomatCodingStandard\Sniffs\Commenting\UselessFunctionDocCommentSniff;
+use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowEmptySniff;
+use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperatorSniff;
+use SlevomatCodingStandard\Sniffs\Functions\FunctionLengthSniff;
 use SlevomatCodingStandard\Sniffs\Namespaces\AlphabeticallySortedUsesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
@@ -50,7 +59,7 @@ return [
     |
     */
 
-    'ide' => null,
+    'ide' => 'phpstorm',
 
     /*
     |--------------------------------------------------------------------------
@@ -82,11 +91,42 @@ return [
         PropertyTypeHintSniff::class,
         ReturnTypeHintSniff::class,
         UselessFunctionDocCommentSniff::class,
+        TodoSniff::class,
+        DisallowShortTernaryOperatorSniff::class,
+        DisallowEmptySniff::class,
+        AssignmentInConditionSniff::class,
+        NoEmptyCommentFixer::class,
+        AssignmentInConditionSniff::class,
+        \SlevomatCodingStandard\Sniffs\ControlStructures\AssignmentInConditionSniff::class,
+        OrderedClassElementsFixer::class,
+        SpaceAfterNotSniff::class,
+        \SlevomatCodingStandard\Sniffs\TypeHints\DisallowArrayTypeHintSyntaxSniff::class,
+        \PhpCsFixer\Fixer\Operator\NewWithBracesFixer::class,
+        \SlevomatCodingStandard\Sniffs\Classes\ModernClassNameReferenceSniff::class,
+        \NunoMaduro\PhpInsights\Domain\Sniffs\ForbiddenSetterSniff::class,
+        \SlevomatCodingStandard\Sniffs\Classes\ForbiddenPublicPropertySniff::class,
     ],
 
     'config' => [
         ForbiddenPrivateMethods::class => [
             'title' => 'The usage of private methods is not idiomatic in Laravel.',
+        ],
+        LineLengthSniff::class => [
+            'lineLimit' => 120,
+            'absoluteLineLimit' => 160,
+            'ignoreComments' => false,
+        ],
+        FunctionLengthSniff::class => [
+            'maxLinesLength' => 50,
+        ],
+        \SlevomatCodingStandard\Sniffs\TypeHints\DisallowArrayTypeHintSyntaxSniff::class => ['app/Models/*.php'],
+        \SlevomatCodingStandard\Sniffs\Commenting\DocCommentSpacingSniff::class => [
+            'linesCountBeforeFirstContent' => 0,
+            'linesCountBetweenDescriptionAndAnnotations' => 1,
+            'linesCountBetweenDifferentAnnotationsTypes' => 0,
+            'linesCountBetweenAnnotationsGroups' => 1,
+            'linesCountAfterLastContent' => 0,
+            'annotationsGroups' => [],
         ],
     ],
 

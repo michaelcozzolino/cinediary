@@ -15,6 +15,7 @@ class SeriesFactory extends Factory
     protected $model = Series::class;
 
     private static int $id = 1;
+
     /**
      * Define the model's default state.
      *

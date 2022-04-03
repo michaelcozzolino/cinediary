@@ -3,7 +3,6 @@
 namespace Tests\Unit\Http\Middleware;
 
 use App\Http\Middleware\SetLocale;
-use App\Models\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;

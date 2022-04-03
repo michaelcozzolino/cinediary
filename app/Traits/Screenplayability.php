@@ -17,7 +17,7 @@ trait Screenplayability
     private TMDBScraper $TMDBScraper;
 
     /**
-     * Initialize the trait variables
+     * Initialize the trait variables.
      */
     public function init()
     {
@@ -35,17 +35,12 @@ trait Screenplayability
         $findQuery = $request->input('query');
         $screenplayType = $this->screenplayModel->getTable();
 
+        $screenplaysQuery = $diary->{$screenplayType}()->orderBy('title');
+
         $screenplays = [
             $screenplayType => is_null($findQuery)
-                ? $diary
-                    ->{$screenplayType}()
-                    ->orderBy('title')
-                    ->paginate()
-                : $diary
-                    ->{$screenplayType}()
-                    ->where('title', 'like', "%{$findQuery}%")
-                    ->orderBy('title')
-                    ->paginate(),
+                ? $screenplaysQuery->paginate()
+                : $screenplaysQuery->where('title', 'like', "%{$findQuery}%")->paginate(),
         ];
 
         return Inertia::render('Diaries/Show', compact('screenplays', 'diary'))->with(['query' => $findQuery ?? '']);
@@ -129,6 +124,7 @@ trait Screenplayability
         $screenplay = $this->screenplayModel::firstOrTranslate($this->TMDBScraper, $request->input('screenplayId'));
         if (!is_null($screenplay)) {
             $screenplay->track($diary);
+
             return redirect()->back();
         }
 
@@ -145,6 +141,7 @@ trait Screenplayability
     public function destroy(Diary $diary, Movie|Series $screenplay)
     {
         $screenplay->removeFromDiary($diary);
+
         return redirect()->back();
     }
 
@@ -153,8 +150,7 @@ trait Screenplayability
      * */
     public function indexPopular(): array
     {
-        $screenplays = $this->screenplayModel
-            ::where('isPopular', true)
+        $screenplays = $this->screenplayModel::where('isPopular', true)
             ->get()
             ->toArray();
 
@@ -167,7 +163,7 @@ trait Screenplayability
             /** getting the screenplays that do not have a blank backdrop path and taking the first one */
             $randomBackdropPathScreenplays = array_filter(
                 $screenplays,
-                fn($screenplay) => $screenplay['backdropPath'] !== TMDBScraper::BLANK_BACKDROP_PATH_URL,
+                fn ($screenplay) => $screenplay['backdropPath'] !== TMDBScraper::BLANK_BACKDROP_PATH_URL,
             );
 
             $randomBackdropPath =

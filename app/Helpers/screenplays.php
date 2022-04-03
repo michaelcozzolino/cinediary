@@ -4,7 +4,7 @@ use App\Traits\ScreenplayTypes;
 
 if (!function_exists(' getAlreadyInDiariesScreenplaysIds')) {
     /**
-     * Get the screenplays ids corresponding to each diary belonging to a user
+     * Get the screenplays ids corresponding to each diary belonging to a user.
      *
      * @param \Illuminate\Http\Request $request
      * @return ?array

@@ -19,20 +19,18 @@ class DiariesControllerTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function it_lists_all_the_user_diaries()
     {
         $this->get(route('diaries.index'))
             ->assertOk()
             ->assertInertia(
-                fn(Assert $page) => $page->component('Diaries/Index')->has('diaries', $this->user->diaries()->count()),
+                fn (Assert $page) => $page->component('Diaries/Index')->has('diaries', $this->user->diaries()->count()),
             );
     }
 
     /**
      * @test
-     *
      */
     public function it_stores_a_diary_if_all_fields_are_valid()
     {
@@ -49,7 +47,6 @@ class DiariesControllerTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function it_does_not_store_a_diary_if_any_field_is_not_valid()
     {
@@ -61,7 +58,6 @@ class DiariesControllerTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function it_deletes_a_diary_and_all_of_its_attached_screenplays()
     {
@@ -76,7 +72,6 @@ class DiariesControllerTest extends TestCase
 
     /**
      * @test
-     *
      */
     public function it_does_not_delete_a_main_diary()
     {
