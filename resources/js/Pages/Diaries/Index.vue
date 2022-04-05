@@ -13,7 +13,7 @@
                     <tbody>
                         <tr v-for="diary in diaries">
                             <td>
-                                <a
+                                <Link
                                     class="text-decoration-underline fw-bold text-primary"
                                     :href="diaryRoute(diary.id)"
                                     v-text="diary.name"
@@ -45,9 +45,10 @@ import { mdbRipple } from 'mdb-vue-ui-kit';
 import Create from '@/Pages/Diaries/Create';
 import Destroy from '@/Pages/Diaries/Destroy';
 import Header from '@/Layouts/Partials/Header';
+import { Link } from '@inertiajs/inertia-vue3';
 
 export default {
-    components: { Header, Destroy, Create, Authenticated },
+    components: { Header, Destroy, Create, Authenticated, Link },
     directives: {
         mdbRipple,
     },
