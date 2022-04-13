@@ -115,6 +115,7 @@ class DashboardController extends Controller
                 ->{$screenplayType}()
                 ->select(['genre', DB::raw('count(*) as watchedScreenplaysNumber')])
                 ->groupBy('genre')
+                ->orderBy('watchedScreenplaysNumber', 'desc')
                 ->get();
 
             $data[$screenplayType] = array_combine(
