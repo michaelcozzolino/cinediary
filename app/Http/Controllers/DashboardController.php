@@ -72,7 +72,12 @@ class DashboardController extends Controller
 
             foreach ($lettersBarChartData as $lettersBarChartDatum) {
                 $letter = strtoupper($lettersBarChartDatum->letter);
-                $chartData['lettersBarChart'][$screenplayType][$letter] = $lettersBarChartDatum->number;
+
+                if (!in_array($letter, self::LETTERS)) {
+                    $chartData['lettersBarChart'][$screenplayType]['#'] += $lettersBarChartDatum->number;
+                } else {
+                    $chartData['lettersBarChart'][$screenplayType][$letter] = $lettersBarChartDatum->number;
+                }
             }
         }
 
