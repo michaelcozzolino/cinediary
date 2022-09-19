@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Diary;
-use App\Traits\ScreenplayTypes;
+use App\Models\Screenplay;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    use ScreenplayTypes;
     private const LETTERS = [
         '#',
         'A',
@@ -48,42 +47,54 @@ class DashboardController extends Controller
         $chartData = [];
         $currentLanguage = app()->getLocale();
         $lastWatchedScreenplaysData = [];
-        $screenplayTypes = $this->getScreenplayTypes();
         $watchedDiary = \Auth::user()->watched_diary;
 
-        foreach ($screenplayTypes as $screenplayType) {
-            $lastWatchedScreenplaysData[$screenplayType] = $watchedDiary->getLatestAddedScreenplays($screenplayType, 4);
+        foreach (Screenplay::getTypes() as $screenplayType) {
+            $lastWatchedScreenplaysData[
+                $screenplayType
+            ] = $watchedDiary->getLatestAddedScreenplays($screenplayType, 4);
 
-            $chartData['watchedScreenplaysPercentageChart'][$screenplayType] = $watchedDiary
-                ->{$screenplayType}()
-                ->count();
+            $chartData['watchedScreenplaysPercentageChart'][
+                $screenplayType
+            ] = $watchedDiary->{$screenplayType}()->count();
 
             /*
              * taking the first letter of each screenplay, grouping and counting them
              * */
             $lettersBarChartData = $watchedDiary
                 ->{$screenplayType}()
-                ->selectRaw("substr(json_extract(title,'$.{$currentLanguage}'),2,1) as letter, count(*) as number")
+                ->selectRaw(
+                    "substr(json_extract(title,'$.{$currentLanguage}'),2,1) as letter, count(*) as number"
+                )
                 ->groupBy('letter')
                 ->orderBy('number', 'desc')
                 ->get();
 
-            $chartData['lettersBarChart'][$screenplayType] = $this->getLettersCount();
+            $chartData['lettersBarChart'][
+                $screenplayType
+            ] = $this->getLettersCount();
 
             foreach ($lettersBarChartData as $lettersBarChartDatum) {
                 $letter = strtoupper($lettersBarChartDatum->letter);
 
                 if (!in_array($letter, self::LETTERS)) {
-                    $chartData['lettersBarChart'][$screenplayType]['#'] += $lettersBarChartDatum->number;
+                    $chartData['lettersBarChart'][$screenplayType]['#'] +=
+                        $lettersBarChartDatum->number;
                 } else {
-                    $chartData['lettersBarChart'][$screenplayType][$letter] = $lettersBarChartDatum->number;
+                    $chartData['lettersBarChart'][$screenplayType][$letter] =
+                        $lettersBarChartDatum->number;
                 }
             }
         }
 
-        $chartData['watchedGenresPercentageChart'] = $this->getGenresCount($watchedDiary);
+        $chartData['watchedGenresPercentageChart'] = $this->getGenresCount(
+            $watchedDiary
+        );
 
-        return Inertia::render('Home/Dashboard/Index', compact('chartData', 'lastWatchedScreenplaysData'));
+        return Inertia::render(
+            'Home/Dashboard/Index',
+            compact('chartData', 'lastWatchedScreenplaysData')
+        );
     }
 
     /**
@@ -94,7 +105,10 @@ class DashboardController extends Controller
      */
     private function getLettersCount(): array
     {
-        return array_combine(self::LETTERS, array_fill(0, count(self::LETTERS), 0));
+        return array_combine(
+            self::LETTERS,
+            array_fill(0, count(self::LETTERS), 0)
+        );
     }
 
     /**
@@ -107,20 +121,23 @@ class DashboardController extends Controller
     {
         $data = [];
 
-        foreach ($screenplayTypes = $this->getScreenplayTypes() as $screenplayType) {
+        foreach ($screenplayTypes = Screenplay::getTypes() as $screenplayType) {
             /*
              *  grouping by genre and counting the screenplays having that genre
              * */
             $genresCountResult = $diary
                 ->{$screenplayType}()
-                ->select(['genre', DB::raw('count(*) as watchedScreenplaysNumber')])
+                ->select([
+                    'genre',
+                    DB::raw('count(*) as watchedScreenplaysNumber'),
+                ])
                 ->groupBy('genre')
                 ->orderBy('watchedScreenplaysNumber', 'desc')
                 ->get();
 
             $data[$screenplayType] = array_combine(
                 $genresCountResult->pluck(['genre'])->toArray(),
-                $genresCountResult->pluck('watchedScreenplaysNumber')->toArray(),
+                $genresCountResult->pluck('watchedScreenplaysNumber')->toArray()
             );
         }
 
@@ -129,7 +146,10 @@ class DashboardController extends Controller
          * of each screenplay type because they might have different genres
          * */
         $genres = array_unique(
-            array_merge(array_keys($data[$screenplayTypes[0]]), array_keys($data[$screenplayTypes[1]])),
+            array_merge(
+                array_keys($data[$screenplayTypes[0]]),
+                array_keys($data[$screenplayTypes[1]])
+            )
         );
 
         /*

@@ -10,8 +10,11 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
-    protected $user;
+
+    protected User $user;
+
     protected array $diaries;
+
     protected array $availableLanguages;
 
     protected function setUp(): void
@@ -45,6 +48,7 @@ abstract class TestCase extends BaseTestCase
             $toWatch = \Auth::user()->to_be_watched_diary;
             $this->diaries = compact('custom', 'watched', 'favourite', 'toWatch');
         }
+        $this->get(route('home'));
 
         return $this;
     }

@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use App\Traits\HasTranslations;
-use App\Traits\ScreenplayActions;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\Movie.
@@ -50,15 +49,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Movie whereGenre($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Movie whereIsPopular($value)
  */
-class Movie extends Model
+class Movie extends Screenplay
 {
     use HasFactory;
     use HasTranslations;
-    use ScreenplayActions;
 
     public $incrementing = false;
+
     protected $guarded = [];
+
     protected $perPage = 20;
+
     protected $casts = [
         'releaseDate' => 'datetime:Y',
     ];
@@ -71,5 +72,13 @@ class Movie extends Model
     public function diaries()
     {
         return $this->belongsToMany(Diary::class)->withTimestamps();
+    }
+
+    protected function runtime(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return $value . ' ' . __('minutes');
+            });
     }
 }

@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
+    public function __construct(protected StorePopularScreenplays $storePopularScreenplays)
+    {
+    }
+
     /**
      * Seed the application's database.
      *
@@ -28,6 +32,6 @@ class DatabaseSeeder extends Seeder
 
         event(new Verified($demoUser));
 
-        (new StorePopularScreenplays())();
+//          (new StorePopularScreenplays())();
     }
 }

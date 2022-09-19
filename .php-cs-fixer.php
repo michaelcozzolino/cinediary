@@ -36,7 +36,11 @@ return (new PhpCsFixer\Config())
         'cast_spaces' => true,
         'class_attributes_separation' => [
             'elements' => [
+                'const' => 'one',
                 'method' => 'one',
+                'property' => 'one',
+                'trait_import' => 'none',
+                'case' => 'none',
             ],
         ],
         'class_definition' => false,
@@ -53,7 +57,7 @@ return (new PhpCsFixer\Config())
         'encoding' => true,
         'full_opening_tag' => true,
         'function_declaration' => true,
-        'function_typehint_space' => true,
+        'function_typehint_space' => false,
         'heredoc_to_nowdoc' => true,
         'include' => true,
         'increment_style' => [

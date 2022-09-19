@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\TMDBScraper;
+use App\Classes\TMDB\ScreenplayFetcher;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SearchController extends Controller
 {
     public const SEARCH_SESSION_DATA_KEY = 'searchData';
+
+    /**
+     * @param array<ScreenplayFetcher>  $TMDBScreenplayRepositories
+     */
+    public function __construct(protected array $TMDBScreenplayRepositories)
+    {
+    }
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Inertia\Response
@@ -34,9 +41,12 @@ class SearchController extends Controller
             'query' => 'required',
         ]);
 
-        $TMDBScraper = new TMDBScraper();
         $query = $request->input('query');
-        $screenplays = $TMDBScraper->search($query);
+
+        $screenplays = [];
+        foreach ($this->TMDBScreenplayRepositories as $repository){
+            $screenplays[$repository->getScreenplay()->getTable()] = $repository->findByQuery($query);
+        }
 
         session([
             self::SEARCH_SESSION_DATA_KEY => $screenplays,

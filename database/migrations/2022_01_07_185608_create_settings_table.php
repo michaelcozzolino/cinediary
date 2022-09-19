@@ -14,7 +14,9 @@ return new class extends Migration {
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('user_id');
+
             $table
                 ->foreign('user_id')
                 ->references('id')
@@ -26,7 +28,9 @@ return new class extends Migration {
                 ->nullable()
                 ->default(null);
             $table->boolean('adultContent');
+
             $table->string('defaultLanguage', 5)->default(config('app.locale'));
+
             $table->timestamps();
         });
     }

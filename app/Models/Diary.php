@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
+use App\Contracts\DiaryInterface;
+use App\Exceptions\Diary\MissingScreenplayFromDiaryException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Log;
+use Parental\HasChildren;
 
 /**
  * App\Models\Diary.
@@ -37,14 +42,18 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Diary main()
  * @method static \Illuminate\Database\Eloquent\Builder|Diary toBeWatched()
  * @method static \Illuminate\Database\Eloquent\Builder|Diary watched()
+ * @property string $type
+ * @method static \Illuminate\Database\Eloquent\Builder|Diary whereType($value)
  */
-class Diary extends Model
+class Diary extends Model implements DiaryInterface
 {
     use HasFactory;
+    use HasChildren;
+
     protected $guarded = [];
-    public const WATCHED_DIARY_NAME = 'Watched';
-    public const FAVOURITE_DIARY_NAME = 'Favourite';
-    public const TO_BE_WATCHED_DIARY_NAME = 'to watch';
+
+    public const DEFAULT_NAME = '';
+
     protected $with = ['movies', 'series'];
 
     protected static function booted()
@@ -81,17 +90,6 @@ class Diary extends Model
     }
 
     /**
-     * Get the watched diary builder.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $builder
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeWatched(Builder $builder)
-    {
-        return $builder->whereName(self::WATCHED_DIARY_NAME)->main();
-    }
-
-    /**
      * Get the to be watched diary builder.
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
@@ -99,59 +97,7 @@ class Diary extends Model
      */
     public function scopeToBeWatched(Builder $builder)
     {
-        return $builder->whereName(self::TO_BE_WATCHED_DIARY_NAME)->main();
-    }
-
-    /**
-     *  Get the favourite diary builder.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $builder
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeFavourite(Builder $builder): Builder
-    {
-        return $builder->whereName(self::FAVOURITE_DIARY_NAME)->main();
-    }
-
-    /**
-     * Get the main diaries builder.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $builder
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeMain(Builder $builder): Builder
-    {
-        return $builder->where('isMain', true);
-    }
-
-    /**
-     * Check if the diary is the watched one.
-     *
-     * @return bool
-     */
-    public function isWatched()
-    {
-        return $this->name === self::WATCHED_DIARY_NAME && $this->isMain;
-    }
-
-    /**
-     * Check if the diary is the favourite one.
-     *
-     * @return bool
-     */
-    public function isFavourite()
-    {
-        return $this->name === self::FAVOURITE_DIARY_NAME && $this->isMain;
-    }
-
-    /**
-     * Check if the diary is the to be watched one.
-     *
-     * @return bool
-     */
-    public function isToBeWatched()
-    {
-        return $this->name === self::TO_BE_WATCHED_DIARY_NAME && $this->isMain;
+        return $builder->whereName(self::TO_BE_WATCHED_DIARY_NAME);
     }
 
     /**
@@ -183,5 +129,77 @@ class Diary extends Model
             ->orderBy('created_at', 'desc')
             ->limit($count)
             ->get();
+    }
+
+    /** TODO: delete exists in diary in screenplay.
+     *
+     * @throws MissingScreenplayFromDiaryException
+     */
+    protected function hasScreenplay(Screenplay $screenplay): void
+    {
+        $hasScreenplay = self::whereHas(
+            $screenplay->getTable(),
+            function ($builder) use ($screenplay) {
+                $builder->where(getClassName($screenplay::class) . '_id', '=', $this->id);
+            }
+        )->exists();
+
+        if ($hasScreenplay === false) {
+            throw new MissingScreenplayFromDiaryException(
+                sprintf('Screenplay %s #%d does not exist in this diary', $screenplay::class, $screenplay->id)
+            );
+        }
+    }
+
+    public function addScreenplay(Screenplay $screenplay): void
+    {
+        try {
+            $this->hasScreenplay($screenplay);
+        } catch (MissingScreenplayFromDiaryException $e) {
+            $relation = $this->{$screenplay->getTable()}();
+            $relation->syncWithoutDetaching([$screenplay->id]);
+            Log::info(
+                sprintf(
+                    'Added screenplay %s #%u to diary %s #%u',
+                    $screenplay::class,
+                    $screenplay->id,
+                    static::class,
+                    $this->id
+                )
+            );
+        }
+    }
+
+    /** TODO: message check.
+     *
+     * @throws MissingScreenplayFromDiaryException
+     */
+    public function removeScreenplay(Screenplay $screenplay): void
+    {
+        /** @var BelongsToMany $relation */
+        $relation = $this->{$screenplay->getTable()}();
+
+        $removed = $relation->detach($screenplay->id);
+
+        if($removed === 0) {
+            throw new MissingScreenplayFromDiaryException(
+                sprintf('Screenplay %s #%d does not exist in this diary', $screenplay::class, $screenplay->id)
+            );
+        }
+
+        Log::info(
+            sprintf(
+                'Removed screenplay %s #%u from diary %s #%u',
+                $screenplay::class,
+                $screenplay->id,
+                static::class,
+                $this->id
+            )
+        );
+
+        session()->flash(
+            'message',
+            __('flash.screenplay_removed', ['screenplay_title' => $screenplay->title])
+        );
     }
 }

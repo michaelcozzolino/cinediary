@@ -28,6 +28,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
+ * @property-read WatchedDiary $watched_diary
+ * @property-read FavouriteDiary $favourite_diary
+ * @property-read ToWatchDiary $to_watch_diary
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -74,7 +77,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['watched_diary', 'favourite_diary', 'to_be_watched_diary'];
+    protected $appends = ['watched_diary', 'favourite_diary', 'to_watch_diary'];
+
+    protected WatchedDiary $watchedDiary;
+
+    protected FavouriteDiary $favouriteDiary;
+
+    protected ToWatchDiary $toWatchDiary;
 
     /**
      * @return HasMany
@@ -100,9 +109,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function watchedDiary(): Attribute
     {
         return new Attribute(
-            get: fn () => Diary::setEagerLoads([])
-                ->watched()
-                ->first(),
+            get: fn () => WatchedDiary::setEagerLoads([])->first(),
         );
     }
 
@@ -114,9 +121,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function favouriteDiary(): Attribute
     {
         return new Attribute(
-            get: fn () => Diary::setEagerLoads([])
-                ->favourite()
-                ->first(),
+            get: fn () => FavouriteDiary::setEagerLoads([])->first(),
         );
     }
 
@@ -125,12 +130,10 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return Attribute
      */
-    protected function toBeWatchedDiary(): Attribute
+    protected function toWatchDiary(): Attribute
     {
         return new Attribute(
-            get: fn () => Diary::setEagerLoads([])
-                ->toBeWatched()
-                ->first(),
+            get: fn () => ToWatchDiary::setEagerLoads([])->first(),
         );
     }
 }

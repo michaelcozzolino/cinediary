@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Series;
-use App\Traits\Screenplayability;
+use App\Classes\TMDB\ScreenplayFetcher;
+use App\Classes\TMDB\Translator;
 
 class SeriesController extends Controller
 {
-    use Screenplayability;
+    use ScreenplayController;
 
-    protected string $model = Series::class;
-
-    public function __construct()
-    {
-        $this->init();
+    public function __construct(
+        protected ScreenplayFetcher $TMDBScreenplayRepository,
+        protected Translator        $translator,
+    ) {
     }
 }

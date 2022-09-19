@@ -3,8 +3,10 @@
 namespace App\Exceptions;
 
 use App\Providers\RouteServiceProvider;
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Inertia\Inertia;
+use Psr\Log\LogLevel;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -19,11 +21,24 @@ class Handler extends ExceptionHandler
     ];
 
     /**
+     * A list of exception types with their corresponding custom log levels.
+     *
+     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
+     */
+    protected $levels = [
+        ScreenplayNotFoundException::class => LogLevel::INFO,
+    ];
+
+    /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
      * @var array
      */
-    protected $dontFlash = ['current_password', 'password', 'password_confirmation'];
+    protected $dontFlash = [
+        'current_password',
+        'password',
+        'password_confirmation',
+    ];
 
     /**
      * Register the exception handling callbacks for the application.
@@ -50,8 +65,13 @@ class Handler extends ExceptionHandler
     {
         $response = parent::render($request, $e);
 
-        if (!app()->environment(['local', 'testing']) && in_array($response->status(), [500, 503, 404, 403])) {
-            return Inertia::render('Exceptions/Error', ['status' => $response->status()])
+        if (
+            !app()->environment(['local', 'testing']) &&
+            in_array($response->status(), [500, 503, 404, 403])
+        ) {
+            return Inertia::render('Exceptions/Error', [
+                'status' => $response->status(),
+            ])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
         } elseif ($response->status() === 419) {

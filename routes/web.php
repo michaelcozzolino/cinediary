@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiariesController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MoviesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SettingsController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,39 +21,14 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/language/{language}', function ($language) {
-    if (in_array($language, config('app.available_locales'))) {
-        session(['locale' => $language]);
+Route::put('/language/{language}', [LanguageController::class, 'update'])->name('language.update');
 
-        if (Auth::user()) {
-            Auth::user()
-                ->settings()
-                ->update(['defaultLanguage' => $language]);
-        }
-    }
-
-    return redirect()->back();
-})->name('language');
-
-Route::get('/', function () {
-    if (!Auth::user()) {
-        return Inertia::render('Home/Index', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-            'canVerifyEmail' => false,
-            'status' => session('status'),
-        ]);
-    }
-
-    return redirect()->route('dashboard');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware(['diaries.empty'])
-        ->name('dashboard');
+         ->middleware(['diaries.empty'])
+         ->name('dashboard');
 
     Route::group(['prefix' => 'search'], function () {
         Route::get('/create', [SearchController::class, 'create'])->name('search.create');
@@ -89,5 +64,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/movies/{movie}', [MoviesController::class, 'show'])->name('movies.show');
+
 Route::get('/series/{series}', [SeriesController::class, 'show'])->name('series.show');
+Route::get('/get-config', [\App\Http\Controllers\ConfigController::class, 'get'])->name('config.get');
+
 require __DIR__ . '/auth.php';

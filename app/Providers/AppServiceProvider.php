@@ -10,10 +10,14 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      * @return void
      */
     public function register()
     {
+        if($this->app->runningUnitTests() === false) {
+            $this->app->register(TMDBServiceProvider::class);
+        }
     }
 
     /**

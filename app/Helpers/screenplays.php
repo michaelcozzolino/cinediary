@@ -1,6 +1,7 @@
 <?php
 
-use App\Traits\ScreenplayTypes;
+use App\Classes\TMDB\ScreenplayFetcher;
+use App\Models\Screenplay;
 
 if (!function_exists(' getAlreadyInDiariesScreenplaysIds')) {
     /**
@@ -9,16 +10,15 @@ if (!function_exists(' getAlreadyInDiariesScreenplaysIds')) {
      * @param \Illuminate\Http\Request $request
      * @return ?array
      */
-    function getAlreadyInDiariesScreenplaysIds(\Illuminate\Http\Request $request): ?array
-    {
+    function getAlreadyInDiariesScreenplaysIds(
+        \Illuminate\Http\Request $request
+    ): ?array {
         $alreadyInDiariesScreenplaysIds = [];
 
         if (\Auth::user()) {
             $diaries = \Auth::user()->load('diaries')->diaries;
 
-            $screenplayTypes = (new class {
-                use ScreenplayTypes;
-            })->getScreenplayTypes();
+            $screenplayTypes = \App\Models\Screenplay::getTypes();
 
             /*
              * getting the ids of all the screenplays that are in each diary
@@ -27,16 +27,40 @@ if (!function_exists(' getAlreadyInDiariesScreenplaysIds')) {
                 $diaryId = $diary->id;
 
                 foreach ($screenplayTypes as $screenplayType) {
-                    $alreadyInDiariesScreenplaysIds[$diaryId][$screenplayType] = $diary->{$screenplayType}
-                        ->pluck('id')
-                        ->toArray();
+                    $alreadyInDiariesScreenplaysIds[$diaryId][
+                        $screenplayType
+                    ] = $diary->{$screenplayType}->pluck('id')->toArray();
                 }
             }
         }
 
-        return $request->routeIs(['search.create', 'search.index', 'diaries.*.index', 'dashboard'])
+        return $request->routeIs([
+            'search.create',
+            'search.index',
+            'diaries.*.index',
+            'dashboard',
+        ])
             ? $alreadyInDiariesScreenplaysIds
             : null;
+    }
+}
+
+if (!function_exists('storePopularScreenplays')) {
+    function storePopularScreenplays(ScreenplayFetcher $repository)
+    {
+        $screenplayModels = Screenplay::getScreenplayModels();
+
+        foreach ($screenplayModels as $screenplayModel) {
+            $screenplayModel::where(['isPopular' => true])
+                ->update(['isPopular' => false]);
+
+            $screenplays = $repository->getSearcher()->getPopular();
+
+            foreach ($screenplays as $screenplay) {
+                $screenplayModel::firstOrTranslate($TMDBScraper, $screenplay->getId())
+                    ->update(['isPopular' => true]);
+            }
+        }
     }
 }
 
@@ -47,6 +71,10 @@ if (!function_exists(' getScreenplayType')) {
      */
     function getScreenplayType(\Illuminate\Http\Request $request): ?string
     {
-        return $request->routeIs('*.movies.*') ? 'movies' : ($request->routeIs('*.series.*') ? 'series' : null);
+        return $request->routeIs('*.movies.*')
+            ? 'movies'
+            : ($request->routeIs('*.series.*')
+                ? 'series'
+                : null);
     }
 }

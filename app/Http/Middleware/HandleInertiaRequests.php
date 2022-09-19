@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Diary;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,10 +42,11 @@ class HandleInertiaRequests extends Middleware
                 return [
                     'user' => $request->user()
                         ? [
+                            'user' => $request->user(),
                             'name' => $request->user()->name,
-                            'diaries' => Diary::setEagerLoads([])
-                                ->whereUserId($request->user()->id)
-                                ->get(['id', 'name', 'isMain']),
+                            'diaries' => $request->user()->diaries() /*Diary::setEagerLoads([])
+                                ->whereUserId($request->user()->id)*/
+                                ->get(['id', 'name', 'type']),
                         ]
                         : null,
                 ];

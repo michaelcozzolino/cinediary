@@ -193,4 +193,18 @@ return [
             // ...
         ])
         ->toArray(),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Models
+    |--------------------------------------------------------------------------
+    |
+    | The models that are going to be used to represent data to be manipulated.
+    |
+    */
+
+    'screenplay_models' => [
+        \App\Models\Movie::class,
+        \App\Models\Series::class,
+    ],
 ];

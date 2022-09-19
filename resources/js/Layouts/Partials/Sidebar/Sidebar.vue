@@ -123,7 +123,8 @@ export default {
 
             for (let userDiaryIndex in userDiaries) {
                 let userDiary = userDiaries[userDiaryIndex];
-                if (userDiary.isMain) {
+
+                if (userDiary.type !== null) {
                     let diaryName = userDiary.name;
                     let href = route('diaries.movies.index', {
                         diary: userDiary.id,
