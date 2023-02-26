@@ -12,15 +12,17 @@ class FavouriteDiary extends Diary
 
     public const DEFAULT_NAME = 'favourite';
 
-    public function addScreenplay(Screenplay $screenplay): void
+    public function addScreenplay(int $screenplayId): array
     {
-        $this->user->watched_diary->addScreenplay($screenplay);
-        parent::addScreenplay($screenplay);
+        $this->prepareForScreenplayAddition($screenplayId);
+
+        $this->addToDiary(WatchedDiary::first(), $screenplayId);
+
+        return $this->addToDiary($this, $screenplayId);
     }
 
-    public function removeScreenplay(Screenplay $screenplay): void
+    public function prepareForScreenplayAddition(int $screenplayId): void
     {
-        $this->user->watched_diary->removeScreenplay($screenplay);
-        parent::removeScreenplay($screenplay);
+        $this->removeFromDiary(ToWatchDiary::first(), $screenplayId);
     }
 }

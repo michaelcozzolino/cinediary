@@ -28,7 +28,7 @@ class RedirectIfEmptyDiaries
         }
 
         return redirect()
-            ->route('search.create')
+            ->route('search.index')
             ->with(['message' => self::ERROR_MESSAGE]);
     }
 }

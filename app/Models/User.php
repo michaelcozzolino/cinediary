@@ -45,8 +45,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Diary[] $diaries
- * @property-read int|null $diaries_count
- * @property-read \App\Models\Setting|null $settings
+ * @property-read int|null                                                     $diaries_count
+ * @property-read \App\Models\UserSetting|null                                 $settings
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -98,7 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function settings()
     {
-        return $this->hasOne(Setting::class);
+        return $this->hasOne(UserSetting::class);
     }
 
     /**

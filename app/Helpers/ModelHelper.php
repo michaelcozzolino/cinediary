@@ -4,18 +4,26 @@ declare(strict_types=1);
 
 namespace App\Helpers;
 
+use App\Exceptions\InvalidModelClassNameException;
 use Illuminate\Database\Eloquent\Model;
 
 class ModelHelper
 {
-    public static function getTable(string $class): string
+    /**
+     * Get the table name of a {@see Model}.
+     *
+     * @throws InvalidModelClassNameException
+     */
+    public static function getTable(string $modelClass): string
     {
-        $model = new $class();
+        $model = new $modelClass();
 
         if ($model instanceof Model) {
             return $model->getTable();
         }
 
-        return '';
+        throw new InvalidModelClassNameException(
+            sprintf('The class %s is not a %s instance when instanciated', $modelClass, Model::class)
+        );
     }
 }

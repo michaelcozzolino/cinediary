@@ -66,12 +66,17 @@ class Movie extends Screenplay
 
     public array $translatable = ['title', 'posterPath', 'backdropPath', 'overview', 'genre'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
+//    /**
+//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+//     */
+//    public function diaries()
+//    {
+//        return $this->belongsToMany(Diary::class)->withTimestamps();
+//    }
+
     public function diaries()
     {
-        return $this->belongsToMany(Diary::class)->withTimestamps();
+        return $this->morphToMany(Diary::class, 'watchable');
     }
 
     protected function runtime(): Attribute

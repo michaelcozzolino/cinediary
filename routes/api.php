@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\MoviesController;
-use App\Http\Controllers\SeriesController;
 use App\Models\Diary;
 use App\Models\Movie;
 use App\Models\Series;
@@ -19,23 +17,26 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::name('api.')->group(static function () {
+    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+        return $request->user();
+    });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+    /** TODO: these routes */
+//Route::get('/popular-movies', [MovieController::class, 'indexPopular'])->name('popular-movies');
+//Route::get('/popular-series', [MovieController::class, 'indexPopular'])->name('popular-series');
 
-Route::get('/popular-movies', [MoviesController::class, 'indexPopular'])->name('popular-movies');
-Route::get('/popular-series', [SeriesController::class, 'indexPopular'])->name('popular-series');
+    Route::get('/statistics', function () {
+        $registeredUsers = User::all()->count();
+        $createdDiaries = Diary::withoutGlobalScope('userDiaries')->count();
+        $trackedMovies = Movie::all()->count();
+        $trackedSeries = Series::all()->count();
 
-Route::get('/statistics', function () {
-    $registeredUsers = User::all()->count();
-    $createdDiaries = Diary::withoutGlobalScope('userDiaries')->count();
-    $trackedMovies = Movie::all()->count();
-    $trackedSeries = Series::all()->count();
+        return compact('registeredUsers', 'createdDiaries', 'trackedMovies', 'trackedSeries');
+    })->name('statistics');
 
-    return compact('registeredUsers', 'createdDiaries', 'trackedMovies', 'trackedSeries');
-})->name('statistics');
+    Route::fallback(function () {
+        return response()->json(['message' => 'Not Found'], 404);
+    });
 
-Route::fallback(function () {
-    return response()->json(['message' => 'Not Found'], 404);
 });

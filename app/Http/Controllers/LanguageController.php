@@ -2,59 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\UserNotLoggedInException;
-use App\Services\UserSettingService;
-use App\Traits\ExceptionContext;
+use App\Exceptions\Language\LanguageNotFoundException;
+use App\Services\Language\Switcher as LanguageSwitcher;
 use Config;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Redirect;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class LanguageController extends Controller
 {
     public function __construct(
-        protected UserSettingService $userSettingService
+        protected LanguageSwitcher $languageSwitcher
     ) {
     }
 
     public function update(string $language): RedirectResponse
     {
-        if (
-            in_array($language, Config::get('app.available_locales'), true) ===
-            false
-        ) {
-            Log::info(
-                sprintf(
-                    'Cannot change website language because language "%s" is not available.',
-                    $language
-                )
-            );
-
-            return Redirect::route('home');
-        }
-
-        Session::put('locale', $language);
-
+//        dd(
+//            "when changing language the movies data are not updated. 21 january 2023 "
+//        );
+        $availableLanguages = Config::get('app.available_locales');
         try {
-            $this->userSettingService->changeDefaultLanguage($language);
+            $this->languageSwitcher->switchTo($language, $availableLanguages);
 
-            Log::info(
-                sprintf(
-                    'Changed default language to "%s" for user %u',
-                    $language,
-                    $this->userSettingService->getUserService()->getLogged()->id
-                )
-            );
-        } catch (UserNotLoggedInException $e) {
-            Log::info(
-                'Cannot change default language for user because it is not logged in.',
-                ExceptionContext::getContext($e)
+            return Redirect::back();
+        } catch (LanguageNotFoundException $e) {
+            throw new BadRequestHttpException(
+                'Cannot change language because the requested does not exist.'
             );
         }
-
-        Log::info(sprintf('Changed website language to "%s"', $language));
-
-        return Redirect::back();
     }
 }

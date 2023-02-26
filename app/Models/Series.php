@@ -68,7 +68,7 @@ class Series extends Screenplay
      */
     public function diaries()
     {
-        return $this->belongsToMany(Diary::class)->withTimestamps();
+        return $this->morphToMany(Diary::class, 'watchable')->withTimestamps();
     }
 
     protected function runtime(): Attribute

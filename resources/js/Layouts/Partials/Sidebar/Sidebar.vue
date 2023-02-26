@@ -57,13 +57,8 @@ export default {
     methods: {
         setActiveItem() {
             this.sidebar.menu.forEach((element) => {
-                let isSearching =
-                    (element.href === route('search.create') ||
-                        element.href === route('search.index')) &&
-                    this.$page.url.startsWith('/search');
-
                 element.class =
-                    element.href === window.location.href || isSearching
+                    element.href === window.location.href
                         ? 'vsm--link_active'
                         : '';
             });
@@ -180,7 +175,7 @@ export default {
                     },
 
                     {
-                        href: route('search.create'),
+                        href: route('search.index'),
                         title: this.__('Add movies or TV series'),
                         icon: {
                             element: markRaw(FontAwesomeIcon),

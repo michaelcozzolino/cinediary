@@ -1,27 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use App;
 use App\Classes\StorePopularScreenplays;
 use App\Classes\TMDB\Client as TMDBClient;
-use App\Classes\TMDB\MovieFetcher;
+use App\Classes\TMDB\MovieParser;
 use App\Classes\TMDB\MovieSearcher;
-use App\Classes\TMDB\MoviesParser;
-use App\Classes\TMDB\SeriesFetcher;
+use App\Classes\TMDB\ScreenplayFetcher;
+use App\Classes\TMDB\ScreenplayParser;
+use App\Classes\TMDB\Searcher;
 use App\Classes\TMDB\SeriesParser;
 use App\Classes\TMDB\SeriesSearcher;
 use App\Classes\TMDB\StandardEventDispatcherConfigurator;
-use App\Classes\TMDB\Translator;
 use App\Contracts\TMDB\EventDispatcherConfiguratorInterface;
-use App\Http\Controllers\MoviesController;
+use App\Contracts\TMDB\FetcherInterface;
+use App\Contracts\TMDB\ScreenplayParserInterface;
+use App\Contracts\TMDB\Searchable;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\SeriesController;
-use App\Repositories\UserRepository;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\ServiceProvider;
+use App\Models\Movie;
+use App\Models\Series;
+use App\Registries\FetcherRegistry;
+use App\Registries\ScreenplayRegistry;
+use App\Registries\TranslatorRegistry;
+use App\Services\ScreenplayContextService;
+use App\Services\Search\Screenplay\ScreenplaySearchService;
+use App\Services\SearchServiceInterface;
+use App\VO\Providers\Binding;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Tmdb\Event\BeforeRequestEvent;
@@ -42,65 +48,42 @@ class TMDBServiceProvider extends ServiceProvider
      */
     public function register()
     {
-/*        $this->app->singleton(
-            UserRepository::class, fn() => new UserRepository($this->app, $this->app->make(App\Models\User::class))
-        );*/
-
-        $this->app->bind(EventDispatcherInterface::class, fn () => new EventDispatcher());
-        $this->app->bind(Model::class, App\Models\Movie::class);
-        $this->app->bind(Model::class, App\Models\User::class);
         $clientParameters = config(self::TMDB_CONFIG_FILE_NAME);
 
-        $this->app->singleton(TMDBClient::class, fn () => new TMDBClient($clientParameters));
+//        /** @var TMDBClient $TMDBClient */
+//        $TMDBClient = $this->app->make(TMDBClient::class);
 
-        /** @var TMDBClient $TMDBClient */
-        try {
-            $TMDBClient = $this->app->make(TMDBClient::class);
-        } catch (BindingResolutionException $e) {
-        }
-
-        $this->app->singleton(
-            EventDispatcherConfiguratorInterface::class,
-            fn () => new StandardEventDispatcherConfigurator()
-        );
-
-        $this->app->singleton(
-            RequestListener::class,
-            fn (Application $app) => new RequestListener(
-                $TMDBClient->getHttpClient(),
+        $this->registerSingletons([
+            new Binding(TMDBClient::class, fn () => new TMDBClient($clientParameters)),
+            new Binding(EventDispatcherInterface::class, fn () => new EventDispatcher()),
+            new Binding(
+                EventDispatcherConfiguratorInterface::class,
+                fn () => new StandardEventDispatcherConfigurator()
+            ),
+            new Binding(RequestListener::class, fn () => new RequestListener(
+                $this->app->make(TMDBClient::class)->getHttpClient(),
                 $clientParameters['event_dispatcher']['adapter']
-            )
-        );
-
-        $this->app->singleton(
-            ApiTokenRequestListener::class,
-            fn (Application $app) => new ApiTokenRequestListener(
-                $TMDBClient->getToken()
-            )
-        );
-
-        $this->app->singleton(
-            AcceptJsonRequestListener::class,
-            fn () => new AcceptJsonRequestListener()
-        );
-
-        $this->app->singleton(
-            AcceptJsonRequestListener::class,
-            fn () => new AcceptJsonRequestListener()
-        );
-
-        $this->app->singleton(
-            ContentTypeJsonRequestListener::class,
-            fn () => new ContentTypeJsonRequestListener()
-        );
-
-        $this->app->singleton(
-            UserAgentRequestListener::class,
-            fn () => new UserAgentRequestListener()
-        );
+            )),
+            new Binding(
+                ApiTokenRequestListener::class,
+                fn () => new ApiTokenRequestListener(
+                    $this->app->make(TMDBClient::class)->getToken()
+                )
+            ),
+            new Binding(AcceptJsonRequestListener::class),
+            new Binding(AcceptJsonRequestListener::class),
+            new Binding(ContentTypeJsonRequestListener::class),
+            new Binding(UserAgentRequestListener::class),
+            new Binding(ScreenplayRegistry::class),
+            new Binding(
+                ScreenplayContextService::class, fn () => new ScreenplayContextService()
+            ),
+            new Binding(TranslatorRegistry::class),
+            new Binding(FetcherRegistry::class),
+        ]);
 
         $eventListeners = [
-            RequestEvent::class => [$this->app->make(RequestListener::class)],
+            RequestEvent::class       => [$this->app->make(RequestListener::class)],
             BeforeRequestEvent::class => [
                 $this->app->make(ApiTokenRequestListener::class),
                 $this->app->make(AcceptJsonRequestListener::class),
@@ -109,47 +92,44 @@ class TMDBServiceProvider extends ServiceProvider
             ],
         ];
 
+        $TMDBClient = $this->app->make(TMDBClient::class);
         $TMDBClient->build(
             $this->app->make(EventDispatcherConfiguratorInterface::class),
             $eventListeners
         );
 
-        $this->app->singleton(
+        $this->app->bind(
             SearchRepository::class,
             fn () => new SearchRepository($TMDBClient)
         );
 
         $searchRepository = $this->app->make(SearchRepository::class);
 
-        $this->app->singleton(
+        $this->app->bind(Searcher::class, fn () => new Searcher($TMDBClient, $searchRepository));
+
+        $this->app->bind(
             MovieSearcher::class,
             fn () => new MovieSearcher($TMDBClient, $searchRepository)
         );
 
-        $this->app->singleton(MoviesParser::class, fn () => new MoviesParser());
+        $this->app->bind(MovieParser::class, fn () => new MovieParser());
 
-        $movieFetcher = new MovieFetcher(
+        $this->app->bind(FetcherInterface::class, ScreenplayFetcher::class);
+        $this->app->bind(Searchable::class, Searcher::class);
+        $this->app->bind(ScreenplayParserInterface::class, ScreenplayParser::class);
+        $movieFetcher = new ScreenplayFetcher(
             $this->app->make(MovieSearcher::class),
-            $this->app->make(MoviesParser::class),
+            $this->app->make(MovieParser::class)
         );
 
-        $movieTranslator = new Translator($movieFetcher);
-
-        $seriesFetcher = new SeriesFetcher(
+        $seriesFetcher = new ScreenplayFetcher(
             new SeriesSearcher($TMDBClient, $searchRepository),
             new SeriesParser(),
         );
 
-        $seriesTranslator = new Translator($seriesFetcher);
-
-        $screenplayRepositories = [
-            $movieFetcher,
-            $seriesFetcher,
-        ];
-
-        $translators = [
-            $movieTranslator,
-            $seriesTranslator,
+        $screenplayFetchers = [
+            Movie::class  => $movieFetcher,
+            Series::class => $seriesFetcher,
         ];
 
         /*   $this->app->bind(
@@ -159,19 +139,16 @@ class TMDBServiceProvider extends ServiceProvider
                }
            );*/
 
-        $this->app->when([SearchController::class, StorePopularScreenplays::class])
-                  ->needs('$TMDBScreenplayRepositories')
-                  ->give(function ($app) use ($screenplayRepositories) {
-                      return $screenplayRepositories;
+        $this->app->when([StorePopularScreenplays::class])
+                  ->needs('$screenplayFetchers')
+                  ->give(function ($app) use ($screenplayFetchers) {
+                      return $screenplayFetchers;
                   });
 
-        $this->app->bind(MoviesController::class, function () use ($movieFetcher, $movieTranslator) {
-            return new MoviesController($movieFetcher, $movieTranslator);
-        });
+        $this->app->when(SearchController::class)
+                  ->needs(SearchServiceInterface::class)
+                  ->give(ScreenplaySearchService::class);
 
-        $this->app->bind(SeriesController::class, function () use ($seriesFetcher, $seriesTranslator) {
-            return new MoviesController($seriesFetcher, $seriesTranslator);
-        });
     }
 
     /**
@@ -181,6 +158,20 @@ class TMDBServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        /** @var FetcherRegistry $fetcherRegistry */
+        $fetcherRegistry = $this->app->make(FetcherRegistry::class);
+
+        $fetcherRegistry->registerMany([
+            Movie::class  => new ScreenplayFetcher(
+                app()->make(MovieSearcher::class),
+                app()->make(MovieParser::class)
+            ),
+            Series::class => new ScreenplayFetcher(
+                $this->app->make(SeriesSearcher::class),
+                $this->app->make(SeriesParser::class)
+            ),
+        ]
+        );
+
     }
 }

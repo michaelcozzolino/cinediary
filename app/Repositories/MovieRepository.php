@@ -6,10 +6,10 @@ namespace App\Repositories;
 
 use App\Models\Movie;
 
-class MovieRepository extends BaseRepository
+class MovieRepository extends ScreenplayRepository
 {
-    protected function model(): string
+    public function __construct()
     {
-        return Movie::class;
+        parent::__construct(Movie::class);
     }
 }

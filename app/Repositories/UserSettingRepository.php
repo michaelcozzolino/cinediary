@@ -4,19 +4,24 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Models\Setting;
-use Illuminate\Container\Container as App;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\UserSetting;
 
 class UserSettingRepository extends BaseRepository
 {
-    public function __construct(protected App $app, protected Model $model)
+    public function __construct()
     {
-        parent::__construct($this->app, $this->model);
+        parent::__construct(UserSetting::class);
     }
 
-    protected function model(): string
+    public function changeDefaultLanguageByUser(int $userId, string $language): void
     {
-        return Setting::class;
+        $this->updateByUser($userId, [
+            'defaultLanguage' => $language,
+        ]);
+    }
+
+    public function updateByUser(int $userId, array $updates): bool
+    {
+        return (bool) $this->model::where('user_id', $userId)->update($updates);
     }
 }

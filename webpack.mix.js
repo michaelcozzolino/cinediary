@@ -12,14 +12,13 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    // .js('resources/css/vendor/telescope/app.css', 'public/js/vendor/telescope')
     .vue()
     .sass('resources/css/app.scss', 'public/css')
     .sass('resources/css/mdb.scss', 'public/css')
+    // todo check how to move telescope css to public folder
     .options({
-        postCss: [
-            require('postcss-import'),
-            require('autoprefixer'),
-        ]
+        postCss: [require('postcss-import'), require('autoprefixer')],
     })
     .webpackConfig(require('./webpack.config'));
 

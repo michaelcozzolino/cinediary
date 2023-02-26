@@ -25,6 +25,7 @@ return new class extends Migration {
                 ->onDelete('cascade');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -36,5 +37,6 @@ return new class extends Migration {
     public function down()
     {
         Schema::dropIfExists('diaries');
+
     }
 };

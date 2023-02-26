@@ -5,7 +5,7 @@ namespace App\Classes\TMDB;
 use Tmdb\Model\AbstractModel;
 use Tmdb\Model\Tv;
 
-class SeriesParser extends Parser
+class SeriesParser extends ScreenplayParser
 {
     /**
      * Get the runtime of the first episode of a series to be represented as the runtime of each episode.

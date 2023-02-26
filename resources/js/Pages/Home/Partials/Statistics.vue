@@ -34,7 +34,7 @@ export default {
 
     created() {
         axios
-            .get(route('statistics'))
+            .get(route('api.statistics'))
             .then((result) => {
                 let data = result.data;
 

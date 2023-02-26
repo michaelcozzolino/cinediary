@@ -4,77 +4,59 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-//use Bosnadev\Repositories\Exceptions\RepositoryException;
-use App\Contracts\RepositoryInterface;
-use App\Exceptions\Repositories\RepositoryException;
-use Illuminate\Container\Container as App;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
-abstract class BaseRepository implements RepositoryInterface
+abstract class BaseRepository
 {
-    /**
-     * @param  App    $app
-     * @param  Model  $model
-     *
-     * @throws RepositoryException
-     */
-    public function __construct(protected App $app, protected Model $model)
+    protected Model $model;
+
+    protected string $modelTable;
+
+    public function __construct(protected string $modelClass)
     {
-        $this->makeModel();
+        $this->model = app($modelClass);
+        $this->modelTable = $this->model->getTable();
     }
 
-    abstract protected function model(): string;
+    public function find($id): Model
+    {
+        return $this->model::find($id);
+    }
 
     /**
-     * @throws
+     * @param  array<string, string>  $attributes
+     *
      * @return Model
      */
-    public function makeModel()
+    public function create(array $attributes = []): Model
     {
-        $model = $this->app->make($this->model());
-
-        if ($model instanceof Model === false) {
-            throw new RepositoryException(
-                sprintf('Class %s must be an instance of %s', $this->model(), Model::class)
-            );
-        }
-
-        return $this->model = $model;
+        return $this->model::create($attributes);
     }
 
-    public function all($columns = ['*']): Collection
+    public function delete(Model $model): bool
     {
-        return $this->model->all($columns);
+        return (bool) $model->delete();
     }
 
-    public function paginate($perPage = 15, $columns = ['*'])
+    protected function scopeFindByCriteria(array $criteria): Builder
     {
-        // TODO: Implement paginate() method.
+       return $this->model::where($criteria);
     }
 
-    public function create(array $data)
+    public function findAllByCriteria(array $criteria, array $columns = ['*']): Collection
     {
-        // TODO: Implement create() method.
+        return $this->scopeFindByCriteria($criteria)->get($columns);
     }
 
-    public function update(array $data, $id)
+    public function findFirstByCriteria(array $criteria, array $columns = ['*']): ?Model
     {
-        // TODO: Implement update() method.
+        return $this->scopeFindByCriteria($criteria)->first($columns);
     }
 
-    public function delete($id)
-    {
-        // TODO: Implement delete() method.
-    }
-
-    public function find($id, $columns = ['*'])
-    {
-        // TODO: Implement find() method.
-    }
-
-    public function findBy($field, $value, $columns = ['*'])
-    {
-        // TODO: Implement findBy() method.
-    }
+//    public function updateByCriteria(array $criteria)
+//    {
+//        $this->model::where('')
+//    }
 }

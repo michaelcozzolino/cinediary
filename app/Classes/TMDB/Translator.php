@@ -2,54 +2,59 @@
 
 namespace App\Classes\TMDB;
 
+use App\Exceptions\ScreenplayNotTranslatableException;
 use App\Models\Screenplay;
+use App\Registries\FetcherRegistry;
+use Illuminate\Database\Eloquent\Model;
 use Tmdb\Exception\TmdbApiException;
 
-class Translator
+class Translator implements TranslatorInterface
 {
-    public function __construct(protected ScreenplayFetcher $screenplayFetcher)
-    {
+    public function __construct(
+        protected FetcherRegistry $fetchers,
+
+    ) {
     }
 
+    /** TODO: better using model class string */
     /**
      * Get the screenplay matching the given id and translate it if possible.
      *
-     * @param  int    $id
-     * @param  array  $languages
+     * @param  class-string  $model
+     * @param  int     $id
+     * @param  array   $languages
      *
-     * @return null|Screenplay
+     * @throws ScreenplayNotTranslatableException
+     * @return Screenplay
      */
     public function firstOrTranslate(
-        int $id,
-        array $languages = []
-    ): ?Screenplay {
-        /** TODO: Maybe rename screenplay to facade */
-        $screenplayInstance = $this->screenplayFetcher->getScreenplay();
+        string $model,
+        int   $id,
+        array $languages = [],
+    ): Screenplay {
+        /** @var Model $model */
+        return $model::findOr(
+            $id,
+            function () use ($id, $model, $languages) {
 
-        $screenplay = $screenplayInstance::find($id);
+                $screenplayTranslations = $this->getTranslations(new $model(), $id, $languages);
 
-        if ($screenplay === null) {
-            $screenplayTranslations = $this->getTranslations($id, $languages);
+                if ($screenplayTranslations === []) {
+                    throw new ScreenplayNotTranslatableException(
+                        sprintf(
+                            'screenplay of type %s with id #%u cannot be translated.',
+                            $model::class,
+                            $id
+                        )
+                    );
+                }
 
-            if ($screenplayTranslations !== []) {
-                $screenplay = new $screenplayInstance($screenplayTranslations);
+                return new $model($screenplayTranslations);
             }
-        }
-
-        return $screenplay;
-    }
-
-    private function isFieldTranslatable(string $field): bool
-    {
-        return in_array(
-            $field,
-            $this->screenplayFetcher
-                ->getScreenplay()
-                ->getTranslatableAttributes()
         );
     }
 
-    public function getTranslations(int $id, array $languages = []): array
+    protected function getTranslations(Screenplay $screenplayModel, int $id, array $languages = []): array
     {
         if ($languages === []) {
             $languages = config('app.available_locales');
@@ -59,9 +64,9 @@ class Translator
 
         foreach ($languages as $language) {
             try {
-                $translationData = $this->translate($id, $language);
+                $translationData = $this->translate($screenplayModel::class, $id, $language);
                 foreach ($translationData as $field => $value) {
-                    if ($this->isFieldTranslatable($field)) {
+                    if ($this->isFieldTranslatable($field, $screenplayModel)) {
                         $translations[$field][$language] = $value;
                     } else {
                         $translations[$field] = $value;
@@ -74,11 +79,26 @@ class Translator
         return $translations;
     }
 
-    /**
-     * @throws \Tmdb\Exception\TmdbApiException
-     */
-    public function translate(int $id, string $language): array
+    public function isFieldTranslatable(string $field, Screenplay $screenplayModel): bool
     {
-        return $this->screenplayFetcher->findById($id, compact('language'));
+        return in_array(
+            $field,
+            $screenplayModel->getTranslatableAttributes(),
+            true
+        );
+    }
+
+    /**
+     * @param  class-string  $model
+     * @param  int     $id
+     * @param  string  $language
+     *
+     * @throws \App\Exceptions\RegistryNotFoundException
+     * @throws \Tmdb\Exception\TmdbApiException
+     * @return array
+     */
+    public function translate(string $model, int $id, string $language): array
+    {
+        return $this->fetchers->get($model)->fetchById($id, compact('language'));
     }
 }

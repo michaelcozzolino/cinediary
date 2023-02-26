@@ -35,7 +35,6 @@ if (!function_exists(' getAlreadyInDiariesScreenplaysIds')) {
         }
 
         return $request->routeIs([
-            'search.create',
             'search.index',
             'diaries.*.index',
             'dashboard',

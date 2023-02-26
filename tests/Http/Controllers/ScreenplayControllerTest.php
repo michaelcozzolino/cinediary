@@ -13,7 +13,7 @@ class ScreenplayControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    private Movie $movie;
+    protected Movie $movie;
 
     private $movies;
 

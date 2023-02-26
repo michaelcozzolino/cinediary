@@ -10,10 +10,10 @@ use Illuminate\Support\Collection;
 class StorePopularScreenplays
 {
     /**
-     * @param  array<ScreenplayFetcher>  $TMDBScreenplayRepositories
-     * @param  Translator                $translator
+     * //     * @param  array<ScreenplayFetcher>  $TMDBScreenplayRepositories
+     * //     * @param  Translator                $translator
      */
-    public function __construct(protected array $TMDBScreenplayRepositories)
+    public function __construct(/*protected array $TMDBScreenplayRepositories*/)
     {
     }
 

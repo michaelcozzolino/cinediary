@@ -21,7 +21,7 @@ abstract class Screenplay extends Model
      */
     public static function getModels(): array
     {
-        return config('app.screenplay_models');
+        return config('app.screenplay_types');
     }
 
     /**

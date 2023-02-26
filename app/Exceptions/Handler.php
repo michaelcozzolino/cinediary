@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use App\Providers\RouteServiceProvider;
-use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Inertia\Inertia;
 use Psr\Log\LogLevel;
@@ -26,7 +25,7 @@ class Handler extends ExceptionHandler
      * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
      */
     protected $levels = [
-        ScreenplayNotFoundException::class => LogLevel::INFO,
+        MovieNotFoundException::class => LogLevel::INFO,
     ];
 
     /**
@@ -39,6 +38,11 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+    public function report(Throwable $e)
+    {
+         parent::report($e);
+    }
 
     /**
      * Register the exception handling callbacks for the application.
@@ -76,6 +80,13 @@ class Handler extends ExceptionHandler
                 ->setStatusCode($response->status());
         } elseif ($response->status() === 419) {
             return redirect(RouteServiceProvider::HOME);
+        } elseif ($response->status() === 400) {
+            $exception = $response->exception;
+
+            if($exception !== null) {
+                return redirect()->back()->with(['message' => $exception->getMessage()]);
+            }
+
         }
 
         return $response;

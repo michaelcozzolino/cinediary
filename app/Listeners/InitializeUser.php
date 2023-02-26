@@ -3,8 +3,8 @@
 namespace App\Listeners;
 
 use App\Models\FavouriteDiary;
-use App\Models\Setting;
 use App\Models\ToWatchDiary;
+use App\Models\UserSetting;
 use App\Models\WatchedDiary;
 use Illuminate\Auth\Events\Verified;
 
@@ -21,7 +21,7 @@ class InitializeUser
     {
         $user = $event->user;
 
-        Setting::create([
+        UserSetting::create([
             'user_id' => $user->id,
             'defaultLanguage' => app()->getLocale(),
         ]);
@@ -29,12 +29,14 @@ class InitializeUser
         WatchedDiary::create([
             'user_id' => $user->id,
             'name' => WatchedDiary::DEFAULT_NAME,
+            'is_deletable' => false,
         ]);
 
         FavouriteDiary::create(
             [
                 'user_id' => $user->id,
                 'name' => FavouriteDiary::DEFAULT_NAME,
+                'is_deletable' => false,
             ]
         );
 
@@ -42,6 +44,7 @@ class InitializeUser
             [
                 'user_id' => $user->id,
                 'name' => ToWatchDiary::DEFAULT_NAME,
+                'is_deletable' => false,
             ]
         );
 
