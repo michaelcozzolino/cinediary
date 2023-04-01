@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace App\Contracts\TMDB;
 
 use Illuminate\Support\Collection;
+use Tmdb\Model\AbstractModel;
 
 interface ParserInterface
 {
-    public function parseOne($screenplay): array;
+    public function parseOne(AbstractModel $model): array;
 
-    public function parseMany(array $screenplays): Collection;
+    /**
+     * @param  array<AbstractModel>  $models
+     *
+     * @return Collection
+     */
+    public function parseMany(array $models): Collection;
 }

@@ -9,7 +9,7 @@ class StandardEventDispatcherConfigurator implements EventDispatcherConfigurator
 {
     public function configure(
         EventDispatcherInterface &$eventDispatcher,
-        array                    $eventListeners = []
+        array $eventListeners = []
     ): void {
         foreach ($eventListeners as $eventName => $listeners) {
             foreach ($listeners as $listener) {

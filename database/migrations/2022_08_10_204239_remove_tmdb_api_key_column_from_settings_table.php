@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::table('settings', function (Blueprint $table) {
+        Schema::table('user_settings', function (Blueprint $table) {
             $table->dropColumn('TMDBApiKey');
         });
     }
@@ -26,8 +26,7 @@ return new class extends Migration {
     {
         Schema::table('settings', function (Blueprint $table) {
             $table->tinyText('TMDBApiKey')
-                  ->nullable()
-                  ->default(null);
+                  ->nullable();
         });
     }
 };

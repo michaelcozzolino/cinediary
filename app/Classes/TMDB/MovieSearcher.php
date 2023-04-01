@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Classes\TMDB;
 
 use App\Contracts\TMDB\Searchable;
@@ -23,8 +25,11 @@ class MovieSearcher extends Searcher implements Searchable
         string $query,
         SearchQuery $parameters = null
     ): array {
+        /** @var MovieSearchQuery $parameters */
+        $parameters = $parameters ?? $this->getDefaultSearchQuery();
+
         $movies = $this->searchRepository
-            ->searchMovie($query, $parameters ?? $this->getDefaultSearchQuery())
+            ->searchMovie($query, $parameters)
             ->getAll();
 
         return array_map(
@@ -34,10 +39,11 @@ class MovieSearcher extends Searcher implements Searchable
     }
 
     /**
-     * @param int $id
-     * @param array $parameters
-     * @return AbstractModel
+     * @param  int    $id
+     * @param  array  $parameters
+     *
      * @throws TmdbApiException
+     * @return AbstractModel
      */
     public function searchById(int $id, array $parameters = []): AbstractModel
     {

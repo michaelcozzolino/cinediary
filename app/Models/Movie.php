@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * App\Models\Movie.
@@ -66,15 +67,7 @@ class Movie extends Screenplay
 
     public array $translatable = ['title', 'posterPath', 'backdropPath', 'overview', 'genre'];
 
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function diaries()
-//    {
-//        return $this->belongsToMany(Diary::class)->withTimestamps();
-//    }
-
-    public function diaries()
+    public function diaries(): MorphToMany
     {
         return $this->morphToMany(Diary::class, 'watchable');
     }

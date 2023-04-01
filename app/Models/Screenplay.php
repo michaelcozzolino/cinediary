@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 abstract class Screenplay extends Model
 {
     /**
-     * Get the screenplay runtime depending if the screenplay is a movie or a series.
+     * Get the screenplay runtime depending on if the screenplay is a movie or a series.
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */

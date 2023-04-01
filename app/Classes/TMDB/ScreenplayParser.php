@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Classes\TMDB;
 
 use App\Contracts\TMDB\ScreenplayParserInterface;
@@ -19,14 +21,15 @@ abstract class ScreenplayParser implements ScreenplayParserInterface
     public const BACKDROP_PATH_SIZE = 'original';
 
     /**
-     * Create the image url for a screenplay based on the given parameters.
+     * Builds the image url for a screenplay based on the given parameters.
      *
-     * @param string|null $path
-     * @param string $size
-     * @param bool $isPoster
+     * @param  string|null  $path
+     * @param  string       $size
+     * @param  bool         $isPoster
+     *
      * @return string
      */
-    protected function parseImageUrl(
+    protected function buildImageUrl(
         ?string $path,
         string $size,
         bool $isPoster = true
@@ -41,7 +44,8 @@ abstract class ScreenplayParser implements ScreenplayParserInterface
     /**
      * Get the first genre from a list of genres of a screenplay.
      *
-     * @param AbstractModel $screenplay
+     * @param  AbstractModel  $screenplay
+     *
      * @return string|null
      */
     protected function parseFirstGenre(AbstractModel $screenplay)
@@ -52,37 +56,39 @@ abstract class ScreenplayParser implements ScreenplayParserInterface
     }
 
     /**
-     * @param $screenplay
-     * @return array
+     * @param  AbstractModel  $model
+     *
+     * @return array<string, string>
      */
-    public function parseOne($screenplay): array
+    public function parseOne(AbstractModel $model): array
     {
         return [
-            'id' => $screenplay->getId(),
-            'title' => $this->parseTitle($screenplay),
-            'overview' => $screenplay->getOverview(),
-            'genre' => $this->parseFirstGenre($screenplay),
-            'posterPath' => $this->parseImageUrl(
-                $screenplay->getPosterPath(),
+            'id'           => $model->getId(),
+            'title'        => $this->parseTitle($model),
+            'overview'     => $model->getOverview(),
+            'genre'        => $this->parseFirstGenre($model),
+            'posterPath'   => $this->buildImageUrl(
+                $model->getPosterPath(),
                 self::POSTER_PATH_SIZE
             ),
-            'backdropPath' => $this->parseImageUrl(
-                $screenplay->getBackdropPath(),
+            'backdropPath' => $this->buildImageUrl(
+                $model->getBackdropPath(),
                 self::BACKDROP_PATH_SIZE
             ),
-            'runtime' => $this->parseRuntime($screenplay),
+            'runtime'      => $this->parseRuntime($model),
         ];
     }
 
     /**
-     * @param array $screenplays
+     * @param  array<AbstractModel>  $models
+     *
      * @return Collection
      */
-    public function parseMany(array $screenplays): Collection
+    public function parseMany(array $models): Collection
     {
         $parsedScreenplays = new Collection();
 
-        foreach ($screenplays as $screenplay) {
+        foreach ($models as $screenplay) {
             $parsedScreenplays->push($this->parseOne($screenplay));
         }
 
@@ -94,13 +100,11 @@ abstract class ScreenplayParser implements ScreenplayParserInterface
     /**
      * Get the release date of a screenplay if available.
      *
-     * @param AbstractModel $screenplay
+     * @param  AbstractModel  $screenplay
+     *
      * @return \DateTime|null
      */
-    abstract public function parseReleaseDate(
-        AbstractModel $screenplay
-    ): ?\DateTime;
+    abstract public function parseReleaseDate(AbstractModel $screenplay): ?\DateTime;
 
-    /** @noinspection PhpPossiblePolymorphicInvocationInspection */
     abstract public function parseRuntime(AbstractModel $screenplay): int;
 }

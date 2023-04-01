@@ -9,9 +9,6 @@ use Inertia\Response;
 
 class SearchController extends Controller
 {
-    /**
-     * @param  SearchServiceInterface  $searchService
-     */
     public function __construct(protected SearchServiceInterface $searchService)
     {
     }

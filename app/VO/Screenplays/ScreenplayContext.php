@@ -11,9 +11,10 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 class ScreenplayContext
 {
     /**
-     * @param  string        $type
-     * @param  class-string  $class
-     * @param  string        $table
+     * @param  string                $type
+     * @param  class-string          $class
+     * @param  string                $table
+     * @param  ScreenplayRepository  $repository
      */
     public function __construct(
         public string $type,

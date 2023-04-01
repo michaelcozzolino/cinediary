@@ -12,24 +12,22 @@ class Translator implements TranslatorInterface
 {
     public function __construct(
         protected FetcherRegistry $fetchers,
-
     ) {
     }
 
-    /** TODO: better using model class string */
     /**
      * Get the screenplay matching the given id and translate it if possible.
      *
      * @param  class-string  $model
-     * @param  int     $id
-     * @param  array   $languages
+     * @param  int           $id
+     * @param  array         $languages
      *
      * @throws ScreenplayNotTranslatableException
      * @return Screenplay
      */
     public function firstOrTranslate(
         string $model,
-        int   $id,
+        int $id,
         array $languages = [],
     ): Screenplay {
         /** @var Model $model */
@@ -73,13 +71,14 @@ class Translator implements TranslatorInterface
                     }
                 }
             } catch (TmdbApiException $e) {
+                /** TODO: catch */
             }
         }
 
         return $translations;
     }
 
-    public function isFieldTranslatable(string $field, Screenplay $screenplayModel): bool
+    protected function isFieldTranslatable(string $field, Screenplay $screenplayModel): bool
     {
         return in_array(
             $field,
@@ -90,8 +89,8 @@ class Translator implements TranslatorInterface
 
     /**
      * @param  class-string  $model
-     * @param  int     $id
-     * @param  string  $language
+     * @param  int           $id
+     * @param  string        $language
      *
      * @throws \App\Exceptions\RegistryNotFoundException
      * @throws \Tmdb\Exception\TmdbApiException

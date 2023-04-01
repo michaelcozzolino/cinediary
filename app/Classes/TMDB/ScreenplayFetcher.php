@@ -14,11 +14,6 @@ class ScreenplayFetcher implements FetcherInterface
     ) {
     }
 
-    public function getParser(): ScreenplayParser
-    {
-        return $this->parser;
-    }
-
     public function getSearcher(): Searcher
     {
         return $this->searcher;

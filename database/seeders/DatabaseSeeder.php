@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
 
         event(new Verified($demoUser));
 
+        /** TODO: to be refactored */
 //          (new StorePopularScreenplays())();
     }
 }

@@ -18,9 +18,7 @@ class LanguageController extends Controller
 
     public function update(string $language): RedirectResponse
     {
-//        dd(
-//            "when changing language the movies data are not updated. 21 january 2023 "
-//        );
+//      todo:      "when changing language the movies data are not updated. 21 january 2023 "
         $availableLanguages = Config::get('app.available_locales');
         try {
             $this->languageSwitcher->switchTo($language, $availableLanguages);

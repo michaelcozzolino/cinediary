@@ -15,7 +15,6 @@ class DashboardController extends Controller
         ScreenplayCountByLetterBuilder $screenplayCountByLetterBuilder,
         WatchedGenreCountBuilder $watchedGenreCountBuilder
     ): InertiaResponse {
-
         $charts = [];
         $charts['screenplayCount'] = $screenplayCountChartBuilder->build();
         $charts['screenplayCountByAlphabetLetters'] = $screenplayCountByLetterBuilder->build();

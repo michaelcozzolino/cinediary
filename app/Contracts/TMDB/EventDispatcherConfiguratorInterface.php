@@ -6,8 +6,5 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 interface EventDispatcherConfiguratorInterface
 {
-    public function configure(
-        EventDispatcherInterface &$eventDispatcher,
-        array $eventListeners = []
-    ): void;
+    public function configure(EventDispatcherInterface &$eventDispatcher, array $eventListeners = []): void;
 }

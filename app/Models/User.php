@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -28,7 +27,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
- * @property-read WatchedDiary $watched_diary
  * @property-read FavouriteDiary $favourite_diary
  * @property-read ToWatchDiary $to_watch_diary
  * @method static \Database\Factories\UserFactory factory(...$parameters)
@@ -77,9 +75,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['watched_diary', 'favourite_diary', 'to_watch_diary'];
-
-    protected WatchedDiary $watchedDiary;
+    /** TODO: a lot of data is useless sometimes, remove them */
+//    protected $appends = ['watched_diary', 'favourite_diary', 'to_watch_diary'];
 
     protected FavouriteDiary $favouriteDiary;
 
@@ -99,41 +96,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function settings()
     {
         return $this->hasOne(UserSetting::class);
-    }
-
-    /**
-     * Get the watched diary attribute.
-     *
-     * @return Attribute
-     */
-    protected function watchedDiary(): Attribute
-    {
-        return new Attribute(
-            get: fn () => WatchedDiary::setEagerLoads([])->first(),
-        );
-    }
-
-    /**
-     * Get the favourite diary attribute.
-     *
-     * @return Attribute
-     */
-    protected function favouriteDiary(): Attribute
-    {
-        return new Attribute(
-            get: fn () => FavouriteDiary::setEagerLoads([])->first(),
-        );
-    }
-
-    /**
-     * Get the to be watched diary attribute.
-     *
-     * @return Attribute
-     */
-    protected function toWatchDiary(): Attribute
-    {
-        return new Attribute(
-            get: fn () => ToWatchDiary::setEagerLoads([])->first(),
-        );
     }
 }

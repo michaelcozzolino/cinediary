@@ -11,7 +11,7 @@ class Binding
      * @param  \Closure|string|null  $concrete
      */
     public function __construct(
-        public string                   $abstract,
+        public string $abstract,
         public \Closure|string|null $concrete = null,
     ) {
 

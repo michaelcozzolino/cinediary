@@ -7,10 +7,7 @@ use Tmdb\Model\Search\SearchQuery;
 
 interface Searchable
 {
-    public function searchByQuery(
-        string $query,
-        SearchQuery $parameters = null
-    ): array;
+    public function searchByQuery(string $query, SearchQuery $parameters = null): array;
 
     public function searchById(int $id, array $parameters = []): AbstractModel;
 

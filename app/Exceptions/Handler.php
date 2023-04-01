@@ -5,7 +5,6 @@ namespace App\Exceptions;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Inertia\Inertia;
-use Psr\Log\LogLevel;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -25,7 +24,7 @@ class Handler extends ExceptionHandler
      * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
      */
     protected $levels = [
-        MovieNotFoundException::class => LogLevel::INFO,
+
     ];
 
     /**
@@ -41,7 +40,7 @@ class Handler extends ExceptionHandler
 
     public function report(Throwable $e)
     {
-         parent::report($e);
+        parent::report($e);
     }
 
     /**
@@ -60,10 +59,10 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $e
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param  \Throwable                $e
      *
      * @throws \Throwable
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Throwable $e)
     {
@@ -76,14 +75,14 @@ class Handler extends ExceptionHandler
             return Inertia::render('Exceptions/Error', [
                 'status' => $response->status(),
             ])
-                ->toResponse($request)
-                ->setStatusCode($response->status());
+                          ->toResponse($request)
+                          ->setStatusCode($response->status());
         } elseif ($response->status() === 419) {
             return redirect(RouteServiceProvider::HOME);
         } elseif ($response->status() === 400) {
             $exception = $response->exception;
 
-            if($exception !== null) {
+            if ($exception !== null) {
                 return redirect()->back()->with(['message' => $exception->getMessage()]);
             }
 

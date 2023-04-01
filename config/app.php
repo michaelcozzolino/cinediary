@@ -2,7 +2,6 @@
 
 use App\Models\Movie as MovieModel;
 use App\Models\Series;
-use App\Providers\QueryBuilderTimestampsProvider;
 use App\Repositories\MovieRepository;
 use App\Repositories\SeriesRepository;
 use Illuminate\Support\Facades\Facade;
@@ -181,7 +180,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
-        QueryBuilderTimestampsProvider::class,
     ],
 
     /*

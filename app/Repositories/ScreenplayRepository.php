@@ -23,8 +23,9 @@ abstract class ScreenplayRepository extends BaseRepository
     /**
      * Counts the occurrences of a specific screenplay for the specified diaries.
      *
-     * @param  int    $screenplayId
-     * @param  array  $diaryIds
+     * @param  array<int>   $diaryIds
+     * @param  string  $screenplayType
+     * @param  int     $screenplayId
      *
      * @return int
      */

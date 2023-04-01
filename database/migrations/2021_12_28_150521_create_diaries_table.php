@@ -17,12 +17,11 @@ return new class extends Migration {
             $table->mediumText('name');
             $table->boolean('isMain');
             $table->unsignedBigInteger('user_id');
-            $table
-                ->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
 
             $table->timestamps();
             $table->softDeletes();
@@ -37,6 +36,5 @@ return new class extends Migration {
     public function down()
     {
         Schema::dropIfExists('diaries');
-
     }
 };

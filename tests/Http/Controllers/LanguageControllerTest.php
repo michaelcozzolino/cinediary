@@ -7,8 +7,6 @@ namespace Tests\Http\Controllers;
 use App\Helpers\ModelHelper;
 use App\Models\UserSetting;
 use App\Providers\RouteServiceProvider;
-use App\Services\UserService;
-use App\Services\UserSettingService;
 use Config;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;

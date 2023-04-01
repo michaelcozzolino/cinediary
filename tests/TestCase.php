@@ -24,12 +24,12 @@ abstract class TestCase extends BaseTestCase
 
     protected Mockery\MockInterface $series;
 
+    /** TODO: testcase should be improved */
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->movie = Mockery::mock(Movie::class);
-//        $this->movie->expects('getAttribute')->with('id')->andReturn(1);
         $this->series = Mockery::mock(Series::class);
         $this->availableLanguages = config('app.available_locales');
     }

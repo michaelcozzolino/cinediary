@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Diary;
 use App\Models\Movie;
 use App\Models\Series;
 use App\VO\Screenplays\ScreenplayContext;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -130,13 +128,5 @@ class ScreenplayContextService
         }
 
         return null;
-    }
-
-    /** TODO: remove */
-    public function getDiaryRelation(Diary $diary): ?MorphToMany
-    {
-        $table = $this->screenplayContext->table;
-
-        return $table !== null ? $diary->{$table}() : null;
     }
 }

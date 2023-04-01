@@ -10,6 +10,7 @@ class WatchedDiary extends Diary
 {
     use HasParent;
 
+    /** TODO: name must be capitalized */
     public const DEFAULT_NAME = 'watched';
 
     public function addScreenplay(int $screenplayId): array

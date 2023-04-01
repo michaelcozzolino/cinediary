@@ -63,7 +63,6 @@
         },
         "files": [
             "app/Helpers/screenplays.php",
-            "app/Helpers/helpers.php",
             "tests/helpers/functions.php"
         ]
     },
@@ -98,8 +97,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": false,
-            "pestphp/pest-plugin": true
+            "dealerdirect/phpcodesniffer-composer-installer": false
         }
     },
     "minimum-stability": "dev",

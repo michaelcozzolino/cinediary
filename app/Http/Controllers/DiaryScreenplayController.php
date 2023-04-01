@@ -22,9 +22,9 @@ use Redirect;
 class DiaryScreenplayController extends Controller
 {
     public function __construct(
-        protected ScreenplayService        $screenplayService,
+        protected ScreenplayService $screenplayService,
         protected ScreenplayContextService $screenplayContextService,
-        protected DiaryRepository          $diaryRepository,
+        protected DiaryRepository $diaryRepository,
     ) {
     }
 
@@ -94,7 +94,6 @@ class DiaryScreenplayController extends Controller
                 )
             );
         }
-
     }
 
     /**
@@ -125,7 +124,7 @@ class DiaryScreenplayController extends Controller
         return Redirect::back()->with(compact('message'));
     }
 
-    /*
+    /* todo: refactor
      * Get the popular screenplays from database based on the screenplay type.
      * */
     public function indexPopular(): array

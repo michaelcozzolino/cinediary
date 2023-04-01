@@ -23,7 +23,7 @@ class ModelHelper
         }
 
         throw new InvalidModelClassNameException(
-            sprintf('The class %s is not a %s instance when instanciated', $modelClass, Model::class)
+            sprintf('The class %s is not a %s instance when instantiated', $modelClass, Model::class)
         );
     }
 }

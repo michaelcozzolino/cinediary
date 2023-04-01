@@ -19,12 +19,6 @@ class ScreenplayController extends Controller
     ) {
     }
 
-    /**
-     * @param  Screenplay  $screenplay
-     *
-     * @throws \App\Exceptions\RegistryNotFoundException
-     * @return InertiaResponse
-     */
     public function show(Screenplay $screenplay): InertiaResponse
     {
         $screenplayId = $screenplay->id;

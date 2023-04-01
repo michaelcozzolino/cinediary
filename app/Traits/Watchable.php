@@ -35,7 +35,6 @@ trait Watchable
         $screenplayContext = app(ScreenplayContextService::class)->getScreenplayContext();
 
         $removed = $screenplayContext->getDiaryRelation($diary)->detach([$screenplayId]);
-        $x = 1;
     }
 
     /**
@@ -61,8 +60,8 @@ trait Watchable
      */
     protected function guardAgainstScreenplayAlreadyInDiary(
         string $screenplayType,
-        int    $diaryId,
-        int    $screenplayId
+        int $diaryId,
+        int $screenplayId
     ): void {
         if ($this->hasScreenplay($screenplayType, $screenplayId, $diaryId)) {
             throw new ScreenplayAlreadyInDiaryException(

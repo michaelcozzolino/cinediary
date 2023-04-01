@@ -82,14 +82,6 @@ class Diary extends Model implements DiaryInterface
         return $this->belongsTo(User::class);
     }
 
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function movies()
-//    {
-//        return $this->belongsToMany(Movie::class)->withTimestamps();
-//    }
-
     public function movies(): MorphToMany
     {
         return $this->morphedByMany(Movie::class, 'watchable');

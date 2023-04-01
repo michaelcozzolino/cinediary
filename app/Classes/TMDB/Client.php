@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Classes\TMDB;
 
 use App\Contracts\TMDB\EventDispatcherConfiguratorInterface;
+use Tmdb\Client as BaseClient;
 use Tmdb\ConfigurationInterface;
 
-class Client extends \Tmdb\Client
+class Client extends BaseClient
 {
     public function __construct(protected ConfigurationInterface|array $options)
     {

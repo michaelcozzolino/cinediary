@@ -33,7 +33,7 @@ class ScreenplaySearchService implements SearchServiceInterface
      * Get the screenplays resulting from the last search.
      * The result is an empty array if no screenplays have been found or if no search has been performed yet.
      *
-     * @return array|
+     * @return array
      */
     public function getLastSearchResult(): array
     {

@@ -22,8 +22,6 @@ use App\Http\Controllers\SearchController;
 use App\Models\Movie;
 use App\Models\Series;
 use App\Registries\FetcherRegistry;
-use App\Registries\ScreenplayRegistry;
-use App\Registries\TranslatorRegistry;
 use App\Services\ScreenplayContextService;
 use App\Services\Search\Screenplay\ScreenplaySearchService;
 use App\Services\SearchServiceInterface;
@@ -74,11 +72,9 @@ class TMDBServiceProvider extends ServiceProvider
             new Binding(AcceptJsonRequestListener::class),
             new Binding(ContentTypeJsonRequestListener::class),
             new Binding(UserAgentRequestListener::class),
-            new Binding(ScreenplayRegistry::class),
             new Binding(
                 ScreenplayContextService::class, fn () => new ScreenplayContextService()
             ),
-            new Binding(TranslatorRegistry::class),
             new Binding(FetcherRegistry::class),
         ]);
 
