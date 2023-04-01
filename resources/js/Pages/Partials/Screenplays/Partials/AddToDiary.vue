@@ -64,7 +64,7 @@ export default {
 
         addToDiary(diaryId) {
             if (!this.isAlreadyInDiary(diaryId)) {
-                let routeName = 'diaries.' + this.screenplayType + '.store';
+                let routeName = 'diaries.' + this.screenplayType + '.add';
                 this.addToDiaryForm.screenplayId = this.screenplayId;
 
                 this.addToDiaryForm.post(route(routeName, { diary: diaryId }), {

@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Movie as MovieModel;
+use App\Models\Series;
+use App\Repositories\MovieRepository;
+use App\Repositories\SeriesRepository;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -175,6 +179,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
     ],
 
     /*
@@ -193,4 +198,23 @@ return [
             // ...
         ])
         ->toArray(),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Screenplay types
+    |--------------------------------------------------------------------------
+    |
+    | The screenplay model types that are going to be used to represent data to be manipulated.
+    |
+    */
+
+    'screenplay_types' => [
+        'movie' => MovieModel::class,
+        'series' => \App\Models\Series::class,
+    ],
+
+    'screenplay_repositories' => [
+        MovieModel::class => MovieRepository::class,
+        Series::class => SeriesRepository::class,
+    ],
 ];

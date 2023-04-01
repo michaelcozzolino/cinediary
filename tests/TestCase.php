@@ -3,21 +3,34 @@
 namespace Tests;
 
 use App\Models\Diary;
-use App\Models\Setting;
+use App\Models\Movie;
+use App\Models\Series;
 use App\Models\User;
+use App\Models\UserSetting;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Mockery;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
-    protected $user;
+
+    protected User $user;
+
     protected array $diaries;
+
     protected array $availableLanguages;
 
+    protected Mockery\MockInterface $movie;
+
+    protected Mockery\MockInterface $series;
+
+    /** TODO: testcase should be improved */
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->movie = Mockery::mock(Movie::class);
+        $this->series = Mockery::mock(Series::class);
         $this->availableLanguages = config('app.available_locales');
     }
 
@@ -35,7 +48,7 @@ abstract class TestCase extends BaseTestCase
             $this->user = $user;
         }
 
-        $this->userSettings = Setting::whereUserId($this->user->id);
+        $this->userSettings = UserSetting::whereUserId($this->user->id);
         $this->actingAs($this->user);
 
         if (!is_null($this->user->email_verified_at)) {
@@ -45,6 +58,7 @@ abstract class TestCase extends BaseTestCase
             $toWatch = \Auth::user()->to_be_watched_diary;
             $this->diaries = compact('custom', 'watched', 'favourite', 'toWatch');
         }
+        $this->get(route('home'));
 
         return $this;
     }

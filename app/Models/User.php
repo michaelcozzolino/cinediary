@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -28,6 +27,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
+ * @property-read FavouriteDiary $favourite_diary
+ * @property-read ToWatchDiary $to_watch_diary
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -42,8 +43,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Diary[] $diaries
- * @property-read int|null $diaries_count
- * @property-read \App\Models\Setting|null $settings
+ * @property-read int|null                                                     $diaries_count
+ * @property-read \App\Models\UserSetting|null                                 $settings
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -74,7 +75,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['watched_diary', 'favourite_diary', 'to_be_watched_diary'];
+    /** TODO: a lot of data is useless sometimes, remove them */
+//    protected $appends = ['watched_diary', 'favourite_diary', 'to_watch_diary'];
+
+    protected FavouriteDiary $favouriteDiary;
+
+    protected ToWatchDiary $toWatchDiary;
 
     /**
      * @return HasMany
@@ -89,48 +95,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function settings()
     {
-        return $this->hasOne(Setting::class);
-    }
-
-    /**
-     * Get the watched diary attribute.
-     *
-     * @return Attribute
-     */
-    protected function watchedDiary(): Attribute
-    {
-        return new Attribute(
-            get: fn () => Diary::setEagerLoads([])
-                ->watched()
-                ->first(),
-        );
-    }
-
-    /**
-     * Get the favourite diary attribute.
-     *
-     * @return Attribute
-     */
-    protected function favouriteDiary(): Attribute
-    {
-        return new Attribute(
-            get: fn () => Diary::setEagerLoads([])
-                ->favourite()
-                ->first(),
-        );
-    }
-
-    /**
-     * Get the to be watched diary attribute.
-     *
-     * @return Attribute
-     */
-    protected function toBeWatchedDiary(): Attribute
-    {
-        return new Attribute(
-            get: fn () => Diary::setEagerLoads([])
-                ->toBeWatched()
-                ->first(),
-        );
+        return $this->hasOne(UserSetting::class);
     }
 }

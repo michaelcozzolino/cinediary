@@ -163,15 +163,13 @@ export default {
     },
 
     data() {
-        return {
+        return reactive({
             // this is the diary object that manages the diary in the frontend
-            currentDiary: new Diary(
-                reactive({
-                    diary: this.diary,
-                    screenplays: this.screenplays,
-                    screenplayType: usePage().props.value.screenplayType,
-                }),
-            ),
+            currentDiary: new Diary({
+                diary: this.diary,
+                screenplays: reactive(this.screenplays),
+                screenplayType: usePage().props.value.screenplayType,
+            }),
 
             tabs: {
                 movies: { title: this.__('Movies'), color: 'primary' },
@@ -180,7 +178,7 @@ export default {
 
             activeTab: null,
             findQuery: this.query, // query that the user inputs to find a screenplay in his diary
-        };
+        });
     },
 
     mounted() {

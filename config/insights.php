@@ -87,7 +87,6 @@ return [
 
     'remove' => [
         AlphabeticallySortedUsesSniff::class,
-        DeclareStrictTypesSniff::class,
         DisallowMixedTypeHintSniff::class,
         ForbiddenDefineFunctions::class,
         ForbiddenNormalClasses::class,
@@ -132,6 +131,11 @@ return [
             'linesCountBetweenAnnotationsGroups' => 1,
             'linesCountAfterLastContent' => 0,
             'annotationsGroups' => [],
+        ],
+        DeclareStrictTypesSniff::class => [
+            'declareOnFirstLine' => 1,
+            'linesCountAfterDeclare' => 1,
+            'spacesCountAroundEqualsSign' => 1,
         ],
     ],
 

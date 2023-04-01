@@ -67,10 +67,10 @@ export default {
 
     created() {
         let popularScreenplaysRoute = null;
-        if (this.screenplayType === 'movies')
-            popularScreenplaysRoute = this.route('popular-movies');
-        else if (this.screenplayType === 'series')
-            popularScreenplaysRoute = this.route('popular-series');
+        // if (this.screenplayType === 'movies')
+        //     popularScreenplaysRoute = this.route('popular-movies');
+        // else if (this.screenplayType === 'series')
+        //     popularScreenplaysRoute = this.route('popular-series');
 
         if (popularScreenplaysRoute !== null) {
             axios

@@ -1,19 +1,6 @@
 <template>
     <authenticated>
         <form @submit.prevent="update">
-            <MDBInput
-                type="password"
-                :label="this.__('TMDB API key')"
-                aria-describedby="tmdb-api-key"
-                :formText="
-                    this.__(
-                        'You can use your TMDB API key instead of using the Cinediary\'s one to speed up your searches. We do not store this key as plain text',
-                    ) + '.'
-                "
-                v-model="form.TMDBApiKey"
-            />
-            <validation-error :error="errors.TMDBApiKey" />
-
             <MDBSwitch
                 wrapper-class="my-4"
                 :label="this.__('Include NSFW content to be found')"
@@ -45,14 +32,12 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
-                TMDBApiKey: '',
                 adultContent: false,
             }),
         };
     },
 
     created() {
-        this.form.TMDBApiKey = this.settings.TMDBApiKey;
         this.form.adultContent = this.settings.adultContent > 0;
     },
 

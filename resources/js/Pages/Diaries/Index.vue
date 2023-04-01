@@ -20,15 +20,15 @@
                                 />
                                 &nbsp
                                 <font-awesome-icon
-                                    v-show="!diary.isMain"
+                                    v-show="diary.isDeletable"
                                     class="text-danger"
                                     icon="times"
                                     style="cursor: pointer"
                                     @click="openDestroyDiaryModal(diary)"
                                 />
                             </td>
-                            <td v-text="diary.movies_count" />
-                            <td v-text="diary.series_count" />
+                            <td v-text="diary.moviesCount" />
+                            <td v-text="diary.seriesCount" />
                         </tr>
                     </tbody>
                 </MDBTable>

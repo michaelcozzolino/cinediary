@@ -57,13 +57,8 @@ export default {
     methods: {
         setActiveItem() {
             this.sidebar.menu.forEach((element) => {
-                let isSearching =
-                    (element.href === route('search.create') ||
-                        element.href === route('search.index')) &&
-                    this.$page.url.startsWith('/search');
-
                 element.class =
-                    element.href === window.location.href || isSearching
+                    element.href === window.location.href
                         ? 'vsm--link_active'
                         : '';
             });
@@ -123,7 +118,8 @@ export default {
 
             for (let userDiaryIndex in userDiaries) {
                 let userDiary = userDiaries[userDiaryIndex];
-                if (userDiary.isMain) {
+
+                if (userDiary.type !== null) {
                     let diaryName = userDiary.name;
                     let href = route('diaries.movies.index', {
                         diary: userDiary.id,
@@ -179,7 +175,7 @@ export default {
                     },
 
                     {
-                        href: route('search.create'),
+                        href: route('search.index'),
                         title: this.__('Add movies or TV series'),
                         icon: {
                             element: markRaw(FontAwesomeIcon),

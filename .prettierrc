@@ -5,14 +5,5 @@
     "tabWidth": 4,
     "trailingComma": "all",
     "htmlWhitespaceSensitivity": "css",
-    "braceStyle": "psr-2",
-    "phpVersion": "8.0",
-    "overrides": [
-        {
-            "files": "*.php",
-            "options": {
-                "printWidth":120
-            }
-        }
-    ]
+    "braceStyle": "psr-2"
 }

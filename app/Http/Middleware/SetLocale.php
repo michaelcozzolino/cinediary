@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Setting;
+use App\Models\UserSetting;
 use Closure;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -36,7 +36,7 @@ class SetLocale
 
             if (!session()->has('locale')) {
                 if (\Auth::check() && \Auth::user()->hasVerifiedEmail()) {
-                    $locale = Setting::whereUserId(\Auth::user()->id)->first()->defaultLanguage;
+                    $locale = UserSetting::whereUserId(\Auth::user()->id)->first()->defaultLanguage;
                 } else {
                     $locale = $this->getCountryIp(\Request::ip(), new Client());
                 }

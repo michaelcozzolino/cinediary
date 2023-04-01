@@ -35,7 +35,9 @@ export default {
     methods: {
         changeLanguage(language) {
             language = language.toLowerCase();
-            this.$inertia.get(route('language', { language }));
+            this.$inertia.put(route('language.update', { language }), {
+                resetOnSuccess: true,
+            });
         },
 
         getLanguages() {

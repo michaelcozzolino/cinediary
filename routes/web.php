@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DiariesController;
-use App\Http\Controllers\MoviesController;
+use App\Http\Controllers\DiaryController;
+use App\Http\Controllers\DiaryScreenplayController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ScreenplayController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\SeriesController;
-use App\Http\Controllers\SettingsController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\UserSettingsController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,73 +23,49 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/language/{language}', function ($language) {
-    if (in_array($language, config('app.available_locales'))) {
-        session(['locale' => $language]);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-        if (Auth::user()) {
-            Auth::user()
-                ->settings()
-                ->update(['defaultLanguage' => $language]);
-        }
-    }
-
-    return redirect()->back();
-})->name('language');
-
-Route::get('/', function () {
-    if (!Auth::user()) {
-        return Inertia::render('Home/Index', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-            'canVerifyEmail' => false,
-            'status' => session('status'),
-        ]);
-    }
-
-    return redirect()->route('dashboard');
-})->name('home');
+Route::put('/languages/{language}', [LanguageController::class, 'update'])->name('language.update');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware(['diaries.empty'])
-        ->name('dashboard');
+         ->middleware(['diaries.empty'])
+         ->name('dashboard');
 
     Route::group(['prefix' => 'search'], function () {
-        Route::get('/create', [SearchController::class, 'create'])->name('search.create');
         Route::post('/make', [SearchController::class, 'make'])->name('search.make');
         Route::get('/', [SearchController::class, 'index'])->name('search.index');
     });
 
     Route::group(['prefix' => 'settings'], function () {
-        Route::get('/', [SettingsController::class, 'index'])->name('settings.index');
-        Route::patch('/', [SettingsController::class, 'update'])->name('settings.update');
+        Route::get('/', [UserSettingsController::class, 'index'])->name('settings.index');
+        Route::patch('/', [UserSettingsController::class, 'update'])->name('settings.update');
     });
 
     Route::group(['prefix' => 'diaries'], function () {
-        Route::get('/', [DiariesController::class, 'index'])->name('diaries.index');
-        Route::post('store', [DiariesController::class, 'store'])->name('diaries.store');
+        Route::get('/', [DiaryController::class, 'index'])->name('diaries.index');
+        Route::post('store', [DiaryController::class, 'store'])->name('diaries.store');
     });
 
     Route::group(['prefix' => 'diaries/{diary}'], function () {
-        Route::delete('/', [DiariesController::class, 'destroy'])->name('diaries.destroy');
+        Route::delete('/', [DiaryController::class, 'destroy'])->name('diaries.destroy');
 
         Route::group(['prefix' => 'movies'], function () {
-            Route::get('/', [MoviesController::class, 'index'])->name('diaries.movies.index');
-            Route::post('/', [MoviesController::class, 'store'])->name('diaries.movies.store');
-            Route::delete('{movie}', [MoviesController::class, 'destroy'])->name('diaries.movies.destroy');
+            Route::get('/', [DiaryScreenplayController::class, 'index'])->name('diaries.movies.index');
+            Route::post('/', [DiaryScreenplayController::class, 'add'])->name('diaries.movies.add');
+            Route::delete('{movie}', [DiaryScreenplayController::class, 'destroy'])->name('diaries.movies.destroy');
         });
 
         Route::group(['prefix' => 'series'], function () {
-            Route::get('/', [SeriesController::class, 'index'])->name('diaries.series.index');
-            Route::post('/', [SeriesController::class, 'store'])->name('diaries.series.store');
-            Route::delete('/', [SeriesController::class, 'destroy'])->name('diaries.series.destroy');
+            Route::get('/', [DiaryScreenplayController::class, 'index'])->name('diaries.series.index');
+            Route::post('/', [DiaryScreenplayController::class, 'add'])->name('diaries.series.add');
+            Route::delete('/{series}', [DiaryScreenplayController::class, 'destroy'])->name('diaries.series.destroy');
         });
     });
 });
 
-Route::get('/movies/{movie}', [MoviesController::class, 'show'])->name('movies.show');
-Route::get('/series/{series}', [SeriesController::class, 'show'])->name('series.show');
+Route::get('/movies/{movie}', [ScreenplayController::class, 'show'])->name('movies.show');
+
+Route::get('/series/{series}', [ScreenplayController::class, 'show'])->name('series.show');
+
 require __DIR__ . '/auth.php';

@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Traits\HasTranslations;
-use App\Traits\ScreenplayActions;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * App\Models\Movie.
@@ -50,26 +50,33 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Movie whereGenre($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Movie whereIsPopular($value)
  */
-class Movie extends Model
+class Movie extends Screenplay
 {
     use HasFactory;
     use HasTranslations;
-    use ScreenplayActions;
 
     public $incrementing = false;
+
     protected $guarded = [];
+
     protected $perPage = 20;
+
     protected $casts = [
         'releaseDate' => 'datetime:Y',
     ];
 
     public array $translatable = ['title', 'posterPath', 'backdropPath', 'overview', 'genre'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function diaries()
+    public function diaries(): MorphToMany
     {
-        return $this->belongsToMany(Diary::class)->withTimestamps();
+        return $this->morphToMany(Diary::class, 'watchable');
+    }
+
+    protected function runtime(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return $value . ' ' . __('minutes');
+            });
     }
 }
